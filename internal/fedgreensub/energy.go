@@ -1,6 +1,9 @@
 package fedgreensub
 
-import "time"
+import (
+	"sync"
+	"time"
+)
 
 // EnergyWeights controls how each normalized metric contributes to the energy
 // estimate.
@@ -27,6 +30,7 @@ func DefaultEnergyWeights() EnergyWeights {
 // EnergyEstimator computes a configurable score that proxies runtime power
 // usage.
 type EnergyEstimator struct {
+	mu      sync.RWMutex
 	weights EnergyWeights
 }
 
@@ -38,10 +42,39 @@ func NewEnergyEstimator(weights EnergyWeights) *EnergyEstimator {
 	return &EnergyEstimator{weights: weights}
 }
 
+// SetWeights updates the estimator coefficients safely.
+func (e *EnergyEstimator) SetWeights(weights EnergyWeights) {
+	if e == nil {
+		return
+	}
+	if weights == (EnergyWeights{}) {
+		weights = DefaultEnergyWeights()
+	}
+	e.mu.Lock()
+	e.weights = weights
+	e.mu.Unlock()
+}
+
+// Weights returns a copy of the current estimator coefficients.
+func (e *EnergyEstimator) Weights() EnergyWeights {
+	if e == nil {
+		return DefaultEnergyWeights()
+	}
+	e.mu.RLock()
+	defer e.mu.RUnlock()
+	return e.weights
+}
+
 // EstimateEnergy returns a normalized score where larger values indicate a
 // more expensive runtime profile.
 func EstimateEnergy(metrics RuntimeMetrics) float64 {
-	return NewEnergyEstimator(DefaultEnergyWeights()).EstimateEnergy(metrics)
+	return EstimateEnergyWithWeights(metrics, DefaultEnergyWeights())
+}
+
+// EstimateEnergyWithWeights computes the energy score using explicit custom
+// coefficients.
+func EstimateEnergyWithWeights(metrics RuntimeMetrics, weights EnergyWeights) float64 {
+	return NewEnergyEstimator(weights).EstimateEnergy(metrics)
 }
 
 // EstimateEnergy returns the weighted score for a configured estimator.
@@ -49,12 +82,13 @@ func (e *EnergyEstimator) EstimateEnergy(metrics RuntimeMetrics) float64 {
 	if e == nil {
 		e = NewEnergyEstimator(DefaultEnergyWeights())
 	}
+	weights := e.Weights()
 
-	return e.weights.CPU*normalizePercentage(metrics.CPU) +
-		e.weights.Bandwidth*normalizeBandwidth(metrics.BandwidthInBps, metrics.BandwidthOutBps) +
-		e.weights.Memory*normalizeMemory(metrics.MemoryMB) +
-		e.weights.DuplicateMessages*normalizeRate(metrics.DuplicateRate) +
-		e.weights.HeartbeatCost*normalizeHeartbeat(metrics.HeartbeatDuration)
+	return weights.CPU*normalizePercentage(metrics.CPU) +
+		weights.Bandwidth*normalizeBandwidth(metrics.BandwidthInBps, metrics.BandwidthOutBps) +
+		weights.Memory*normalizeMemory(metrics.MemoryMB) +
+		weights.DuplicateMessages*normalizeRate(metrics.DuplicateRate) +
+		weights.HeartbeatCost*normalizeHeartbeat(metrics.HeartbeatDuration)
 }
 
 func normalizePercentage(value float64) float64 {

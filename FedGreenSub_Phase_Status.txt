@@ -1,0 +1,81 @@
+FedGreenSub Implementation Status
+Last updated: 2026-07-27
+
+Overview
+- Implemented phases: 1, 2, 3
+- In progress / not yet implemented: 4 onward
+
+Phase 1: Package and Core Scaffolding (Implemented)
+What was done:
+- Created package: internal/fedgreensub
+- Added initial files:
+  - types.go
+  - collector.go
+  - optimizer.go
+  - trainer.go
+  - model.go
+  - config.go
+  - energy.go
+  - inference.go
+  - aggregation.go
+  - metrics.go
+- Added core domain types and interfaces:
+  - RuntimeMetrics
+  - GossipParameters
+  - ModelState
+  - TrainingDataset / TrainingSample
+  - Predictor interface
+  - Trainer interface
+  - Aggregator interface
+  - NeuralNetwork interface
+- Added baseline optimizer wiring and snapshot storage:
+  - Optimizer struct with collector/predictor/energy dependencies
+  - RefreshMetrics, Snapshot, EnergyEstimate helpers
+
+Phase 2: Metrics Collection (Implemented)
+What was done:
+- Implemented runtime metrics sampling components:
+  - SystemSample
+  - GossipSample
+  - SystemProbe interface
+  - GossipProbe interface
+  - RuntimeSystemProbe (default Go runtime sampler)
+- Implemented Collector:
+  - NewCollector with dependency injection options
+  - WithSystemProbe, WithGossipProbe, WithClock options
+  - Collect(ctx) that merges system + gossip samples into RuntimeMetrics
+- Added rate and conversion logic:
+  - IncomingRate, OutgoingRate, DuplicateRate from counter deltas
+  - BandwidthInBps, BandwidthOutBps from byte deltas
+  - Publish latency conversion to milliseconds
+- Added thread safety in collection path:
+  - Internal locking and last-sample state tracking
+
+Phase 3: Energy Estimator (Implemented)
+What was done:
+- Implemented configurable energy model based on weighted components:
+  - Energy = 0.35*CPU + 0.25*Bandwidth + 0.15*Memory + 0.15*DuplicateMessages + 0.10*HeartbeatCost (default)
+- Added configurable coefficients:
+  - EnergyWeights
+  - DefaultEnergyWeights()
+  - EstimateEnergyWithWeights(metrics, weights)
+- Added thread-safe estimator updates:
+  - EnergyEstimator.SetWeights(...)
+  - EnergyEstimator.Weights()
+- Added normalization and clamping helpers for stable scoring inputs
+- Added unit tests:
+  - energy_test.go covering default behavior, custom weights, weight update behavior, and negative input clamping
+
+Not Implemented Yet (Planned by roadmap)
+- Phase 4: Adaptive parameters + ApplyParameters safety validation
+- Phase 5: Heuristic inference engine behind Predictor
+- Phase 6: Tiny feedforward model (Forward/Backward/Predict/Train)
+- Phase 7: LocalTrainer federated export/import + FedAvg
+- Phase 8: Energy-weighted federated averaging
+- Phase 9: Runtime heartbeat integration and non-blocking orchestration
+- Phase 10: Safety clamps + EMA smoothing for unstable predictions
+- Phase 11: Structured logging outputs
+- Phase 12: Full configuration options coverage
+- Phase 13: Broader unit test suite for all modules
+- Phase 14: Benchmarks (standard GossipSub vs FedGreenSub)
+- Phase 15: Final quality hardening and race-safety verification
