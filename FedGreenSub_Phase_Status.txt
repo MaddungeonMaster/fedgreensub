@@ -66,8 +66,42 @@ What was done:
 - Added unit tests:
   - energy_test.go covering default behavior, custom weights, weight update behavior, and negative input clamping
 
+Phase 4: Adaptive Parameters and Safety Validation (Implemented)
+What was done:
+- Added a standalone parameter management component:
+  - parameters.go
+- Implemented ParameterManager for safe, isolated management of adaptive GossipSub parameters
+- Added parameter validation through:
+  - Validate(params)
+- Added safe parameter application through:
+  - ApplyParameters(params)
+- Added access to the latest accepted parameter set through:
+  - CurrentParameters()
+- Added configurable safety validation using existing Config bounds:
+  - Minimum and maximum mesh degree
+  - Minimum and maximum gossip factor
+  - Minimum and maximum heartbeat interval
+- Added consistency checks for GossipSub mesh parameters:
+  - DLow <= MeshDegree <= DHigh
+- Added thread-safe parameter storage and access:
+  - sync.RWMutex used for concurrent reads and updates
+- Added default safe parameter values when creating ParameterManager
+- Added unit tests:
+  - parameters_test.go
+  - Valid parameter acceptance
+  - Mesh degree below minimum rejection
+  - Mesh degree above maximum rejection
+  - Invalid DLow and MeshDegree relationship rejection
+  - Invalid gossip factor rejection
+  - Invalid heartbeat interval rejection
+  - Successful parameter application and retrieval
+- Verified that all project tests pass:
+  - go test ./...
+- Phase 4 currently validates and stores parameters inside the FedGreenSub extension layer
+- Applying parameters to the live GossipSub runtime is planned for Phase 9
+
 Not Implemented Yet (Planned by roadmap)
-- Phase 4: Adaptive parameters + ApplyParameters safety validation
+- Phase 4: Adaptive parameters + ApplyParameters safety validation (DONE)
 - Phase 5: Heuristic inference engine behind Predictor
 - Phase 6: Tiny feedforward model (Forward/Backward/Predict/Train)
 - Phase 7: LocalTrainer federated export/import + FedAvg
