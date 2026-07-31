@@ -100,10 +100,115 @@ What was done:
 - Phase 4 currently validates and stores parameters inside the FedGreenSub extension layer
 - Applying parameters to the live GossipSub runtime is planned for Phase 9
 
+Phase 5: Heuristic Inference Engine (Implemented)
+What was done:
+- Added a rule-based heuristic predictor:
+  - heuristic.go
+- Implemented HeuristicPredictor as a concrete implementation of the existing Predictor interface
+- Added:
+  - NewHeuristicPredictor(cfg)
+  - Predict(metrics)
+- Implemented runtime-based parameter prediction rules:
+  - High CPU usage reduces the suggested mesh degree
+  - Low peer count increases the suggested mesh degree
+  - High duplicate-message rate reduces the suggested gossip factor
+  - High publish latency increases the suggested heartbeat interval
+  - Normal runtime conditions use conservative default parameter values
+- Added safety clamping for predicted values:
+  - Mesh degree is kept within configured minimum and maximum bounds
+  - Gossip factor is kept within configured minimum and maximum bounds
+  - Heartbeat interval is kept within configured minimum and maximum bounds
+- Added helper functions:
+  - clampInt(...)
+  - clampFloat(...)
+  - clampDuration(...)
+- Added unit tests:
+  - heuristic_test.go
+  - Normal metrics prediction
+  - High CPU prediction
+  - Low peer-count prediction
+  - High duplicate-rate prediction
+  - High publish-latency prediction
+  - Configured safety-bound validation
+- Verified that all Phase 1–5 tests pass:
+  - go test -v ./internal/fedgreensub
+  - go test ./...
+- Phase 5 generates parameter suggestions only
+- Predicted parameters are not yet applied to the live GossipSub runtime
+- Validation and safe storage are provided by the Phase 4 ParameterManager
+
+Phase 6: Tiny Feedforward Neural Network (Implemented)
+What was done:
+- Added a small pure-Go feedforward neural network:
+  - tiny_network.go
+- Implemented TinyNetwork with:
+  - Configurable input layer size
+  - Configurable hidden layer size
+  - Configurable output layer size
+  - Configurable learning rate
+  - One hidden layer
+  - Sigmoid activation function
+- Implemented the existing NeuralNetwork interface:
+  - Forward(input)
+  - Backward(input, target, output)
+  - Predict(input)
+  - Train(dataset)
+  - Weights()
+  - SetWeights(state)
+  - MarshalBinary()
+  - UnmarshalBinary(data)
+- Implemented forward propagation:
+  - Input-to-hidden layer computation
+  - Hidden-layer activation
+  - Hidden-to-output layer computation
+  - Output-layer activation
+- Implemented backpropagation:
+  - Mean squared error loss calculation
+  - Output-layer error calculation
+  - Hidden-layer error calculation
+  - Gradient-based weight updates
+  - Bias updates
+- Implemented local model training:
+  - Processes all samples in a TrainingDataset
+  - Performs forward and backward passes for each sample
+  - Returns the average training loss
+- Added model-state management:
+  - Exports model weights and biases through ModelState
+  - Restores model weights, biases, version, sample count, and loss
+- Added model serialization:
+  - MarshalBinary() serializes the model state
+  - UnmarshalBinary() restores the serialized model state
+- Added thread safety:
+  - sync.RWMutex protects model reads and weight updates
+- Added input validation:
+  - Rejects invalid input, hidden, and output layer sizes
+  - Rejects invalid learning rates
+  - Rejects incorrect input and target vector sizes
+  - Rejects empty training datasets
+  - Validates weight and bias counts during model restoration
+- Added unit tests:
+  - tiny_network_test.go
+  - Valid network creation
+  - Invalid network configuration handling
+  - Forward-pass output validation
+  - Invalid input-size handling
+  - Predict() behavior
+  - Backpropagation weight updates
+  - Training loss reduction
+  - Model-state export and restoration
+  - Model serialization and deserialization
+- Verified that all Phase 1–6 tests pass:
+  - go test -v ./internal/fedgreensub
+  - go test ./...
+- Phase 6 provides a generic trainable neural-network model
+- The model currently uses normalized numeric feature and target vectors
+- Direct conversion between RuntimeMetrics and GossipParameters is not yet implemented
+- Federated model training and aggregation are planned for Phases 7 and 8
+
 Not Implemented Yet (Planned by roadmap)
 - Phase 4: Adaptive parameters + ApplyParameters safety validation (DONE)
-- Phase 5: Heuristic inference engine behind Predictor
-- Phase 6: Tiny feedforward model (Forward/Backward/Predict/Train)
+- Phase 5: Heuristic inference engine behind Predictor (DONE)
+- Phase 6: Tiny feedforward model (Forward/Backward/Predict/Train) (DONE)
 - Phase 7: LocalTrainer federated export/import + FedAvg
 - Phase 8: Energy-weighted federated averaging
 - Phase 9: Runtime heartbeat integration and non-blocking orchestration
