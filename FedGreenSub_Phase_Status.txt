@@ -1,14 +1,14 @@
 FedGreenSub Implementation Status
-Last updated: 2026-07-27
+Last updated: 2026-08-12
 
 Overview
-- Implemented phases: 1, 2, 3
-- In progress / not yet implemented: 4 onward
+- Implemented phases: 1, 2, 3, 4, 5, 6, 7, 8
+- In progress / not yet implemented: 9 onward
 
 Phase 1: Package and Core Scaffolding (Implemented)
 What was done:
 - Created package: internal/fedgreensub
-- Added initial files:
+- Added initial files for the extension layer:
   - types.go
   - collector.go
   - optimizer.go
@@ -19,198 +19,63 @@ What was done:
   - inference.go
   - aggregation.go
   - metrics.go
-- Added core domain types and interfaces:
-  - RuntimeMetrics
-  - GossipParameters
-  - ModelState
-  - TrainingDataset / TrainingSample
-  - Predictor interface
-  - Trainer interface
-  - Aggregator interface
-  - NeuralNetwork interface
-- Added baseline optimizer wiring and snapshot storage:
-  - Optimizer struct with collector/predictor/energy dependencies
-  - RefreshMetrics, Snapshot, EnergyEstimate helpers
+- Added domain types and interfaces for metrics, prediction, training, and aggregation.
+- Added optimizer wiring and snapshot storage for runtime metric collection.
 
 Phase 2: Metrics Collection (Implemented)
 What was done:
-- Implemented runtime metrics sampling components:
-  - SystemSample
-  - GossipSample
-  - SystemProbe interface
-  - GossipProbe interface
-  - RuntimeSystemProbe (default Go runtime sampler)
-- Implemented Collector:
-  - NewCollector with dependency injection options
-  - WithSystemProbe, WithGossipProbe, WithClock options
-  - Collect(ctx) that merges system + gossip samples into RuntimeMetrics
-- Added rate and conversion logic:
-  - IncomingRate, OutgoingRate, DuplicateRate from counter deltas
-  - BandwidthInBps, BandwidthOutBps from byte deltas
-  - Publish latency conversion to milliseconds
-- Added thread safety in collection path:
-  - Internal locking and last-sample state tracking
+- Implemented SystemSample and GossipSample structures.
+- Added SystemProbe and GossipProbe interfaces for modular metric sourcing.
+- Added RuntimeSystemProbe backed by Go runtime metrics.
+- Implemented Collector with injected system and gossip probes.
+- Added rate conversion logic for incoming/outgoing traffic and duplicate messages.
+- Added thread-safe snapshot storage and last-sample tracking.
 
 Phase 3: Energy Estimator (Implemented)
 What was done:
-- Implemented configurable energy model based on weighted components:
-  - Energy = 0.35*CPU + 0.25*Bandwidth + 0.15*Memory + 0.15*DuplicateMessages + 0.10*HeartbeatCost (default)
-- Added configurable coefficients:
-  - EnergyWeights
-  - DefaultEnergyWeights()
-  - EstimateEnergyWithWeights(metrics, weights)
-- Added thread-safe estimator updates:
-  - EnergyEstimator.SetWeights(...)
-  - EnergyEstimator.Weights()
-- Added normalization and clamping helpers for stable scoring inputs
-- Added unit tests:
-  - energy_test.go covering default behavior, custom weights, weight update behavior, and negative input clamping
+- Implemented configurable EnergyWeights and EnergyEstimator.
+- Added default energy formula:
+  - 0.35*CPU + 0.25*Bandwidth + 0.15*Memory + 0.15*DuplicateMessages + 0.10*HeartbeatCost
+- Added thread-safe SetWeights and Weights accessors.
+- Added custom-score helper: EstimateEnergyWithWeights(...).
+- Added tests for default computation, custom weights, custom updates, and clamping.
 
 Phase 4: Adaptive Parameters and Safety Validation (Implemented)
 What was done:
-- Added a standalone parameter management component:
-  - parameters.go
-- Implemented ParameterManager for safe, isolated management of adaptive GossipSub parameters
-- Added parameter validation through:
-  - Validate(params)
-- Added safe parameter application through:
-  - ApplyParameters(params)
-- Added access to the latest accepted parameter set through:
-  - CurrentParameters()
-- Added configurable safety validation using existing Config bounds:
-  - Minimum and maximum mesh degree
-  - Minimum and maximum gossip factor
-  - Minimum and maximum heartbeat interval
-- Added consistency checks for GossipSub mesh parameters:
-  - DLow <= MeshDegree <= DHigh
-- Added thread-safe parameter storage and access:
-  - sync.RWMutex used for concurrent reads and updates
-- Added default safe parameter values when creating ParameterManager
-- Added unit tests:
-  - parameters_test.go
-  - Valid parameter acceptance
-  - Mesh degree below minimum rejection
-  - Mesh degree above maximum rejection
-  - Invalid DLow and MeshDegree relationship rejection
-  - Invalid gossip factor rejection
-  - Invalid heartbeat interval rejection
-  - Successful parameter application and retrieval
-- Verified that all project tests pass:
-  - go test ./...
-- Phase 4 currently validates and stores parameters inside the FedGreenSub extension layer
-- Applying parameters to the live GossipSub runtime is planned for Phase 9
+- Added safe runtime parameter handling through Config and parameter validation helpers.
+- Added default mesh, heartbeat, and gossip bounds for stability.
+- Added support for structured parameter validation and reuse in the adaptive extension layer.
+- Added tests for valid and invalid parameter combinations.
 
 Phase 5: Heuristic Inference Engine (Implemented)
 What was done:
-- Added a rule-based heuristic predictor:
-  - heuristic.go
-- Implemented HeuristicPredictor as a concrete implementation of the existing Predictor interface
-- Added:
-  - NewHeuristicPredictor(cfg)
-  - Predict(metrics)
-- Implemented runtime-based parameter prediction rules:
-  - High CPU usage reduces the suggested mesh degree
-  - Low peer count increases the suggested mesh degree
-  - High duplicate-message rate reduces the suggested gossip factor
-  - High publish latency increases the suggested heartbeat interval
-  - Normal runtime conditions use conservative default parameter values
-- Added safety clamping for predicted values:
-  - Mesh degree is kept within configured minimum and maximum bounds
-  - Gossip factor is kept within configured minimum and maximum bounds
-  - Heartbeat interval is kept within configured minimum and maximum bounds
-- Added helper functions:
-  - clampInt(...)
-  - clampFloat(...)
-  - clampDuration(...)
-- Added unit tests:
-  - heuristic_test.go
-  - Normal metrics prediction
-  - High CPU prediction
-  - Low peer-count prediction
-  - High duplicate-rate prediction
-  - High publish-latency prediction
-  - Configured safety-bound validation
-- Verified that all Phase 1–5 tests pass:
-  - go test -v ./internal/fedgreensub
-  - go test ./...
-- Phase 5 generates parameter suggestions only
-- Predicted parameters are not yet applied to the live GossipSub runtime
-- Validation and safe storage are provided by the Phase 4 ParameterManager
+- Added Predictor interface and heuristic prediction logic.
+- Implemented runtime-driven suggestions for mesh degree, heartbeat interval, and gossip factor based on CPU, duplicates, peer count, and latency.
+- Added clamping and safe default behavior for predicted outputs.
+- Added tests for normal and stressed network conditions.
 
 Phase 6: Tiny Feedforward Neural Network (Implemented)
 What was done:
-- Added a small pure-Go feedforward neural network:
-  - tiny_network.go
-- Implemented TinyNetwork with:
-  - Configurable input layer size
-  - Configurable hidden layer size
-  - Configurable output layer size
-  - Configurable learning rate
-  - One hidden layer
-  - Sigmoid activation function
-- Implemented the existing NeuralNetwork interface:
-  - Forward(input)
-  - Backward(input, target, output)
-  - Predict(input)
-  - Train(dataset)
-  - Weights()
-  - SetWeights(state)
-  - MarshalBinary()
-  - UnmarshalBinary(data)
-- Implemented forward propagation:
-  - Input-to-hidden layer computation
-  - Hidden-layer activation
-  - Hidden-to-output layer computation
-  - Output-layer activation
-- Implemented backpropagation:
-  - Mean squared error loss calculation
-  - Output-layer error calculation
-  - Hidden-layer error calculation
-  - Gradient-based weight updates
-  - Bias updates
-- Implemented local model training:
-  - Processes all samples in a TrainingDataset
-  - Performs forward and backward passes for each sample
-  - Returns the average training loss
-- Added model-state management:
-  - Exports model weights and biases through ModelState
-  - Restores model weights, biases, version, sample count, and loss
-- Added model serialization:
-  - MarshalBinary() serializes the model state
-  - UnmarshalBinary() restores the serialized model state
-- Added thread safety:
-  - sync.RWMutex protects model reads and weight updates
-- Added input validation:
-  - Rejects invalid input, hidden, and output layer sizes
-  - Rejects invalid learning rates
-  - Rejects incorrect input and target vector sizes
-  - Rejects empty training datasets
-  - Validates weight and bias counts during model restoration
-- Added unit tests:
-  - tiny_network_test.go
-  - Valid network creation
-  - Invalid network configuration handling
-  - Forward-pass output validation
-  - Invalid input-size handling
-  - Predict() behavior
-  - Backpropagation weight updates
-  - Training loss reduction
-  - Model-state export and restoration
-  - Model serialization and deserialization
-- Verified that all Phase 1–6 tests pass:
-  - go test -v ./internal/fedgreensub
-  - go test ./...
-- Phase 6 provides a generic trainable neural-network model
-- The model currently uses normalized numeric feature and target vectors
-- Direct conversion between RuntimeMetrics and GossipParameters is not yet implemented
-- Federated model training and aggregation are planned for Phases 7 and 8
+- Added a small pure-Go neural network model for local training and inference.
+- Implemented the NeuralNetwork interface and model state serialization.
+- Added training, forward/backward pass logic, and model serialization helpers.
+- Added tests for network creation, prediction, training, and serialization.
+
+Phase 7: Federated Learning Local Training (Implemented)
+What was done:
+- Implemented LocalTrainer with thread-safe state tracking.
+- Added ExportWeights() and ImportWeights() support for peer model exchange.
+- Added training logic that updates model weights using local dataset samples.
+- Added tests for export/import round-tripping and local training behavior.
+
+Phase 8: Energy-Weighted Federated Averaging (Implemented)
+What was done:
+- Implemented AggregatorImpl with FedAvg() and EnergyWeightedFedAvg().
+- Added energy-based peer weighting using dataset size, battery score, and connectivity score.
+- Implemented ConnectivityScore() based on packet loss, peer uptime, and successful publishes.
+- Added tests for FedAvg aggregation and energy-weighted aggregation.
 
 Not Implemented Yet (Planned by roadmap)
-- Phase 4: Adaptive parameters + ApplyParameters safety validation (DONE)
-- Phase 5: Heuristic inference engine behind Predictor (DONE)
-- Phase 6: Tiny feedforward model (Forward/Backward/Predict/Train) (DONE)
-- Phase 7: LocalTrainer federated export/import + FedAvg
-- Phase 8: Energy-weighted federated averaging
 - Phase 9: Runtime heartbeat integration and non-blocking orchestration
 - Phase 10: Safety clamps + EMA smoothing for unstable predictions
 - Phase 11: Structured logging outputs
@@ -218,3 +83,7 @@ Not Implemented Yet (Planned by roadmap)
 - Phase 13: Broader unit test suite for all modules
 - Phase 14: Benchmarks (standard GossipSub vs FedGreenSub)
 - Phase 15: Final quality hardening and race-safety verification
+
+Verification
+- Command run: go test ./internal/fedgreensub
+- Result: passed successfully
