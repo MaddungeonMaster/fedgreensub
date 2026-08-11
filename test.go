@@ -37,7 +37,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	topicName := "gossipsub-demo"
+	topicName := "gossipsub-test"
 	const messageText = "hello from node 0"
 
 	topics := make([]*pubsub.Topic, len(pss))
@@ -85,7 +85,7 @@ func main() {
 	}
 
 	readers.Wait()
-	fmt.Println("gossipsub demo finished successfully")
+	fmt.Println("gossipsub test finished successfully")
 }
 
 func createHosts(count int) ([]host.Host, error) {

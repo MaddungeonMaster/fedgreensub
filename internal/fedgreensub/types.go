@@ -48,12 +48,16 @@ type GossipParameters struct {
 // ModelState stores a serializable view of model parameters and lightweight
 // training metadata for federated exchange.
 type ModelState struct {
-	Weights        []float64
-	Biases         []float64
-	Version        uint64
-	Samples        int64
-	Loss           float64
-	EnergyEstimate float64
+	Weights             []float64
+	Biases              []float64
+	Version             uint64
+	Samples             int64
+	Loss                float64
+	EnergyEstimate      float64
+	BatteryScore        float64
+	PacketLossRate      float64
+	PeerUptimeSeconds   float64
+	SuccessfulPublishes uint64
 }
 
 // TrainingSample represents one labeled example for local training.
