@@ -1,9 +1,9 @@
 FedGreenSub Implementation Status
-Last updated: 2026-08-12
+Last updated: 2026-08-25
 
 Overview
-- Implemented phases: 1, 2, 3, 4, 5, 6, 7, 8
-- In progress / not yet implemented: 9 onward
+- Implemented phases: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+- In progress / not yet implemented: 11 onward
 
 Phase 1: Package and Core Scaffolding (Implemented)
 What was done:
@@ -75,9 +75,26 @@ What was done:
 - Implemented ConnectivityScore() based on packet loss, peer uptime, and successful publishes.
 - Added tests for FedAvg aggregation and energy-weighted aggregation.
 
+Phase 9: Runtime Heartbeat Integration and Non-Blocking Orchestration (Implemented)
+What was done:
+- Added runtime.go with a Runtime type that wires Collector -> Optimizer -> Predictor -> ParameterManager on a timer-driven heartbeat.
+- Implemented Start(ctx)/Stop() lifecycle using context cancellation and sync.WaitGroup for clean, leak-free shutdown; Stop is idempotent and safe to call without a prior Start.
+- Used Config.MetricsInterval and Config.PredictionInterval to drive two independent ticker loops: one refreshes cached metrics, the other predicts and applies GossipParameters from the latest cached snapshot.
+- Added a non-blocking tick guard (atomic busy flags, one per loop) so a slow metrics or prediction cycle causes that tick to be skipped rather than queued or run concurrently, keeping the loop off the hot path.
+- Added a thread-safe RuntimeStatus snapshot (Status()) exposing Running state, last collected metrics, last predicted parameters, last validation report, and last error, plus an IsRunning() helper.
+- Added nil-receiver safety on all exported Runtime methods, matching the defensive style already used by Collector, Optimizer, and ParameterManager.
+- Added tests in runtime_test.go covering: heartbeat populates status, Stop halts further updates, double-Start is rejected, Stop is idempotent and safe pre-Start, restart after Stop resumes ticking, context cancellation independently halts the loop, and nil-runtime safety.
+
+Phase 10: Safety Clamps + EMA Smoothing for Unstable Predictions (Implemented)
+What was done:
+- Added smoothing.go with a ParameterSmoother that applies exponential moving average (EMA) smoothing to predicted GossipParameters before they are validated and applied, using the existing Config.EMAAlpha coefficient (previously defined but unused).
+- Smoothing damps oscillation between successive predictions (e.g. a heuristic flip-flopping mesh degree every tick) so applied parameters settle toward a stable value instead of chattering.
+- Every smoothed output is re-clamped against the same safety bounds already used elsewhere in the package (Config Min/Max fields via the existing clampInt/clampFloat/clampDuration helpers), and the DLow <= MeshDegree <= DHigh invariant is re-enforced after blending, so smoothing can never itself produce an out-of-range or inconsistent parameter set.
+- The first Smooth() call after construction, or after Reset(), has no history to blend against and is clamped only, not averaged, so cold starts are not artificially damped toward zero.
+- Wired ParameterSmoother into Runtime's prediction tick (runtime.go): predicted parameters are smoothed before being handed to ParameterManager.ApplyParameters, and the smoothed (post-processing) values are what RuntimeStatus.LastParameters reports.
+- Added tests in smoothing_test.go covering: first-call passthrough (clamp only), damping of a sudden large change, convergence toward a target over repeated ticks (accounting for expected integer-rounding quantization), clamping of out-of-range inputs, Reset() behavior, and nil-receiver safety.
+
 Not Implemented Yet (Planned by roadmap)
-- Phase 9: Runtime heartbeat integration and non-blocking orchestration
-- Phase 10: Safety clamps + EMA smoothing for unstable predictions
 - Phase 11: Structured logging outputs
 - Phase 12: Full configuration options coverage
 - Phase 13: Broader unit test suite for all modules
