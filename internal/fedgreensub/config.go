@@ -1,6 +1,9 @@
 package fedgreensub
 
-import "time"
+import (
+	"log/slog"
+	"time"
+)
 
 // Config controls the adaptive extension layer and its background workflows.
 type Config struct {
@@ -14,6 +17,7 @@ type Config struct {
 	MetricsInterval     time.Duration
 
 	EMAAlpha float64
+	Logger   *slog.Logger
 
 	MinMeshDegree int
 	MaxMeshDegree int
@@ -41,6 +45,7 @@ func DefaultConfig() Config {
 		PredictionInterval:      1 * time.Second,
 		MetricsInterval:         1 * time.Second,
 		EMAAlpha:                0.25,
+		Logger:                  slog.Default(),
 		MinMeshDegree:           3,
 		MaxMeshDegree:           16,
 		MinHeartbeatInterval:    500 * time.Millisecond,
@@ -64,6 +69,12 @@ func NewConfig(opts ...Option) Config {
 }
 
 func (c *Config) normalize() {
+	if c == nil {
+		return
+	}
+	if c.Logger == nil {
+		c.Logger = slog.Default()
+	}
 	if c.TrainingInterval <= 0 {
 		c.TrainingInterval = DefaultConfig().TrainingInterval
 	}
@@ -79,22 +90,22 @@ func (c *Config) normalize() {
 	if c.EMAAlpha <= 0 || c.EMAAlpha > 1 {
 		c.EMAAlpha = DefaultConfig().EMAAlpha
 	}
-	if c.MinMeshDegree < 3 {
+	if c.MinMeshDegree <= 0 || c.MinMeshDegree < 3 {
 		c.MinMeshDegree = 3
 	}
-	if c.MaxMeshDegree < c.MinMeshDegree {
+	if c.MaxMeshDegree <= 0 || c.MaxMeshDegree < c.MinMeshDegree {
 		c.MaxMeshDegree = c.MinMeshDegree
 	}
 	if c.MinHeartbeatInterval <= 0 {
 		c.MinHeartbeatInterval = DefaultConfig().MinHeartbeatInterval
 	}
-	if c.MaxHeartbeatInterval < c.MinHeartbeatInterval {
+	if c.MaxHeartbeatInterval <= 0 || c.MaxHeartbeatInterval < c.MinHeartbeatInterval {
 		c.MaxHeartbeatInterval = c.MinHeartbeatInterval
 	}
 	if c.MinGossipFactor <= 0 {
 		c.MinGossipFactor = DefaultConfig().MinGossipFactor
 	}
-	if c.MaxGossipFactor < c.MinGossipFactor {
+	if c.MaxGossipFactor <= 0 || c.MaxGossipFactor < c.MinGossipFactor {
 		c.MaxGossipFactor = c.MinGossipFactor
 	}
 	if c.EnergyWeights == (EnergyWeights{}) {
@@ -144,9 +155,35 @@ func WithMetricsInterval(interval time.Duration) Option {
 	}
 }
 
+func WithLogger(logger *slog.Logger) Option {
+	return func(cfg *Config) {
+		if logger != nil {
+			cfg.Logger = logger
+		}
+	}
+}
+
 func WithEMAAlpha(alpha float64) Option {
 	return func(cfg *Config) {
 		cfg.EMAAlpha = alpha
+	}
+}
+
+func WithMinMeshDegree(minMeshDegree int) Option {
+	return func(cfg *Config) {
+		cfg.MinMeshDegree = minMeshDegree
+		if cfg.MaxMeshDegree < cfg.MinMeshDegree {
+			cfg.MaxMeshDegree = cfg.MinMeshDegree
+		}
+	}
+}
+
+func WithMaxMeshDegree(maxMeshDegree int) Option {
+	return func(cfg *Config) {
+		cfg.MaxMeshDegree = maxMeshDegree
+		if cfg.MinMeshDegree > cfg.MaxMeshDegree {
+			cfg.MinMeshDegree = cfg.MaxMeshDegree
+		}
 	}
 }
 
@@ -157,10 +194,46 @@ func WithMeshBounds(minMeshDegree, maxMeshDegree int) Option {
 	}
 }
 
+func WithMinHeartbeatInterval(minInterval time.Duration) Option {
+	return func(cfg *Config) {
+		cfg.MinHeartbeatInterval = minInterval
+		if cfg.MaxHeartbeatInterval < cfg.MinHeartbeatInterval {
+			cfg.MaxHeartbeatInterval = cfg.MinHeartbeatInterval
+		}
+	}
+}
+
+func WithMaxHeartbeatInterval(maxInterval time.Duration) Option {
+	return func(cfg *Config) {
+		cfg.MaxHeartbeatInterval = maxInterval
+		if cfg.MinHeartbeatInterval > cfg.MaxHeartbeatInterval {
+			cfg.MinHeartbeatInterval = cfg.MaxHeartbeatInterval
+		}
+	}
+}
+
 func WithHeartbeatBounds(minInterval, maxInterval time.Duration) Option {
 	return func(cfg *Config) {
 		cfg.MinHeartbeatInterval = minInterval
 		cfg.MaxHeartbeatInterval = maxInterval
+	}
+}
+
+func WithMinGossipFactor(minFactor float64) Option {
+	return func(cfg *Config) {
+		cfg.MinGossipFactor = minFactor
+		if cfg.MaxGossipFactor < cfg.MinGossipFactor {
+			cfg.MaxGossipFactor = cfg.MinGossipFactor
+		}
+	}
+}
+
+func WithMaxGossipFactor(maxFactor float64) Option {
+	return func(cfg *Config) {
+		cfg.MaxGossipFactor = maxFactor
+		if cfg.MinGossipFactor > cfg.MaxGossipFactor {
+			cfg.MinGossipFactor = cfg.MaxGossipFactor
+		}
 	}
 }
 

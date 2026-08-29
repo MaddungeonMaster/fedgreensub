@@ -2,8 +2,8 @@ FedGreenSub Implementation Status
 Last updated: 2026-08-25
 
 Overview
-- Implemented phases: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
-- In progress / not yet implemented: 11 onward
+- Implemented phases: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13
+- In progress / not yet implemented: 14 onward
 
 Phase 1: Package and Core Scaffolding (Implemented)
 What was done:
@@ -94,10 +94,24 @@ What was done:
 - Wired ParameterSmoother into Runtime's prediction tick (runtime.go): predicted parameters are smoothed before being handed to ParameterManager.ApplyParameters, and the smoothed (post-processing) values are what RuntimeStatus.LastParameters reports.
 - Added tests in smoothing_test.go covering: first-call passthrough (clamp only), damping of a sudden large change, convergence toward a target over repeated ticks (accounting for expected integer-rounding quantization), clamping of out-of-range inputs, Reset() behavior, and nil-receiver safety.
 
+Phase 11: Structured logging outputs (Implemented)
+What was done:
+- Added structured logging support to Config via slog.Logger.
+- Wired implicit default logger initialization and logger option helpers.
+- Added runtime Info-level logging for start, stop, metrics refresh, and prediction application events.
+
+Phase 12: Full configuration options coverage (Implemented)
+What was done:
+- Added explicit min/max option helpers for mesh degree, heartbeat interval, and gossip factor.
+- Hardened Config.normalize() to coerce invalid zero and inverted bounds safely.
+- Kept logger initialization centralized and nil-safe for default configuration flows.
+
+Phase 13: Broader unit test suite for all modules (Implemented)
+What was done:
+- Added coverage for logger configuration and runtime lifecycle behavior.
+- Verified configuration bound normalization and logger wiring together with the package test suite.
+
 Not Implemented Yet (Planned by roadmap)
-- Phase 11: Structured logging outputs
-- Phase 12: Full configuration options coverage
-- Phase 13: Broader unit test suite for all modules
 - Phase 14: Benchmarks (standard GossipSub vs FedGreenSub)
 - Phase 15: Final quality hardening and race-safety verification
 

@@ -3,6 +3,7 @@ package fedgreensub
 import (
 	"context"
 	"errors"
+	"log/slog"
 	"sync"
 	"sync/atomic"
 	"time"
@@ -91,6 +92,10 @@ func (r *Runtime) Start(ctx context.Context) error {
 	r.cancel = cancel
 	r.running = true
 	r.status.Running = true
+	r.logEvent("fedgreensub runtime started",
+		slog.Duration("metrics_interval", r.config.MetricsInterval),
+		slog.Duration("prediction_interval", r.config.PredictionInterval),
+	)
 
 	r.wg.Add(2)
 	go r.metricsLoop(loopCtx)
@@ -124,6 +129,7 @@ func (r *Runtime) Stop() {
 	r.running = false
 	r.status.Running = false
 	r.mu.Unlock()
+	r.logEvent("fedgreensub runtime stopped")
 }
 
 // Status returns a snapshot of the most recent heartbeat activity.
@@ -202,11 +208,19 @@ func (r *Runtime) tickMetrics(ctx context.Context) {
 	r.mu.Lock()
 	if err != nil {
 		r.status.LastError = err
-	} else {
-		r.status.LastMetrics = metrics
-		r.status.LastError = nil
+		r.mu.Unlock()
+		r.logEvent("fedgreensub metrics refresh failed", slog.String("error", err.Error()))
+		return
 	}
+	r.status.LastMetrics = metrics
+	r.status.LastError = nil
 	r.mu.Unlock()
+	r.logEvent("fedgreensub metrics refreshed",
+		slog.Time("timestamp", metrics.Timestamp),
+		slog.Float64("cpu", metrics.CPU),
+		slog.Float64("duplicate_rate", metrics.DuplicateRate),
+		slog.Int("peer_count", metrics.PeerCount),
+	)
 }
 
 // tickPrediction takes the latest cached metrics snapshot, predicts new
@@ -236,4 +250,22 @@ func (r *Runtime) tickPrediction() {
 	r.status.LastParameters = predicted
 	r.status.LastReport = report
 	r.mu.Unlock()
+	r.logEvent("fedgreensub prediction applied",
+		slog.Bool("accepted", report.Accepted),
+		slog.String("reason", report.Reason),
+		slog.Int("mesh_degree", predicted.MeshDegree),
+		slog.Float64("gossip_factor", predicted.GossipFactor),
+		slog.Duration("heartbeat_interval", predicted.HeartbeatInterval),
+	)
+}
+
+func (r *Runtime) logEvent(msg string, args ...any) {
+	if r == nil {
+		return
+	}
+	logger := r.config.Logger
+	if logger == nil {
+		return
+	}
+	logger.Info(msg, args...)
 }
