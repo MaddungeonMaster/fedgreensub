@@ -239,6 +239,61 @@ This gives a safe baseline with:
 - heartbeat bounds of 500ms to 10s
 - gossip bounds of 0.1 to 0.5
 
+### Trust-Aware FedGreenSub
+
+Trust-aware mode is an opt-in layer on top of the existing adaptive extension:
+
+```go
+cfg := fedgreensub.NewConfig(
+    fedgreensub.WithTrustScore(true),
+    fedgreensub.WithTrustEMAAlpha(0.25),
+    fedgreensub.WithTrustAggregationWeight(1),
+)
+optimizer := fedgreensub.NewOptimizer(cfg, collector, predictor, nil)
+optimizer.ObservePeer(peerID, fedgreensub.PeerObservation{
+    PeerID: peerID, MessageReceived: true, DeliverySuccess: true,
+    Connected: true,
+})
+```
+
+`GossipSub PeerScore != FedGreenSub TrustScore`: PeerScore remains the
+protocol's existing reputation mechanism. TrustScore is a local, observable
+behavioral signal and is not cryptographic proof of identity or honesty. It
+does not change message formats, wire behavior, or GossipSub's internal score.
+
+TrustScore uses normalized reliability, observable forwarding, stability,
+normalized PeerScore, link quality, and misbehavior evidence. Configured
+weights are normalized, and each component is smoothed with an EMA from a
+neutral initial value. Invalid messages and abnormal duplication reduce the
+misbehavior component; latency and packet loss affect link quality but do not
+alone classify a peer as malicious.
+
+The four neighborhood features are average trust, minimum trust, trust
+variance, and trusted-peer ratio. They can be added to `RuntimeMetrics` with
+`TrustMetrics` and are inputs to communication-intensity decisions; the ML
+outputs remain mesh degree, heartbeat interval, and gossip factor. Low trust
+only requests additional redundancy when delivery conditions are also poor.
+`RankPeers` is limited to FedGreenSub-controlled ranking and never excludes a
+peer from GossipSub.
+
+Trust-aware federated aggregation is exposed as `TrustWeightedFedAvg`. It
+weights dataset size by trust and the existing connectivity score, uses a
+neutral value when trust is unavailable, validates dimensions and finite
+parameters, and supports basic norm clipping through `ValidateModelState`.
+`TrustModelVersion` identifies feature version 2 (the original feature set is
+version 1); old model metadata is not silently treated as a new feature
+vector.
+
+Trust mode remains disabled by default, so existing FedGreenSub behavior and
+normal GossipSub interoperability are preserved. The implementation is
+incremental and bounded: observations update six EMA values under a mutex,
+and neighborhood statistics are calculated on periodic metric refreshes.
+Benchmark `BenchmarkTrustObservation` measures the additional observation
+overhead. Research comparisons should report delivery ratio, duplicate ratio,
+latency, mesh degree, estimated energy per delivered message, CPU/memory,
+trust overhead, aggregation overhead, convergence, and rejected updates under
+normal, churn, low-bandwidth, unstable-peer, and model-outlier scenarios.
+
 ### When to enable each feature
 
 - `WithAdaptiveMode(true)` when you want the runtime to adjust parameters over time

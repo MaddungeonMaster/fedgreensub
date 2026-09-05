@@ -7,9 +7,19 @@ import (
 
 // Config controls the adaptive extension layer and its background workflows.
 type Config struct {
-	EnableFederatedLearning bool
-	EnableAdaptiveMode      bool
-	EnableEnergyEstimator   bool
+	EnableFederatedLearning  bool
+	EnableAdaptiveMode       bool
+	EnableEnergyEstimator    bool
+	EnableTrustScore         bool
+	TrustWeights             TrustWeights
+	TrustEMAAlpha            float64
+	MinimumTrust             float64
+	PeerScoreWeight          float64
+	TrustScoreWeight         float64
+	TrustAggregationWeight   float64
+	TrustedPeerThreshold     float64
+	ModelUpdateClipping      float64
+	TrustObservationInterval time.Duration
 
 	TrainingInterval    time.Duration
 	AggregationInterval time.Duration
@@ -37,22 +47,32 @@ type Option func(*Config)
 // layer disabled until explicitly enabled by the caller.
 func DefaultConfig() Config {
 	return Config{
-		EnableFederatedLearning: false,
-		EnableAdaptiveMode:      false,
-		EnableEnergyEstimator:   false,
-		TrainingInterval:        10 * time.Minute,
-		AggregationInterval:     15 * time.Minute,
-		PredictionInterval:      1 * time.Second,
-		MetricsInterval:         1 * time.Second,
-		EMAAlpha:                0.25,
-		Logger:                  slog.Default(),
-		MinMeshDegree:           3,
-		MaxMeshDegree:           16,
-		MinHeartbeatInterval:    500 * time.Millisecond,
-		MaxHeartbeatInterval:    10 * time.Second,
-		MinGossipFactor:         0.1,
-		MaxGossipFactor:         0.5,
-		EnergyWeights:           DefaultEnergyWeights(),
+		EnableFederatedLearning:  false,
+		EnableAdaptiveMode:       false,
+		EnableEnergyEstimator:    false,
+		EnableTrustScore:         false,
+		TrustWeights:             DefaultTrustWeights(),
+		TrustEMAAlpha:            0.25,
+		MinimumTrust:             0.1,
+		PeerScoreWeight:          0.5,
+		TrustScoreWeight:         0.5,
+		TrustAggregationWeight:   1,
+		TrustedPeerThreshold:     0.7,
+		ModelUpdateClipping:      10,
+		TrustObservationInterval: time.Second,
+		TrainingInterval:         10 * time.Minute,
+		AggregationInterval:      15 * time.Minute,
+		PredictionInterval:       1 * time.Second,
+		MetricsInterval:          1 * time.Second,
+		EMAAlpha:                 0.25,
+		Logger:                   slog.Default(),
+		MinMeshDegree:            3,
+		MaxMeshDegree:            16,
+		MinHeartbeatInterval:     500 * time.Millisecond,
+		MaxHeartbeatInterval:     10 * time.Second,
+		MinGossipFactor:          0.1,
+		MaxGossipFactor:          0.5,
+		EnergyWeights:            DefaultEnergyWeights(),
 	}
 }
 
@@ -90,6 +110,28 @@ func (c *Config) normalize() {
 	if c.EMAAlpha <= 0 || c.EMAAlpha > 1 {
 		c.EMAAlpha = DefaultConfig().EMAAlpha
 	}
+	if c.TrustEMAAlpha <= 0 || c.TrustEMAAlpha > 1 {
+		c.TrustEMAAlpha = DefaultConfig().TrustEMAAlpha
+	}
+	c.TrustWeights = c.TrustWeights.normalize()
+	if c.MinimumTrust < 0 || c.MinimumTrust > 1 {
+		c.MinimumTrust = DefaultConfig().MinimumTrust
+	}
+	if c.PeerScoreWeight < 0 || c.TrustScoreWeight < 0 || c.PeerScoreWeight+c.TrustScoreWeight <= 0 {
+		c.PeerScoreWeight, c.TrustScoreWeight = .5, .5
+	}
+	if c.TrustAggregationWeight < 0 {
+		c.TrustAggregationWeight = 0
+	}
+	if c.TrustedPeerThreshold < 0 || c.TrustedPeerThreshold > 1 {
+		c.TrustedPeerThreshold = DefaultConfig().TrustedPeerThreshold
+	}
+	if c.ModelUpdateClipping <= 0 {
+		c.ModelUpdateClipping = DefaultConfig().ModelUpdateClipping
+	}
+	if c.TrustObservationInterval <= 0 {
+		c.TrustObservationInterval = DefaultConfig().TrustObservationInterval
+	}
 	if c.MinMeshDegree <= 0 || c.MinMeshDegree < 3 {
 		c.MinMeshDegree = 3
 	}
@@ -111,6 +153,31 @@ func (c *Config) normalize() {
 	if c.EnergyWeights == (EnergyWeights{}) {
 		c.EnergyWeights = DefaultEnergyWeights()
 	}
+}
+
+func WithTrustScore(enabled bool) Option { return func(cfg *Config) { cfg.EnableTrustScore = enabled } }
+func WithTrustWeights(weights TrustWeights) Option {
+	return func(cfg *Config) { cfg.TrustWeights = weights }
+}
+func WithTrustEMAAlpha(alpha float64) Option { return func(cfg *Config) { cfg.TrustEMAAlpha = alpha } }
+func WithMinimumTrust(value float64) Option  { return func(cfg *Config) { cfg.MinimumTrust = value } }
+func WithPeerScoreWeight(value float64) Option {
+	return func(cfg *Config) { cfg.PeerScoreWeight = value }
+}
+func WithTrustScoreWeight(value float64) Option {
+	return func(cfg *Config) { cfg.TrustScoreWeight = value }
+}
+func WithTrustAggregationWeight(value float64) Option {
+	return func(cfg *Config) { cfg.TrustAggregationWeight = value }
+}
+func WithTrustedPeerThreshold(value float64) Option {
+	return func(cfg *Config) { cfg.TrustedPeerThreshold = value }
+}
+func WithModelUpdateClipping(value float64) Option {
+	return func(cfg *Config) { cfg.ModelUpdateClipping = value }
+}
+func WithTrustObservationInterval(value time.Duration) Option {
+	return func(cfg *Config) { cfg.TrustObservationInterval = value }
 }
 
 func WithFederatedLearning(enabled bool) Option {

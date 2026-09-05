@@ -6,6 +6,7 @@ import "fmt"
 type Aggregator interface {
 	FedAvg([]ModelState) (ModelState, error)
 	EnergyWeightedFedAvg([]ModelState, []float64) (ModelState, error)
+	TrustWeightedFedAvg([]ModelState, []float64, float64) (ModelState, error)
 }
 
 // AggregationResult records the outcome of a federated round.
@@ -119,6 +120,78 @@ func (a *AggregatorImpl) EnergyWeightedFedAvg(states []ModelState, energyScores 
 	}
 	merged.Samples = totalSamples(states)
 	return merged, nil
+}
+
+// TrustWeightedFedAvg weights contributions by dataset size, observed trust,
+// and the existing connectivity signal. A missing trust value is neutral.
+func (a *AggregatorImpl) TrustWeightedFedAvg(states []ModelState, trustScores []float64, trustWeight float64) (ModelState, error) {
+	if len(states) == 0 {
+		return ModelState{}, nil
+	}
+	if len(trustScores) != len(states) {
+		return ModelState{}, fmt.Errorf("mismatched state and trust score counts: %d != %d", len(states), len(trustScores))
+	}
+	if err := validateAggregationStates(states); err != nil {
+		return ModelState{}, err
+	}
+	if trustWeight < 0 {
+		trustWeight = 0
+	}
+	weights := make([]float64, len(states))
+	total := 0.0
+	for i, state := range states {
+		trust := .5
+		if trustScores[i] >= 0 && trustScores[i] <= 1 {
+			trust = trustScores[i]
+		}
+		connectivity := ConnectivityScore(state.PacketLossRate, state.PeerUptimeSeconds, state.SuccessfulPublishes)
+		weights[i] = float64(maxInt64(state.Samples, 0)) * (1 + trustWeight*trust) * connectivity
+		total += weights[i]
+	}
+	if total <= 0 {
+		return a.FedAvg(states)
+	}
+	merged := ModelState{Weights: make([]float64, len(states[0].Weights)), Biases: make([]float64, len(states[0].Biases)), FeatureVersion: states[0].FeatureVersion}
+	for i := range merged.Weights {
+		for j, state := range states {
+			merged.Weights[i] += weights[j] * state.Weights[i]
+		}
+		merged.Weights[i] /= total
+	}
+	for i := range merged.Biases {
+		for j, state := range states {
+			merged.Biases[i] += weights[j] * state.Biases[i]
+		}
+		merged.Biases[i] /= total
+	}
+	merged.Samples = totalSamples(states)
+	return merged, nil
+}
+
+func validateAggregationStates(states []ModelState) error {
+	if len(states) == 0 {
+		return nil
+	}
+	weights, biases, version := len(states[0].Weights), len(states[0].Biases), states[0].FeatureVersion
+	for _, state := range states {
+		if len(state.Weights) != weights || len(state.Biases) != biases {
+			return fmt.Errorf("model parameter dimensions do not match")
+		}
+		if state.FeatureVersion != 0 && version != 0 && state.FeatureVersion != version {
+			return fmt.Errorf("model feature versions do not match")
+		}
+		if err := ValidateModelState(state, 0, 0); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func maxInt64(value, minimum int64) int64 {
+	if value < minimum {
+		return minimum
+	}
+	return value
 }
 
 func totalSamples(states []ModelState) int64 {

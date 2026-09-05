@@ -4,6 +4,8 @@ import (
 	"context"
 	"testing"
 	"time"
+
+	"github.com/libp2p/go-libp2p/core/peer"
 )
 
 // BenchmarkCollectorBaseline measures raw metrics collection overhead.
@@ -246,6 +248,16 @@ func BenchmarkConcurrentParameterManagerReads(b *testing.B) {
 			_ = manager.CurrentParameters()
 		}
 	})
+}
+
+func BenchmarkTrustObservation(b *testing.B) {
+	m := NewTrustManager(DefaultTrustWeights(), .25)
+	peerID := peer.ID("benchmark-peer")
+	observation := PeerObservation{PeerID: peerID, MessageReceived: true, DeliverySuccess: true, Connected: true}
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		m.Observe(peerID, observation)
+	}
 }
 
 // BenchmarkCollectorConcurrentReads measures concurrent metric reads.

@@ -57,6 +57,12 @@ func (h *HeuristicPredictor) Predict(
 		heartbeatInterval = 2 * time.Second
 	}
 
+	// Trust only changes redundancy when delivery conditions are already poor;
+	// it never replaces the ML/heuristic communication controls.
+	if h.config.EnableTrustScore && metrics.AverageNeighborTrust < h.config.MinimumTrust && metrics.PacketLossRate > 0.1 {
+		meshDegree++
+	}
+
 	// Keep all generated values within the configured limits.
 	meshDegree = clampInt(
 		meshDegree,

@@ -22,15 +22,19 @@ type RuntimeMetrics struct {
 	MeshDegree int
 	PeerCount  int
 
-	PublishLatency      float64
-	HeartbeatDuration   time.Duration
-	PeerScoreAverage    float64
-	BytesSent           uint64
-	BytesReceived       uint64
-	DroppedMessages     uint64
-	SuccessfulPublishes uint64
-	PacketLossRate      float64
-	PeerUptimeSeconds   float64
+	PublishLatency       float64
+	HeartbeatDuration    time.Duration
+	PeerScoreAverage     float64
+	BytesSent            uint64
+	BytesReceived        uint64
+	DroppedMessages      uint64
+	SuccessfulPublishes  uint64
+	PacketLossRate       float64
+	PeerUptimeSeconds    float64
+	AverageNeighborTrust float64
+	MinimumNeighborTrust float64
+	TrustVariance        float64
+	TrustedPeerRatio     float64
 }
 
 // GossipParameters represents the adaptive knobs that FedGreenSub can tune at
@@ -58,6 +62,7 @@ type ModelState struct {
 	PacketLossRate      float64
 	PeerUptimeSeconds   float64
 	SuccessfulPublishes uint64
+	FeatureVersion      uint64
 }
 
 // TrainingSample represents one labeled example for local training.

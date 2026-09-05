@@ -1,58 +1,115 @@
 # Comparative Benchmark: Normal GossipSub vs Federated GossipSub
-# This comparison is based on the FedGreenSub benchmark suite and the static default assumptions
-# of a standard GossipSub implementation without the adaptive runtime layer.
+# This script runs the actual benchmark suite and compares the measured numbers.
 
-Write-Host "==========================================" -ForegroundColor Cyan
-Write-Host "  Normal GossipSub vs Federated GossipSub" -ForegroundColor Cyan
-Write-Host "==========================================" -ForegroundColor Cyan
+$ErrorActionPreference = 'Stop'
+
+function Parse-BenchmarkLines {
+    param(
+        [string[]]$Lines,
+        [string[]]$AllowedNames
+    )
+
+    $results = @()
+
+    foreach ($line in $Lines) {
+        if ($line -notmatch '^\s*Benchmark\S+') {
+            continue
+        }
+
+        $match = [regex]::Match($line, '^(\s*Benchmark\S+)\s+(\d+)\s+(\d+(?:\.\d+)?)\s*(ns/op|us/op|µs/op|ms/op|s/op)\s+(\d+(?:\.\d+)?)\s*(B/op|KB/op|kB/op|MB/op|GB/op)\s+(\d+(?:\.\d+)?)\s*allocs/op')
+        if (-not $match.Success) { continue }
+
+        $name = $match.Groups[1].Value.Trim()
+        $baseName = $name -replace '-\d+$', ''
+        if ($AllowedNames -and $baseName -notin $AllowedNames) { continue }
+
+        $timeValue = [double]::Parse($match.Groups[3].Value)
+        $timeUnit = $match.Groups[4].Value
+        $bytesValue = [double]::Parse($match.Groups[5].Value)
+        $bytesUnit = $match.Groups[6].Value
+        $allocs = [double]::Parse($match.Groups[7].Value)
+
+        switch ($timeUnit) {
+            'ns/op' { $nsPerOp = $timeValue }
+            'us/op' { $nsPerOp = $timeValue * 1000 }
+            'µs/op' { $nsPerOp = $timeValue * 1000 }
+            'ms/op' { $nsPerOp = $timeValue * 1000000 }
+            's/op' { $nsPerOp = $timeValue * 1000000000 }
+            default { $nsPerOp = $timeValue }
+        }
+
+        switch ($bytesUnit) {
+            'B/op' { $bytesPerOp = $bytesValue }
+            'KB/op' { $bytesPerOp = $bytesValue * 1024 }
+            'kB/op' { $bytesPerOp = $bytesValue * 1000 }
+            'MB/op' { $bytesPerOp = $bytesValue * 1024 * 1024 }
+            'GB/op' { $bytesPerOp = $bytesValue * 1024 * 1024 * 1024 }
+            default { $bytesPerOp = $bytesValue }
+        }
+
+        $results += [PSCustomObject]@{
+            Name        = $baseName
+            TimeNsPerOp = [math]::Round($nsPerOp, 2)
+            BytesPerOp  = [math]::Round($bytesPerOp, 2)
+            AllocsPerOp = [math]::Round($allocs, 2)
+        }
+    }
+
+    return $results
+}
+
+Write-Host "===========================================" -ForegroundColor Cyan
+Write-Host "Normal GossipSub vs Federated GossipSub" -ForegroundColor Cyan
+Write-Host "===========================================" -ForegroundColor Cyan
 Write-Host ""
 
 Push-Location $PSScriptRoot
 
-Write-Host "Baseline assumptions:" -ForegroundColor Yellow
-Write-Host "  - Normal GossipSub = static mesh/heartbeat/gossip defaults with no adaptive optimization layer." -ForegroundColor White
-Write-Host "  - Federated GossipSub = FedGreenSub adaptive runtime with metrics collection, prediction, and smoothing." -ForegroundColor White
+$fedNames = @(
+    'BenchmarkCollectorBaseline',
+    'BenchmarkCollectorConcurrentReads',
+    'BenchmarkParameterValidation',
+    'BenchmarkFullRuntimeCycle'
+)
+
+$origNames = @(
+    'BenchmarkOriginalGossipSubPublish',
+    'BenchmarkOriginalGossipSubConcurrentPublish'
+)
+
+Write-Host "Running actual FedGreenSub benchmark suite..." -ForegroundColor Yellow
+$fedOutput = & go test ./internal/fedgreensub -run '^$' -bench 'CollectorBaseline|CollectorConcurrentReads|FullRuntimeCycle|ParameterValidation' -benchmem 2>&1
+$fedExit = $LASTEXITCODE
+if ($fedExit -ne 0) {
+    Write-Error "FedGreenSub benchmark run failed with exit code $fedExit"
+}
+
+Write-Host "Running actual original GossipSub benchmark suite..." -ForegroundColor Yellow
+$origOutput = & go test . -run '^$' -bench 'OriginalGossipSub' -benchmem 2>&1
+$origExit = $LASTEXITCODE
+if ($origExit -ne 0) {
+    Write-Error "Original GossipSub benchmark run failed with exit code $origExit"
+}
+
+$fedResults = Parse-BenchmarkLines -Lines $fedOutput -AllowedNames $fedNames
+$origResults = Parse-BenchmarkLines -Lines $origOutput -AllowedNames $origNames
+
+$comparison = @(
+    $origResults | Select-Object @{Name='Implementation';Expression={'Normal GossipSub'}}, @{Name='Benchmark';Expression={$_.Name}}, @{Name='ns/op';Expression={$_.TimeNsPerOp}}, @{Name='B/op';Expression={$_.BytesPerOp}}, @{Name='allocs/op';Expression={$_.AllocsPerOp}}, @{Name='Notes';Expression={'Network publish path'}}
+    $fedResults | Select-Object @{Name='Implementation';Expression={'FedGreenSub'}}, @{Name='Benchmark';Expression={$_.Name}}, @{Name='ns/op';Expression={$_.TimeNsPerOp}}, @{Name='B/op';Expression={$_.BytesPerOp}}, @{Name='allocs/op';Expression={$_.AllocsPerOp}}, @{Name='Notes';Expression={'Adaptive runtime path'}}
+)
+
 Write-Host ""
-Write-Host "Measured federated behavior:" -ForegroundColor Cyan
-Write-Host "  - CollectorBaseline: ~14,000-16,000 ns/op, 48 B/op, 1 alloc/op" -ForegroundColor White
-Write-Host "  - CollectorConcurrentReads: ~16,000 ns/op, 48 B/op, 1 alloc/op" -ForegroundColor White
-Write-Host "  - ParameterValidation: ~3.4 ns/op, 0 B/op, 0 alloc/op" -ForegroundColor White
-Write-Host "  - FullRuntimeCycle: ~100,000,000 ns/op, ~1,150 B/op, ~14 alloc/op" -ForegroundColor White
+Write-Host "Measured results:" -ForegroundColor Cyan
+$comparison | Format-Table -AutoSize
+
 Write-Host ""
 Write-Host "Interpretation:" -ForegroundColor Yellow
-Write-Host "  - A normal static GossipSub baseline is simpler and cheaper in fixed conditions because it does no prediction loop." -ForegroundColor Gray
-Write-Host "  - Federated GossipSub pays a measurable runtime cost to adapt to live conditions." -ForegroundColor Gray
-Write-Host "  - The advantage is not lower fixed overhead; it is adaptive behavior under changing load, latency, bandwidth, and energy conditions." -ForegroundColor Gray
+Write-Host "  - The standard libp2p GossipSub publish benchmarks are network-level publish operations and measure message propagation cost." -ForegroundColor White
+Write-Host "  - The FedGreenSub benchmarks measure the adaptive runtime and tuning loop, not a single message publish path." -ForegroundColor White
+Write-Host "  - In this repository, the adaptive runtime adds measurable control-plane overhead, but it provides live optimization and resource-aware behavior." -ForegroundColor White
 Write-Host ""
-Write-Host "Running measured benchmark comparison..." -ForegroundColor Yellow
-Write-Host ""
-
-Write-Host "Benchmark 1: Normal baseline collector" -ForegroundColor Cyan
-& go test ./internal/fedgreensub -bench=CollectorBaseline -benchmem -run=^$
-Write-Host ""
-
-Write-Host "Benchmark 2: Federated full runtime cycle" -ForegroundColor Cyan
-& go test ./internal/fedgreensub -bench=FullRuntimeCycle -benchmem -run=^$
-Write-Host ""
-
-Write-Host "Benchmark 3: Parameter validation safety path" -ForegroundColor Cyan
-& go test ./internal/fedgreensub -bench=ParameterValidation -benchmem -run=^$
-Write-Host ""
-
-Write-Host "Benchmark 4: Concurrent collector reads" -ForegroundColor Cyan
-& go test ./internal/fedgreensub -bench=CollectorConcurrentReads -benchmem -run=^$
-Write-Host ""
-
-Write-Host "==========================================" -ForegroundColor Green
-Write-Host "  Comparison complete" -ForegroundColor Green
-Write-Host "==========================================" -ForegroundColor Green
-Write-Host ""
-Write-Host "Summary:" -ForegroundColor Yellow
-Write-Host "  - Normal GossipSub: minimal static overhead, no adaptive tuning." -ForegroundColor Gray
-Write-Host "  - Federated GossipSub: higher runtime cost, but dynamic optimization for real-world conditions." -ForegroundColor Gray
-Write-Host "  - Use normal GossipSub for simple static deployments; choose Federated GossipSub for adaptive, resource-aware networks." -ForegroundColor Gray
-Write-Host ""
-Write-Host "See COMPARISON.md for the detailed write-up." -ForegroundColor Cyan
+Write-Host "The comparison above is based on actual benchmark output from the current workspace." -ForegroundColor Green
 Write-Host ""
 
 Pop-Location
