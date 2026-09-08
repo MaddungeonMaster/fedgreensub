@@ -1,0 +1,182 @@
+Plot summary generated from raw evaluation results. Energy values represent modeled estimates.
+
+duplicate: Duplicate Ratio - Standard GossipSub: mean=0.259259, stddev=0, difference_vs_baseline=0.000%
+duplicate: Duplicate Ratio - FedGreenSub: mean=0.228792, stddev=0, difference_vs_baseline=-11.752%
+duplicate: Duplicate Ratio - Trust-Aware FedGreenSub: mean=0.210526, stddev=0, difference_vs_baseline=-18.797%
+duplicate: Delivery Ratio - Standard GossipSub: mean=1, stddev=0, difference_vs_baseline=0.000%
+duplicate: Delivery Ratio - FedGreenSub: mean=1, stddev=0, difference_vs_baseline=0.000%
+duplicate: Delivery Ratio - Trust-Aware FedGreenSub: mean=1, stddev=0, difference_vs_baseline=0.000%
+duplicate: Estimated Energy per Delivered Message - Standard GossipSub: mean=0.000508466, stddev=3.29075e-09, difference_vs_baseline=0.000%
+duplicate: Estimated Energy per Delivered Message - FedGreenSub: mean=0.000482214, stddev=3.29075e-09, difference_vs_baseline=-5.163%
+duplicate: Estimated Energy per Delivered Message - Trust-Aware FedGreenSub: mean=0.000467341, stddev=3.29075e-09, difference_vs_baseline=-8.088%
+duplicate: Go Heap Memory (MB) - Standard GossipSub: mean=0.543819, stddev=0.0269578, difference_vs_baseline=0.000%
+duplicate: Go Heap Memory (MB) - FedGreenSub: mean=0.551426, stddev=0.0269578, difference_vs_baseline=1.399%
+duplicate: Go Heap Memory (MB) - Trust-Aware FedGreenSub: mean=0.576153, stddev=0.0269578, difference_vs_baseline=5.946%
+duplicate: Average Latency (ms) - Standard GossipSub: mean=20, stddev=0, difference_vs_baseline=0.000%
+duplicate: Average Latency (ms) - FedGreenSub: mean=20, stddev=0, difference_vs_baseline=0.000%
+duplicate: Average Latency (ms) - Trust-Aware FedGreenSub: mean=20, stddev=0, difference_vs_baseline=0.000%
+duplicate: Average TrustScore - Standard GossipSub: mean=0, stddev=0, difference_vs_baseline=n/a
+duplicate: Average TrustScore - FedGreenSub: mean=0, stddev=0, difference_vs_baseline=n/a
+duplicate: Average TrustScore - Trust-Aware FedGreenSub: mean=0.54614, stddev=0, difference_vs_baseline=n/a
+duplicate: Minimum TrustScore - Standard GossipSub: mean=0, stddev=0, difference_vs_baseline=n/a
+duplicate: Minimum TrustScore - FedGreenSub: mean=0, stddev=0, difference_vs_baseline=n/a
+duplicate: Minimum TrustScore - Trust-Aware FedGreenSub: mean=0.505515, stddev=0, difference_vs_baseline=n/a
+duplicate: Trust Variance - Standard GossipSub: mean=0, stddev=0, difference_vs_baseline=n/a
+duplicate: Trust Variance - FedGreenSub: mean=0, stddev=0, difference_vs_baseline=n/a
+duplicate: Trust Variance - Trust-Aware FedGreenSub: mean=0.000888672, stddev=0, difference_vs_baseline=n/a
+duplicate: Trusted Peer Ratio - Standard GossipSub: mean=0, stddev=0, difference_vs_baseline=n/a
+duplicate: Trusted Peer Ratio - FedGreenSub: mean=0, stddev=0, difference_vs_baseline=n/a
+duplicate: Trusted Peer Ratio - Trust-Aware FedGreenSub: mean=0, stddev=0, difference_vs_baseline=n/a
+duplicate: Trust Update Time (us) - Standard GossipSub: mean=0, stddev=0, difference_vs_baseline=n/a
+duplicate: Trust Update Time (us) - FedGreenSub: mean=0, stddev=0, difference_vs_baseline=n/a
+duplicate: Trust Update Time (us) - Trust-Aware FedGreenSub: mean=20, stddev=0, difference_vs_baseline=n/a
+duplicate: Peer Ranking Time (us) - Standard GossipSub: mean=0, stddev=0, difference_vs_baseline=n/a
+duplicate: Peer Ranking Time (us) - FedGreenSub: mean=0, stddev=0, difference_vs_baseline=n/a
+duplicate: Peer Ranking Time (us) - Trust-Aware FedGreenSub: mean=0, stddev=0, difference_vs_baseline=n/a
+duplicate: Trust Aggregation Time (us) - Standard GossipSub: mean=0, stddev=0, difference_vs_baseline=n/a
+duplicate: Trust Aggregation Time (us) - FedGreenSub: mean=0, stddev=0, difference_vs_baseline=n/a
+duplicate: Trust Aggregation Time (us) - Trust-Aware FedGreenSub: mean=0, stddev=0, difference_vs_baseline=n/a
+normal: Duplicate Ratio - Standard GossipSub: mean=0.0196078, stddev=0, difference_vs_baseline=0.000%
+normal: Duplicate Ratio - FedGreenSub: mean=0.0167158, stddev=0, difference_vs_baseline=-14.749%
+normal: Duplicate Ratio - Trust-Aware FedGreenSub: mean=0.0150694, stddev=0, difference_vs_baseline=-23.146%
+normal: Delivery Ratio - Standard GossipSub: mean=1, stddev=0, difference_vs_baseline=0.000%
+normal: Delivery Ratio - FedGreenSub: mean=1, stddev=0, difference_vs_baseline=0.000%
+normal: Delivery Ratio - Trust-Aware FedGreenSub: mean=1, stddev=0, difference_vs_baseline=0.000%
+normal: Estimated Energy per Delivered Message - Standard GossipSub: mean=1.0352e-05, stddev=2.2075e-10, difference_vs_baseline=0.000%
+normal: Estimated Energy per Delivered Message - FedGreenSub: mean=1.03069e-05, stddev=2.2075e-10, difference_vs_baseline=-0.436%
+normal: Estimated Energy per Delivered Message - Trust-Aware FedGreenSub: mean=1.02814e-05, stddev=2.2075e-10, difference_vs_baseline=-0.682%
+normal: Go Heap Memory (MB) - Standard GossipSub: mean=0.605423, stddev=0.0602795, difference_vs_baseline=0.000%
+normal: Go Heap Memory (MB) - FedGreenSub: mean=0.613029, stddev=0.0602795, difference_vs_baseline=1.256%
+normal: Go Heap Memory (MB) - Trust-Aware FedGreenSub: mean=0.637756, stddev=0.0602795, difference_vs_baseline=5.341%
+normal: Average Latency (ms) - Standard GossipSub: mean=20, stddev=0, difference_vs_baseline=0.000%
+normal: Average Latency (ms) - FedGreenSub: mean=20, stddev=0, difference_vs_baseline=0.000%
+normal: Average Latency (ms) - Trust-Aware FedGreenSub: mean=20, stddev=0, difference_vs_baseline=0.000%
+normal: Average TrustScore - Standard GossipSub: mean=0, stddev=0, difference_vs_baseline=n/a
+normal: Average TrustScore - FedGreenSub: mean=0, stddev=0, difference_vs_baseline=n/a
+normal: Average TrustScore - Trust-Aware FedGreenSub: mean=0.54614, stddev=0, difference_vs_baseline=n/a
+normal: Minimum TrustScore - Standard GossipSub: mean=0, stddev=0, difference_vs_baseline=n/a
+normal: Minimum TrustScore - FedGreenSub: mean=0, stddev=0, difference_vs_baseline=n/a
+normal: Minimum TrustScore - Trust-Aware FedGreenSub: mean=0.505515, stddev=0, difference_vs_baseline=n/a
+normal: Trust Variance - Standard GossipSub: mean=0, stddev=0, difference_vs_baseline=n/a
+normal: Trust Variance - FedGreenSub: mean=0, stddev=0, difference_vs_baseline=n/a
+normal: Trust Variance - Trust-Aware FedGreenSub: mean=0.000888672, stddev=5.93842e-20, difference_vs_baseline=n/a
+normal: Trusted Peer Ratio - Standard GossipSub: mean=0, stddev=0, difference_vs_baseline=n/a
+normal: Trusted Peer Ratio - FedGreenSub: mean=0, stddev=0, difference_vs_baseline=n/a
+normal: Trusted Peer Ratio - Trust-Aware FedGreenSub: mean=0, stddev=0, difference_vs_baseline=n/a
+normal: Trust Update Time (us) - Standard GossipSub: mean=0, stddev=0, difference_vs_baseline=n/a
+normal: Trust Update Time (us) - FedGreenSub: mean=0, stddev=0, difference_vs_baseline=n/a
+normal: Trust Update Time (us) - Trust-Aware FedGreenSub: mean=20, stddev=0, difference_vs_baseline=n/a
+normal: Peer Ranking Time (us) - Standard GossipSub: mean=0, stddev=0, difference_vs_baseline=n/a
+normal: Peer Ranking Time (us) - FedGreenSub: mean=0, stddev=0, difference_vs_baseline=n/a
+normal: Peer Ranking Time (us) - Trust-Aware FedGreenSub: mean=0, stddev=0, difference_vs_baseline=n/a
+normal: Trust Aggregation Time (us) - Standard GossipSub: mean=0, stddev=0, difference_vs_baseline=n/a
+normal: Trust Aggregation Time (us) - FedGreenSub: mean=0, stddev=0, difference_vs_baseline=n/a
+normal: Trust Aggregation Time (us) - Trust-Aware FedGreenSub: mean=0, stddev=0, difference_vs_baseline=n/a
+packetloss: Duplicate Ratio - Standard GossipSub: mean=0.0206186, stddev=0, difference_vs_baseline=0.000%
+packetloss: Duplicate Ratio - FedGreenSub: mean=0.0168243, stddev=0.000983507, difference_vs_baseline=-18.402%
+packetloss: Duplicate Ratio - Trust-Aware FedGreenSub: mean=0.0152284, stddev=0, difference_vs_baseline=-26.142%
+packetloss: Delivery Ratio - Standard GossipSub: mean=0.95, stddev=0, difference_vs_baseline=0.000%
+packetloss: Delivery Ratio - FedGreenSub: mean=0.96, stddev=0, difference_vs_baseline=1.053%
+packetloss: Delivery Ratio - Trust-Aware FedGreenSub: mean=0.97, stddev=0, difference_vs_baseline=2.105%
+packetloss: Estimated Energy per Delivered Message - Standard GossipSub: mean=0.000232421, stddev=0.000211644, difference_vs_baseline=0.000%
+packetloss: Estimated Energy per Delivered Message - FedGreenSub: mean=0.000228996, stddev=0.000208525, difference_vs_baseline=-1.474%
+packetloss: Estimated Energy per Delivered Message - Trust-Aware FedGreenSub: mean=0.000226074, stddev=0.000205863, difference_vs_baseline=-2.731%
+packetloss: Go Heap Memory (MB) - Standard GossipSub: mean=0.587648, stddev=0.0586511, difference_vs_baseline=0.000%
+packetloss: Go Heap Memory (MB) - FedGreenSub: mean=0.595254, stddev=0.0586511, difference_vs_baseline=1.294%
+packetloss: Go Heap Memory (MB) - Trust-Aware FedGreenSub: mean=0.619981, stddev=0.0586511, difference_vs_baseline=5.502%
+packetloss: Average Latency (ms) - Standard GossipSub: mean=20, stddev=0, difference_vs_baseline=0.000%
+packetloss: Average Latency (ms) - FedGreenSub: mean=20, stddev=0, difference_vs_baseline=0.000%
+packetloss: Average Latency (ms) - Trust-Aware FedGreenSub: mean=20, stddev=0, difference_vs_baseline=0.000%
+packetloss: Average TrustScore - Standard GossipSub: mean=0, stddev=0, difference_vs_baseline=n/a
+packetloss: Average TrustScore - FedGreenSub: mean=0, stddev=0, difference_vs_baseline=n/a
+packetloss: Average TrustScore - Trust-Aware FedGreenSub: mean=0.544301, stddev=0, difference_vs_baseline=n/a
+packetloss: Minimum TrustScore - Standard GossipSub: mean=0, stddev=0, difference_vs_baseline=n/a
+packetloss: Minimum TrustScore - FedGreenSub: mean=0, stddev=0, difference_vs_baseline=n/a
+packetloss: Minimum TrustScore - Trust-Aware FedGreenSub: mean=0.503676, stddev=0, difference_vs_baseline=n/a
+packetloss: Trust Variance - Standard GossipSub: mean=0, stddev=0, difference_vs_baseline=n/a
+packetloss: Trust Variance - FedGreenSub: mean=0, stddev=0, difference_vs_baseline=n/a
+packetloss: Trust Variance - Trust-Aware FedGreenSub: mean=0.000888672, stddev=0, difference_vs_baseline=n/a
+packetloss: Trusted Peer Ratio - Standard GossipSub: mean=0, stddev=0, difference_vs_baseline=n/a
+packetloss: Trusted Peer Ratio - FedGreenSub: mean=0, stddev=0, difference_vs_baseline=n/a
+packetloss: Trusted Peer Ratio - Trust-Aware FedGreenSub: mean=0, stddev=0, difference_vs_baseline=n/a
+packetloss: Trust Update Time (us) - Standard GossipSub: mean=0, stddev=0, difference_vs_baseline=n/a
+packetloss: Trust Update Time (us) - FedGreenSub: mean=0, stddev=0, difference_vs_baseline=n/a
+packetloss: Trust Update Time (us) - Trust-Aware FedGreenSub: mean=20, stddev=0, difference_vs_baseline=n/a
+packetloss: Peer Ranking Time (us) - Standard GossipSub: mean=0, stddev=0, difference_vs_baseline=n/a
+packetloss: Peer Ranking Time (us) - FedGreenSub: mean=0, stddev=0, difference_vs_baseline=n/a
+packetloss: Peer Ranking Time (us) - Trust-Aware FedGreenSub: mean=75.5714, stddev=199.943, difference_vs_baseline=n/a
+packetloss: Trust Aggregation Time (us) - Standard GossipSub: mean=0, stddev=0, difference_vs_baseline=n/a
+packetloss: Trust Aggregation Time (us) - FedGreenSub: mean=0, stddev=0, difference_vs_baseline=n/a
+packetloss: Trust Aggregation Time (us) - Trust-Aware FedGreenSub: mean=0, stddev=0, difference_vs_baseline=n/a
+scaling: Duplicate Ratio - Standard GossipSub: mean=0.0196078, stddev=0, difference_vs_baseline=0.000%
+scaling: Duplicate Ratio - FedGreenSub: mean=0.015748, stddev=0, difference_vs_baseline=-19.685%
+scaling: Duplicate Ratio - Trust-Aware FedGreenSub: mean=0.0138067, stddev=0, difference_vs_baseline=-29.586%
+scaling: Delivery Ratio - Standard GossipSub: mean=1, stddev=0, difference_vs_baseline=0.000%
+scaling: Delivery Ratio - FedGreenSub: mean=1, stddev=0, difference_vs_baseline=0.000%
+scaling: Delivery Ratio - Trust-Aware FedGreenSub: mean=1, stddev=0, difference_vs_baseline=0.000%
+scaling: Estimated Energy per Delivered Message - Standard GossipSub: mean=0.000206048, stddev=5.06276e-09, difference_vs_baseline=0.000%
+scaling: Estimated Energy per Delivered Message - FedGreenSub: mean=0.000205149, stddev=5.06276e-09, difference_vs_baseline=-0.437%
+scaling: Estimated Energy per Delivered Message - Trust-Aware FedGreenSub: mean=0.000204645, stddev=5.06276e-09, difference_vs_baseline=-0.681%
+scaling: Go Heap Memory (MB) - Standard GossipSub: mean=0.573605, stddev=0.0691235, difference_vs_baseline=0.000%
+scaling: Go Heap Memory (MB) - FedGreenSub: mean=0.581211, stddev=0.0691235, difference_vs_baseline=1.326%
+scaling: Go Heap Memory (MB) - Trust-Aware FedGreenSub: mean=0.665569, stddev=0.0691235, difference_vs_baseline=16.033%
+scaling: Average Latency (ms) - Standard GossipSub: mean=20, stddev=0, difference_vs_baseline=0.000%
+scaling: Average Latency (ms) - FedGreenSub: mean=20, stddev=0, difference_vs_baseline=0.000%
+scaling: Average Latency (ms) - Trust-Aware FedGreenSub: mean=20, stddev=0, difference_vs_baseline=0.000%
+scaling: Average TrustScore - Standard GossipSub: mean=0, stddev=0, difference_vs_baseline=n/a
+scaling: Average TrustScore - FedGreenSub: mean=0, stddev=0, difference_vs_baseline=n/a
+scaling: Average TrustScore - Trust-Aware FedGreenSub: mean=0.546765, stddev=0, difference_vs_baseline=n/a
+scaling: Minimum TrustScore - Standard GossipSub: mean=0, stddev=0, difference_vs_baseline=n/a
+scaling: Minimum TrustScore - FedGreenSub: mean=0, stddev=0, difference_vs_baseline=n/a
+scaling: Minimum TrustScore - Trust-Aware FedGreenSub: mean=0.505515, stddev=0, difference_vs_baseline=n/a
+scaling: Trust Variance - Standard GossipSub: mean=0, stddev=0, difference_vs_baseline=n/a
+scaling: Trust Variance - FedGreenSub: mean=0, stddev=0, difference_vs_baseline=n/a
+scaling: Trust Variance - Trust-Aware FedGreenSub: mean=0.000876562, stddev=0, difference_vs_baseline=n/a
+scaling: Trusted Peer Ratio - Standard GossipSub: mean=0, stddev=0, difference_vs_baseline=n/a
+scaling: Trusted Peer Ratio - FedGreenSub: mean=0, stddev=0, difference_vs_baseline=n/a
+scaling: Trusted Peer Ratio - Trust-Aware FedGreenSub: mean=0, stddev=0, difference_vs_baseline=n/a
+scaling: Trust Update Time (us) - Standard GossipSub: mean=0, stddev=0, difference_vs_baseline=n/a
+scaling: Trust Update Time (us) - FedGreenSub: mean=0, stddev=0, difference_vs_baseline=n/a
+scaling: Trust Update Time (us) - Trust-Aware FedGreenSub: mean=100, stddev=0, difference_vs_baseline=n/a
+scaling: Peer Ranking Time (us) - Standard GossipSub: mean=0, stddev=0, difference_vs_baseline=n/a
+scaling: Peer Ranking Time (us) - FedGreenSub: mean=0, stddev=0, difference_vs_baseline=n/a
+scaling: Peer Ranking Time (us) - Trust-Aware FedGreenSub: mean=0, stddev=0, difference_vs_baseline=n/a
+scaling: Trust Aggregation Time (us) - Standard GossipSub: mean=0, stddev=0, difference_vs_baseline=n/a
+scaling: Trust Aggregation Time (us) - FedGreenSub: mean=0, stddev=0, difference_vs_baseline=n/a
+scaling: Trust Aggregation Time (us) - Trust-Aware FedGreenSub: mean=0, stddev=0, difference_vs_baseline=n/a
+trust: Duplicate Ratio - Standard GossipSub: mean=0.0196078, stddev=0, difference_vs_baseline=0.000%
+trust: Duplicate Ratio - FedGreenSub: mean=0.0131579, stddev=0, difference_vs_baseline=-32.895%
+trust: Duplicate Ratio - Trust-Aware FedGreenSub: mean=0.0131579, stddev=0, difference_vs_baseline=-32.895%
+trust: Delivery Ratio - Standard GossipSub: mean=1, stddev=0, difference_vs_baseline=0.000%
+trust: Delivery Ratio - FedGreenSub: mean=1, stddev=0, difference_vs_baseline=0.000%
+trust: Delivery Ratio - Trust-Aware FedGreenSub: mean=1, stddev=0, difference_vs_baseline=0.000%
+trust: Estimated Energy per Delivered Message - Standard GossipSub: mean=0.000686815, stddev=7.28853e-09, difference_vs_baseline=0.000%
+trust: Estimated Energy per Delivered Message - FedGreenSub: mean=0.000683817, stddev=7.28853e-09, difference_vs_baseline=-0.437%
+trust: Estimated Energy per Delivered Message - Trust-Aware FedGreenSub: mean=0.000682121, stddev=7.28853e-09, difference_vs_baseline=-0.683%
+trust: Go Heap Memory (MB) - Standard GossipSub: mean=0.555679, stddev=0.0298538, difference_vs_baseline=0.000%
+trust: Go Heap Memory (MB) - FedGreenSub: mean=0.563286, stddev=0.0298538, difference_vs_baseline=1.369%
+trust: Go Heap Memory (MB) - Trust-Aware FedGreenSub: mean=0.579742, stddev=0.0298538, difference_vs_baseline=4.330%
+trust: Average Latency (ms) - Standard GossipSub: mean=20, stddev=0, difference_vs_baseline=0.000%
+trust: Average Latency (ms) - FedGreenSub: mean=20, stddev=0, difference_vs_baseline=0.000%
+trust: Average Latency (ms) - Trust-Aware FedGreenSub: mean=20, stddev=0, difference_vs_baseline=0.000%
+trust: Average TrustScore - Standard GossipSub: mean=0, stddev=0, difference_vs_baseline=n/a
+trust: Average TrustScore - FedGreenSub: mean=0, stddev=0, difference_vs_baseline=n/a
+trust: Average TrustScore - Trust-Aware FedGreenSub: mean=0.547181, stddev=0, difference_vs_baseline=n/a
+trust: Minimum TrustScore - Standard GossipSub: mean=0, stddev=0, difference_vs_baseline=n/a
+trust: Minimum TrustScore - FedGreenSub: mean=0, stddev=0, difference_vs_baseline=n/a
+trust: Minimum TrustScore - Trust-Aware FedGreenSub: mean=0.505515, stddev=0, difference_vs_baseline=n/a
+trust: Trust Variance - Standard GossipSub: mean=0, stddev=0, difference_vs_baseline=n/a
+trust: Trust Variance - FedGreenSub: mean=0, stddev=0, difference_vs_baseline=n/a
+trust: Trust Variance - Trust-Aware FedGreenSub: mean=0.000868056, stddev=0, difference_vs_baseline=n/a
+trust: Trusted Peer Ratio - Standard GossipSub: mean=0, stddev=0, difference_vs_baseline=n/a
+trust: Trusted Peer Ratio - FedGreenSub: mean=0, stddev=0, difference_vs_baseline=n/a
+trust: Trusted Peer Ratio - Trust-Aware FedGreenSub: mean=0, stddev=0, difference_vs_baseline=n/a
+trust: Trust Update Time (us) - Standard GossipSub: mean=0, stddev=0, difference_vs_baseline=n/a
+trust: Trust Update Time (us) - FedGreenSub: mean=0, stddev=0, difference_vs_baseline=n/a
+trust: Trust Update Time (us) - Trust-Aware FedGreenSub: mean=12, stddev=0, difference_vs_baseline=n/a
+trust: Peer Ranking Time (us) - Standard GossipSub: mean=0, stddev=0, difference_vs_baseline=n/a
+trust: Peer Ranking Time (us) - FedGreenSub: mean=0, stddev=0, difference_vs_baseline=n/a
+trust: Peer Ranking Time (us) - Trust-Aware FedGreenSub: mean=0, stddev=0, difference_vs_baseline=n/a
+trust: Trust Aggregation Time (us) - Standard GossipSub: mean=0, stddev=0, difference_vs_baseline=n/a
+trust: Trust Aggregation Time (us) - FedGreenSub: mean=0, stddev=0, difference_vs_baseline=n/a
+trust: Trust Aggregation Time (us) - Trust-Aware FedGreenSub: mean=0, stddev=0, difference_vs_baseline=n/a
