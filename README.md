@@ -210,7 +210,9 @@ The package is designed to support local training and federated aggregation:
 - model state can be exported/imported with `ExportWeights()` and `ImportWeights()`
 - `AggregatorImpl` can merge results using `FedAvg()` or `EnergyWeightedFedAvg()`
 
-This is useful when you want to tune the extension layer using locally observed network states or peer-shared model updates.
+The current implementation also provides a real in-process round coordinator. Candidate GossipSub configurations are scored using delivery, duplicate, latency, and modeled resource costs; the best valid candidate becomes a supervised target. Nodes train `TinyNetwork` locally, export model updates, and install the aggregated global model. The heuristic predictor is not used as the training target.
+
+Aggregation supports sample-count FedAvg, resource/connectivity-weighted FedAvg, and bounded TrustScore-aware FedAvg. TrustScore is a local behavioral reputation signal, not a complete security mechanism.
 
 ### Runtime behavior and safety
 
@@ -318,10 +320,17 @@ cfg := fedgreensub.NewConfig(
 )
 ```
 
+### Validation status
+
+- Implemented and tested: candidate-based target generation, target-driven TinyNetwork training, in-process federated rounds, bounded energy/resource aggregation, TrustScore-aware participant weighting, and the local GossipSub runtime update fork.
+- Controlled/simulation only: the comparison harness's candidate outcomes and participant behavior model. These are not live network measurements.
+- Live integration: validated parameter application to a running forked GossipSub router. The public v0.17.0 API does not expose duplicate, delivery, latency, or byte counters, so those metrics require additional instrumentation.
+- Modeled resource cost is not physical energy consumption or Joules.
+
 ### Notes
 
-- This layer intentionally does not mutate the underlying libp2p runtime directly. It validates and exposes parameter changes for a caller to apply at the correct integration point.
-- The current implementation is focused on safe adaptation, bounded behavior, and deterministic testability before full deployment integration.
+- Runtime updates use the local `go-libp2p-pubsub` fork through a serialized router event-loop API. Construction-only fields remain unchanged.
+- The live probe reports only metrics exposed by the dependency and does not fabricate unavailable counters.
 
 ## Contributing
 

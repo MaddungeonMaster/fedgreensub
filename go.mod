@@ -2,6 +2,8 @@ module golang_project
 
 go 1.26
 
+replace github.com/libp2p/go-libp2p-pubsub => ./third_party/go-libp2p-pubsub
+
 require (
 	github.com/libp2p/go-libp2p v0.47.0
 	github.com/libp2p/go-libp2p-pubsub v0.17.0

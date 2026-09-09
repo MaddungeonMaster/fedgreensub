@@ -19,6 +19,11 @@ type Config struct {
 	TrustAggregationWeight   float64
 	TrustedPeerThreshold     float64
 	ModelUpdateClipping      float64
+	TargetWeights            TargetWeights
+	MinimumDeliveryRatio     float64
+	LocalTrainingEpochs      int
+	LearningRate             float64
+	DatasetWindowSize        int
 	TrustObservationInterval time.Duration
 
 	TrainingInterval    time.Duration
@@ -59,6 +64,11 @@ func DefaultConfig() Config {
 		TrustAggregationWeight:   1,
 		TrustedPeerThreshold:     0.7,
 		ModelUpdateClipping:      10,
+		TargetWeights:            DefaultTargetWeights(),
+		MinimumDeliveryRatio:     .95,
+		LocalTrainingEpochs:      3,
+		LearningRate:             .05,
+		DatasetWindowSize:        128,
 		TrustObservationInterval: time.Second,
 		TrainingInterval:         10 * time.Minute,
 		AggregationInterval:      15 * time.Minute,
@@ -128,6 +138,19 @@ func (c *Config) normalize() {
 	}
 	if c.ModelUpdateClipping <= 0 {
 		c.ModelUpdateClipping = DefaultConfig().ModelUpdateClipping
+	}
+	c.TargetWeights = c.TargetWeights.normalize()
+	if c.MinimumDeliveryRatio <= 0 || c.MinimumDeliveryRatio > 1 {
+		c.MinimumDeliveryRatio = DefaultConfig().MinimumDeliveryRatio
+	}
+	if c.LocalTrainingEpochs <= 0 {
+		c.LocalTrainingEpochs = DefaultConfig().LocalTrainingEpochs
+	}
+	if c.LearningRate <= 0 {
+		c.LearningRate = DefaultConfig().LearningRate
+	}
+	if c.DatasetWindowSize <= 0 {
+		c.DatasetWindowSize = DefaultConfig().DatasetWindowSize
 	}
 	if c.TrustObservationInterval <= 0 {
 		c.TrustObservationInterval = DefaultConfig().TrustObservationInterval

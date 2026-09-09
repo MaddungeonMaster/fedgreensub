@@ -11,6 +11,10 @@ func newImplementation(name string) implementations.Implementation {
 	switch name {
 	case "gossipsub":
 		return &implementations.BaselineGossipSub{}
+	case "heuristic":
+		return &implementations.HeuristicGossipSub{}
+	case "fl":
+		return &implementations.FederatedGossipSub{}
 	case "fedgreen":
 		return &implementations.FedGreenSub{}
 	default:
@@ -18,11 +22,13 @@ func newImplementation(name string) implementations.Implementation {
 	}
 }
 
-func implementationNames() []string { return []string{"gossipsub", "fedgreen", "trustaware"} }
+func implementationNames() []string {
+	return []string{"gossipsub", "heuristic", "fl", "fedgreen", "trustaware"}
+}
 
 func runExperiments(cfg ExperimentConfig) ([]Result, error) {
 	cfg = scenarioConfig(cfg).normalize()
-	results := make([]Result, 0, cfg.Repetitions*3)
+	results := make([]Result, 0, cfg.Repetitions*5)
 	for repetition := 1; repetition <= cfg.Repetitions; repetition++ {
 		for _, name := range implementationNames() {
 			impl := newImplementation(name)
@@ -45,7 +51,7 @@ func runExperiments(cfg ExperimentConfig) ([]Result, error) {
 }
 
 func convertMetrics(m implementations.Metrics) ExperimentMetrics {
-	return ExperimentMetrics{CPU: m.CPU, MemoryMB: m.MemoryMB, BytesSent: m.BytesSent, BytesReceived: m.BytesReceived, Published: m.Published, Received: m.Received, Delivered: m.Delivered, Duplicates: m.Duplicates, DeliveryRatio: m.DeliveryRatio, DuplicateRatio: m.DuplicateRatio, LatencyAverage: m.LatencyAverage, LatencyP95: m.LatencyP95, AverageMeshDegree: m.MeshDegree, HeartbeatCount: m.HeartbeatCount, Energy: m.Energy, EnergyPerDeliveredMessage: m.EnergyPerDeliveredMessage, AverageTrust: m.AverageTrust, MinimumTrust: m.MinimumTrust, TrustVariance: m.TrustVariance, TrustedPeerRatio: m.TrustedPeerRatio, TrustUpdateTime: m.TrustUpdateTime, PeerRankingTime: m.PeerRankingTime, TrustAggregationTime: m.TrustAggregationTime, FLRounds: m.FLRounds, TrainingLoss: m.TrainingLoss, GlobalLoss: m.GlobalLoss, TrainingTime: m.TrainingTime, AggregationTime: m.AggregationTime, Available: map[string]bool{"live_network_counters": false, "process_cpu": false, "go_heap_memory": true, "trust_metrics": m.AverageTrust > 0}}
+	return ExperimentMetrics{CPU: m.CPU, MemoryMB: m.MemoryMB, BytesSent: m.BytesSent, BytesReceived: m.BytesReceived, Published: m.Published, Received: m.Received, Delivered: m.Delivered, Duplicates: m.Duplicates, DeliveryRatio: m.DeliveryRatio, DuplicateRatio: m.DuplicateRatio, LatencyAverage: m.LatencyAverage, LatencyP95: m.LatencyP95, AverageMeshDegree: m.MeshDegree, HeartbeatCount: m.HeartbeatCount, Energy: m.Energy, EnergyPerDeliveredMessage: m.EnergyPerDeliveredMessage, AverageTrust: m.AverageTrust, MinimumTrust: m.MinimumTrust, TrustVariance: m.TrustVariance, TrustedPeerRatio: m.TrustedPeerRatio, TrustUpdateTime: m.TrustUpdateTime, PeerRankingTime: m.PeerRankingTime, TrustAggregationTime: m.TrustAggregationTime, FLRounds: m.FLRounds, TrainingLoss: m.TrainingLoss, GlobalLoss: m.GlobalLoss, TrainingTime: m.TrainingTime, AggregationTime: m.AggregationTime, TotalRoundTime: m.TotalRoundTime, ParameterChange: m.ParameterChange, Contributors: m.Contributors, Rejected: m.Rejected, LocalLossByRound: m.LocalLossByRound, GlobalLossByRound: m.GlobalLossByRound, ParameterChangeByRound: m.ParameterChangeByRound, TrainingTimeByRound: m.TrainingTimeByRound, AggregationTimeByRound: m.AggregationTimeByRound, EffectiveWeights: m.EffectiveWeights, Available: map[string]bool{"live_network_counters": false, "process_cpu": false, "go_heap_memory": true, "trust_metrics": m.AverageTrust > 0}}
 }
 
 func scenarioConfig(cfg ExperimentConfig) ExperimentConfig {

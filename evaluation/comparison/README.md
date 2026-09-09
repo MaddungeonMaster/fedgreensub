@@ -1,21 +1,33 @@
 # Isolated FedGreenSub Comparison Harness
 
 This directory is a research evaluation harness, separate from
-`internal/fedgreensub` tests and benchmarks. It compares:
+`internal/fedgreensub` tests and benchmarks. It compares four distinct
+controlled modes:
 
-1. `gossipsub` - baseline control condition.
-2. `fedgreen` - existing FedGreenSub optimizer and energy model.
-3. `trustaware` - existing FedGreenSub plus controlled `PeerObservation`
-   injection, trust ranking, and `TrustWeightedFedAvg`.
+1. `gossipsub` - fixed baseline control condition.
+2. `heuristic` - rule-based adaptive baseline.
+3. `fedgreen` - candidate-targeted local learning and in-process
+   resource-aware federated rounds.
+4. `trustaware` - the FedGreenSub path plus `PeerTrustManager` observations
+   and bounded TrustWeightedFedAvg.
 
-The current repository does not expose a complete automatic GossipSub event
-adapter or portable live per-process network counters. The harness therefore
-uses a deterministic evaluation-layer workload model for traffic, delivery,
-duplicates, latency, and scenario conditions. Go heap memory is measured with
-`runtime.MemStats`; portable per-process CPU and live wire-counter values are
-not claimed, and their availability flags remain false.
-These results must be described as controlled simulation/instrumentation
-results, not hardware power measurements or automatic peer-behavior claims.
+The comparison harness is Level A controlled evaluation. Its candidate
+outcomes and workload effects are deterministic model outputs, while local
+training, aggregation, model installation, and TrustScore weighting execute
+for real. These results must be described as controlled simulation results,
+not live GossipSub measurements or hardware power measurements.
+
+The controlled network model is causal within that scope: each candidate's
+mesh degree, gossip factor, and heartbeat interval are passed through the
+participant profile model to derive delivery, duplicate traffic, latency, and
+modeled resource cost. Subsequent FL rounds generate new profile-specific
+candidate samples from the resulting conditions. Participant profiles are
+seed-dependent and reproducible; repeated runs with the same seed are not
+independent statistical samples.
+
+Live GossipSub validation is a separate Level B concern. The v0.17.0 fork
+supports synchronized runtime parameter updates, but its public API does not
+expose all delivery, duplicate, latency, or wire-byte counters.
 
 Run a small experiment:
 

@@ -40,11 +40,13 @@ type ImplementationSummary struct {
 	CPU                       MetricSummary `json:"cpu"`
 	MemoryMB                  MetricSummary `json:"memory_mb"`
 	LatencyAverage            MetricSummary `json:"latency_average"`
+	ParameterChange           MetricSummary `json:"parameter_change"`
+	GlobalLoss                MetricSummary `json:"global_loss"`
 }
 
 func summarize(results []Result) []ImplementationSummary {
 	var summaries []ImplementationSummary
-	for _, name := range []string{"gossipsub", "fedgreen", "trustaware"} {
+	for _, name := range []string{"gossipsub", "heuristic", "fl", "fedgreen", "trustaware"} {
 		values := make([]Result, 0)
 		for _, result := range results {
 			if result.Implementation == name {
@@ -61,6 +63,8 @@ func summarize(results []Result) []ImplementationSummary {
 		summary.CPU = stats(values, func(r Result) float64 { return r.Metrics.CPU })
 		summary.MemoryMB = stats(values, func(r Result) float64 { return r.Metrics.MemoryMB })
 		summary.LatencyAverage = stats(values, func(r Result) float64 { return r.Metrics.LatencyAverage })
+		summary.ParameterChange = stats(values, func(r Result) float64 { return r.Metrics.ParameterChange })
+		summary.GlobalLoss = stats(values, func(r Result) float64 { return r.Metrics.GlobalLoss })
 		summaries = append(summaries, summary)
 	}
 	return summaries
@@ -114,12 +118,13 @@ func writeCSV(path string, results []Result) error {
 	defer f.Close()
 	w := csv.NewWriter(f)
 	defer w.Flush()
-	if err := w.Write([]string{"scenario", "implementation", "peers", "repetition", "cpu", "memory", "bytes_sent", "bytes_received", "delivery_ratio", "duplicate_ratio", "latency_avg", "latency_p95", "mesh_degree", "energy", "energy_per_delivered_message", "average_trust", "minimum_trust", "trust_variance", "trusted_peer_ratio", "trust_update_time", "peer_ranking_time", "fl_rounds", "training_loss", "global_loss", "training_time", "aggregation_time"}); err != nil {
+	if err := w.Write([]string{"scenario", "implementation", "peers", "repetition", "cpu", "memory", "bytes_sent", "bytes_received", "delivery_ratio", "duplicate_ratio", "latency_avg", "latency_p95", "mesh_degree", "energy", "energy_per_delivered_message", "average_trust", "minimum_trust", "trust_variance", "trusted_peer_ratio", "trust_update_time", "peer_ranking_time", "fl_rounds", "training_loss", "global_loss", "training_time_ns", "aggregation_time_ns", "total_round_time_ns", "parameter_change", "contributors", "rejected", "effective_weights"}); err != nil {
 		return err
 	}
 	for _, r := range results {
 		m := r.Metrics
-		row := []string{r.Scenario, r.Implementation, fmt.Sprint(r.PeerCount), fmt.Sprint(r.Repetition), fmt.Sprintf("%g", m.CPU), fmt.Sprintf("%g", m.MemoryMB), fmt.Sprint(m.BytesSent), fmt.Sprint(m.BytesReceived), fmt.Sprintf("%g", m.DeliveryRatio), fmt.Sprintf("%g", m.DuplicateRatio), fmt.Sprintf("%g", m.LatencyAverage), fmt.Sprintf("%g", m.LatencyP95), fmt.Sprintf("%g", m.AverageMeshDegree), fmt.Sprintf("%g", m.Energy), fmt.Sprintf("%g", m.EnergyPerDeliveredMessage), fmt.Sprintf("%g", m.AverageTrust), fmt.Sprintf("%g", m.MinimumTrust), fmt.Sprintf("%g", m.TrustVariance), fmt.Sprintf("%g", m.TrustedPeerRatio), fmt.Sprintf("%g", m.TrustUpdateTime), fmt.Sprintf("%g", m.PeerRankingTime), fmt.Sprint(m.FLRounds), fmt.Sprintf("%g", m.TrainingLoss), fmt.Sprintf("%g", m.GlobalLoss), fmt.Sprintf("%g", m.TrainingTime), fmt.Sprintf("%g", m.AggregationTime)}
+		weights, _ := json.Marshal(m.EffectiveWeights)
+		row := []string{r.Scenario, r.Implementation, fmt.Sprint(r.PeerCount), fmt.Sprint(r.Repetition), fmt.Sprintf("%g", m.CPU), fmt.Sprintf("%g", m.MemoryMB), fmt.Sprint(m.BytesSent), fmt.Sprint(m.BytesReceived), fmt.Sprintf("%g", m.DeliveryRatio), fmt.Sprintf("%g", m.DuplicateRatio), fmt.Sprintf("%g", m.LatencyAverage), fmt.Sprintf("%g", m.LatencyP95), fmt.Sprintf("%g", m.AverageMeshDegree), fmt.Sprintf("%g", m.Energy), fmt.Sprintf("%g", m.EnergyPerDeliveredMessage), fmt.Sprintf("%g", m.AverageTrust), fmt.Sprintf("%g", m.MinimumTrust), fmt.Sprintf("%g", m.TrustVariance), fmt.Sprintf("%g", m.TrustedPeerRatio), fmt.Sprintf("%g", m.TrustUpdateTime), fmt.Sprintf("%g", m.PeerRankingTime), fmt.Sprint(m.FLRounds), fmt.Sprintf("%g", m.TrainingLoss), fmt.Sprintf("%g", m.GlobalLoss), fmt.Sprintf("%g", m.TrainingTime), fmt.Sprintf("%g", m.AggregationTime), fmt.Sprintf("%g", m.TotalRoundTime), fmt.Sprintf("%g", m.ParameterChange), fmt.Sprint(m.Contributors), fmt.Sprint(m.Rejected), string(weights)}
 		if err := w.Write(row); err != nil {
 			return err
 		}

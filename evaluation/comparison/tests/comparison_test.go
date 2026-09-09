@@ -9,7 +9,7 @@ import (
 
 func TestAllImplementationsRunIdenticalWorkload(t *testing.T) {
 	workload := implementations.Workload{Peers: 10, Messages: 100, MessageSize: 64, PublishRate: 20, Duration: 5 * time.Second, RandomSeed: 42, Latency: 5 * time.Millisecond}
-	for _, impl := range []implementations.Implementation{&implementations.BaselineGossipSub{}, &implementations.FedGreenSub{}, &implementations.TrustAwareFedGreenSub{}} {
+	for _, impl := range []implementations.Implementation{&implementations.BaselineGossipSub{}, &implementations.HeuristicGossipSub{}, &implementations.FederatedGossipSub{}, &implementations.FedGreenSub{}, &implementations.TrustAwareFedGreenSub{}} {
 		if err := impl.Start(implementations.Config{FLRounds: 2}); err != nil {
 			t.Fatalf("%s start: %v", impl.Name(), err)
 		}

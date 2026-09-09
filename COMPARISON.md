@@ -9,10 +9,10 @@
 - Basic energy/bandwidth awareness
 
 **FedGreenSub** (Federated Adaptive Extension):
-- Dynamic, adaptive parameters
-- Real-time metrics collection and prediction
-- Energy-aware federated learning integration
-- Optimized for edge computing and resource-constrained networks
+- Dynamic, validated parameters
+- Candidate-outcome target generation and TinyNetwork local learning
+- In-process federated aggregation with resource and TrustScore weighting
+- Live router application through the local synchronized pubsub fork
 
 ## Key Differences
 
@@ -21,7 +21,7 @@
 | **Parameter Tuning** | Static (hardcoded) | Dynamic/Adaptive |
 | **Metrics Collection** | Minimal | Comprehensive (CPU, memory, bandwidth, latency) |
 | **Energy Awareness** | Basic | Full energy model with battery scoring |
-| **Federated Learning** | Not supported | Full support (training, aggregation, model sync) |
+| **Federated Learning** | Not supported | In-process training, aggregation, and model installation |
 | **Adaptation Speed** | N/A | Configurable (default: 1 second prediction interval) |
 | **Mesh Degree** | Fixed | Adapts based on network conditions |
 | **Heartbeat Interval** | Fixed | Adapts to peer health |
@@ -130,8 +130,8 @@ cfg := fedgreensub.DefaultConfig()
 runtime := fedgreensub.NewRuntime(cfg, ...)
 runtime.Start(ctx)
 
-// FedGreenSub automatically tunes GossipSub parameters
-// while the application uses standard pubsub API
+// A configured FedGreenSub runtime applies validated updates through
+// the synchronized local GossipSub router fork.
 ```
 
 ## Benchmarks
@@ -159,6 +159,13 @@ go tool pprof cpu.prof
 
 ## Real-World Scenarios
 
+The comparison harness is a controlled Level A testbed. Its local learning
+and aggregation execute, but its candidate network outcomes are modeled and
+must not be described as live GossipSub measurements. Live Level B parameter
+application is tested separately. The pinned pubsub API does not expose all
+delivery, duplicate, latency, or wire-byte counters. Modeled energy is a
+normalized resource-cost score, not physical energy or Joules.
+
 ### Scenario 1: Mobile Network
 ```
 Standard GossipSub:
@@ -169,7 +176,7 @@ Standard GossipSub:
 FedGreenSub:
 - Adaptive mesh: 4-6 peers (detected high latency)
 - Adaptive heartbeat: 2-5 seconds (detected low peer count)
-- Result: 30% better battery life, better message delivery
+- Result: requires live measurement; this repository makes no battery-life claim
 ```
 
 ### Scenario 2: IoT Edge Network
@@ -180,7 +187,7 @@ Standard GossipSub:
 
 FedGreenSub:
 - Adaptive gossip: 0.10-0.15 (detected high CPU)
-- Result: 40% less bandwidth, cooler device
+- Result: requires live measurement; this repository makes no bandwidth claim
 ```
 
 ### Scenario 3: Federated Learning

@@ -16,6 +16,11 @@ type ExperimentMetrics struct {
 	TrustUpdateTime, PeerRankingTime, TrustAggregationTime      float64
 	FLRounds                                                    uint64
 	TrainingLoss, GlobalLoss, TrainingTime, AggregationTime     float64
+	TotalRoundTime, ParameterChange                             float64
+	Contributors, Rejected                                      int
+	LocalLossByRound, GlobalLossByRound, ParameterChangeByRound []float64
+	TrainingTimeByRound, AggregationTimeByRound                 []float64
+	EffectiveWeights                                            map[string]float64
 }
 
 func (m *ExperimentMetrics) finalize() {
