@@ -141,3 +141,22 @@ The following remain outside this implementation pass:
 - rewriting GossipSub
 - blockchain, differential privacy, and unrelated security systems
 
+## Causal benchmark diagnosis (2026-09-09)
+
+- Added `FLRoundTrace` to benchmark artifacts and console output. Each trace
+  includes aggregation method, model output, bounded candidate parameters,
+  controlled outcome, and effective participant weights.
+- Confirmed that FedAvg, resource-aware, and trust-aware weights differ, and
+  global parameter changes are non-zero, while the learned prediction is nearly
+  identical for this workload (same rounded mesh and only very small continuous
+  differences).
+- Confirmed `controlledOutcome` is candidate-sensitive and monotonic for the
+  supported mesh, gossip-factor, and heartbeat effects.
+- Preserved continuous controlled ratios in reported metrics so integer message
+  counter rounding cannot erase sub-message candidate effects.
+- Standardized FL timing metrics as floating-point milliseconds with a 1ns
+  lower-resolution floor when the host timer reports zero.
+- The remaining bottleneck is model-to-candidate separation: weighted global
+  model differences are too small along the prediction input/output direction
+  for this seed, and `ParametersFromModelOutput` rounds mesh degree. No
+  mode-specific performance adjustment was added.

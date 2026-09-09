@@ -47,6 +47,18 @@ type Metrics struct {
 	LocalLossByRound, GlobalLossByRound, ParameterChangeByRound                                              []float64
 	TrainingTimeByRound, AggregationTimeByRound                                                              []float64
 	EffectiveWeights                                                                                         map[string]float64
+	FLRoundTrace                                                                                             []FLRoundTrace
+}
+
+// FLRoundTrace records the complete controlled causal path for one round:
+// aggregation -> model output -> bounded candidate -> controlled outcome.
+type FLRoundTrace struct {
+	Round             uint64
+	Method            string
+	ModelOutput       []float64
+	Candidate         fedgreensub.GossipParameters
+	ControlledOutcome fedgreensub.CandidateScore
+	EffectiveWeights  map[string]float64
 }
 
 type Implementation interface {
@@ -132,8 +144,11 @@ func (a *adapter) run(workload Workload) error {
 		a.metrics.TrainingLoss, a.metrics.GlobalLoss = 0, 0
 		a.metrics.FLRounds = 0
 	}
-	a.metrics.DeliveryRatio = ratio(a.metrics.Delivered, a.metrics.Published)
-	a.metrics.DuplicateRatio = ratio(a.metrics.Duplicates, a.metrics.Received)
+	// Preserve the controlled simulator's continuous expected outcomes in the
+	// reported ratios. Integer message counters remain rounded counts, but must
+	// not erase sub-message candidate effects before analysis.
+	a.metrics.DeliveryRatio = outcome.DeliveryRatio
+	a.metrics.DuplicateRatio = outcome.DuplicateRatio
 	a.metrics.EnergyPerDeliveredMessage = ratioFloat(a.metrics.Energy, a.metrics.Delivered)
 	return nil
 }
@@ -177,9 +192,9 @@ func (a *adapter) runFederatedRounds(workload Workload) fedgreensub.GossipParame
 			a.metrics.FLRounds = result.Round
 			a.metrics.TrainingLoss = result.AverageLocalLoss
 			a.metrics.GlobalLoss = result.Global.Loss
-			a.metrics.TrainingTime += float64(result.LocalTrainingTime.Nanoseconds())
-			a.metrics.AggregationTime += float64(result.AggregationTime.Nanoseconds())
-			a.metrics.TotalRoundTime += float64(result.LocalTrainingTime.Nanoseconds() + result.AggregationTime.Nanoseconds())
+			a.metrics.TrainingTime += durationMilliseconds(result.LocalTrainingTime)
+			a.metrics.AggregationTime += durationMilliseconds(result.AggregationTime)
+			a.metrics.TotalRoundTime += durationMilliseconds(result.LocalTrainingTime + result.AggregationTime)
 			a.metrics.ParameterChange = result.ParameterChange
 			a.metrics.Contributors = result.Contributors
 			a.metrics.Rejected = result.Rejected
@@ -187,12 +202,36 @@ func (a *adapter) runFederatedRounds(workload Workload) fedgreensub.GossipParame
 			a.metrics.LocalLossByRound = append(a.metrics.LocalLossByRound, result.AverageLocalLoss)
 			a.metrics.GlobalLossByRound = append(a.metrics.GlobalLossByRound, result.GlobalLoss)
 			a.metrics.ParameterChangeByRound = append(a.metrics.ParameterChangeByRound, result.ParameterChange)
-			a.metrics.TrainingTimeByRound = append(a.metrics.TrainingTimeByRound, float64(result.LocalTrainingTime.Nanoseconds()))
-			a.metrics.AggregationTimeByRound = append(a.metrics.AggregationTimeByRound, float64(result.AggregationTime.Nanoseconds()))
-			parameters = a.learned.Predict(metricsForWorkload(workload, parameters))
+			a.metrics.TrainingTimeByRound = append(a.metrics.TrainingTimeByRound, durationMilliseconds(result.LocalTrainingTime))
+			a.metrics.AggregationTimeByRound = append(a.metrics.AggregationTimeByRound, durationMilliseconds(result.AggregationTime))
+			modelOutput, nextParameters := a.learned.PredictWithOutput(metricsForWorkload(workload, parameters))
+			outcome := aggregateOutcome(a.profiles, workload, nextParameters)
+			a.metrics.FLRoundTrace = append(a.metrics.FLRoundTrace, FLRoundTrace{Round: result.Round, Method: string(result.Method), ModelOutput: append([]float64(nil), modelOutput...), Candidate: nextParameters, ControlledOutcome: outcome, EffectiveWeights: cloneWeights(result.EffectiveWeights)})
+			parameters = nextParameters
 		}
 	}
 	return parameters
+}
+
+func durationMilliseconds(duration time.Duration) float64 {
+	// Windows timer resolution can report an extremely short operation as
+	// zero. Keep the value in milliseconds while retaining a 1ns lower bound;
+	// this marks "below timer resolution" instead of silently exporting zero.
+	if duration <= 0 {
+		return 0.000001
+	}
+	return float64(duration) / float64(time.Millisecond)
+}
+
+func cloneWeights(weights map[string]float64) map[string]float64 {
+	if weights == nil {
+		return nil
+	}
+	clone := make(map[string]float64, len(weights))
+	for id, weight := range weights {
+		clone[id] = weight
+	}
+	return clone
 }
 
 func (a *adapter) recordTrustMetrics() {

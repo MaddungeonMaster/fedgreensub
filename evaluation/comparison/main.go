@@ -41,6 +41,7 @@ func main() {
 		_ = os.WriteFile(filepath.Join(root, cfg.Scenario, "statistics.json"), data, 0644)
 	}
 	printSummary(results, cfg)
+	printFLTrace(results, cfg.Seed)
 	if analyze {
 		printAnalysis(results)
 	}

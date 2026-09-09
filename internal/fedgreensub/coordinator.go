@@ -144,6 +144,7 @@ func (c *FederatedCoordinator) RunRound(ctx context.Context, method AggregationM
 	trust := make([]float64, 0, len(c.peers))
 	localLoss := 0.0
 	localTrainingTime := time.Duration(0)
+	trainingStarted := time.Now()
 	rejected := 0
 	for _, participant := range c.peers {
 		resource := participant.ResourceWeight
@@ -188,6 +189,7 @@ func (c *FederatedCoordinator) RunRound(ctx context.Context, method AggregationM
 		trust = append(trust, participantTrust)
 		localLoss += result.Loss
 	}
+	localTrainingTime = time.Since(trainingStarted)
 	if len(states) == 0 {
 		return FederatedRoundResult{}, errors.New("fedgreensub: no valid participant updates")
 	}

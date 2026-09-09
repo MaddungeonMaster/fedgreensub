@@ -21,6 +21,34 @@ type ExperimentMetrics struct {
 	LocalLossByRound, GlobalLossByRound, ParameterChangeByRound []float64
 	TrainingTimeByRound, AggregationTimeByRound                 []float64
 	EffectiveWeights                                            map[string]float64
+	FLRoundTrace                                                []implementationsTrace
+}
+
+// implementationsTrace is kept in the comparison package's public result
+// schema so JSON benchmark artifacts include the causal FL trace without
+// importing the implementation package back into the main package.
+type implementationsTrace struct {
+	Round             uint64             `json:"round"`
+	Method            string             `json:"method"`
+	ModelOutput       []float64          `json:"model_output"`
+	Candidate         CandidateTrace     `json:"candidate"`
+	ControlledOutcome OutcomeTrace       `json:"controlled_outcome"`
+	EffectiveWeights  map[string]float64 `json:"effective_weights"`
+}
+
+type CandidateTrace struct {
+	MeshDegree        int     `json:"mesh_degree"`
+	DLow              int     `json:"d_low"`
+	DHigh             int     `json:"d_high"`
+	GossipFactor      float64 `json:"gossip_factor"`
+	HeartbeatInterval string  `json:"heartbeat_interval"`
+}
+
+type OutcomeTrace struct {
+	DeliveryRatio  float64 `json:"delivery_ratio"`
+	DuplicateRatio float64 `json:"duplicate_ratio"`
+	LatencyCost    float64 `json:"latency_cost"`
+	EnergyCost     float64 `json:"energy_cost"`
 }
 
 func (m *ExperimentMetrics) finalize() {

@@ -77,18 +77,26 @@ func NewLearnedPredictor(network *TinyNetwork, cfg Config) *LearnedPredictor {
 }
 
 func (p *LearnedPredictor) Predict(metrics RuntimeMetrics) GossipParameters {
+	_, parameters := p.PredictWithOutput(metrics)
+	return parameters
+}
+
+// PredictWithOutput exposes the normalized model output alongside the bounded
+// protocol parameters for experiment tracing. It uses the exact same mapping
+// as Predict, so traces cannot diverge from the running path.
+func (p *LearnedPredictor) PredictWithOutput(metrics RuntimeMetrics) ([]float64, GossipParameters) {
 	if p == nil || p.network == nil {
-		return GossipParameters{}
+		return nil, GossipParameters{}
 	}
 	output, err := p.network.Predict(FeatureVector(metrics, p.config))
 	if err != nil {
-		return GossipParameters{}
+		return output, GossipParameters{}
 	}
 	parameters, err := ParametersFromModelOutput(output, p.config)
 	if err != nil {
-		return GossipParameters{}
+		return output, GossipParameters{}
 	}
-	return parameters
+	return output, parameters
 }
 
 func modelStateFinite(state ModelState) bool {

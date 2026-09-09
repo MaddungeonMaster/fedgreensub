@@ -118,7 +118,7 @@ func writeCSV(path string, results []Result) error {
 	defer f.Close()
 	w := csv.NewWriter(f)
 	defer w.Flush()
-	if err := w.Write([]string{"scenario", "implementation", "peers", "repetition", "cpu", "memory", "bytes_sent", "bytes_received", "delivery_ratio", "duplicate_ratio", "latency_avg", "latency_p95", "mesh_degree", "energy", "energy_per_delivered_message", "average_trust", "minimum_trust", "trust_variance", "trusted_peer_ratio", "trust_update_time", "peer_ranking_time", "fl_rounds", "training_loss", "global_loss", "training_time_ns", "aggregation_time_ns", "total_round_time_ns", "parameter_change", "contributors", "rejected", "effective_weights"}); err != nil {
+	if err := w.Write([]string{"scenario", "implementation", "peers", "repetition", "cpu", "memory", "bytes_sent", "bytes_received", "delivery_ratio", "duplicate_ratio", "latency_avg", "latency_p95", "mesh_degree", "energy", "energy_per_delivered_message", "average_trust", "minimum_trust", "trust_variance", "trusted_peer_ratio", "trust_update_time", "peer_ranking_time", "fl_rounds", "training_loss", "global_loss", "training_time_ms", "aggregation_time_ms", "total_round_time_ms", "parameter_change", "contributors", "rejected", "effective_weights"}); err != nil {
 		return err
 	}
 	for _, r := range results {

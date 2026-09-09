@@ -51,7 +51,11 @@ func runExperiments(cfg ExperimentConfig) ([]Result, error) {
 }
 
 func convertMetrics(m implementations.Metrics) ExperimentMetrics {
-	return ExperimentMetrics{CPU: m.CPU, MemoryMB: m.MemoryMB, BytesSent: m.BytesSent, BytesReceived: m.BytesReceived, Published: m.Published, Received: m.Received, Delivered: m.Delivered, Duplicates: m.Duplicates, DeliveryRatio: m.DeliveryRatio, DuplicateRatio: m.DuplicateRatio, LatencyAverage: m.LatencyAverage, LatencyP95: m.LatencyP95, AverageMeshDegree: m.MeshDegree, HeartbeatCount: m.HeartbeatCount, Energy: m.Energy, EnergyPerDeliveredMessage: m.EnergyPerDeliveredMessage, AverageTrust: m.AverageTrust, MinimumTrust: m.MinimumTrust, TrustVariance: m.TrustVariance, TrustedPeerRatio: m.TrustedPeerRatio, TrustUpdateTime: m.TrustUpdateTime, PeerRankingTime: m.PeerRankingTime, TrustAggregationTime: m.TrustAggregationTime, FLRounds: m.FLRounds, TrainingLoss: m.TrainingLoss, GlobalLoss: m.GlobalLoss, TrainingTime: m.TrainingTime, AggregationTime: m.AggregationTime, TotalRoundTime: m.TotalRoundTime, ParameterChange: m.ParameterChange, Contributors: m.Contributors, Rejected: m.Rejected, LocalLossByRound: m.LocalLossByRound, GlobalLossByRound: m.GlobalLossByRound, ParameterChangeByRound: m.ParameterChangeByRound, TrainingTimeByRound: m.TrainingTimeByRound, AggregationTimeByRound: m.AggregationTimeByRound, EffectiveWeights: m.EffectiveWeights, Available: map[string]bool{"live_network_counters": false, "process_cpu": false, "go_heap_memory": true, "trust_metrics": m.AverageTrust > 0}}
+	traces := make([]implementationsTrace, 0, len(m.FLRoundTrace))
+	for _, trace := range m.FLRoundTrace {
+		traces = append(traces, implementationsTrace{Round: trace.Round, Method: trace.Method, ModelOutput: trace.ModelOutput, Candidate: CandidateTrace{MeshDegree: trace.Candidate.MeshDegree, DLow: trace.Candidate.DLow, DHigh: trace.Candidate.DHigh, GossipFactor: trace.Candidate.GossipFactor, HeartbeatInterval: trace.Candidate.HeartbeatInterval.String()}, ControlledOutcome: OutcomeTrace{DeliveryRatio: trace.ControlledOutcome.DeliveryRatio, DuplicateRatio: trace.ControlledOutcome.DuplicateRatio, LatencyCost: trace.ControlledOutcome.LatencyCost, EnergyCost: trace.ControlledOutcome.EnergyCost}, EffectiveWeights: trace.EffectiveWeights})
+	}
+	return ExperimentMetrics{CPU: m.CPU, MemoryMB: m.MemoryMB, BytesSent: m.BytesSent, BytesReceived: m.BytesReceived, Published: m.Published, Received: m.Received, Delivered: m.Delivered, Duplicates: m.Duplicates, DeliveryRatio: m.DeliveryRatio, DuplicateRatio: m.DuplicateRatio, LatencyAverage: m.LatencyAverage, LatencyP95: m.LatencyP95, AverageMeshDegree: m.MeshDegree, HeartbeatCount: m.HeartbeatCount, Energy: m.Energy, EnergyPerDeliveredMessage: m.EnergyPerDeliveredMessage, AverageTrust: m.AverageTrust, MinimumTrust: m.MinimumTrust, TrustVariance: m.TrustVariance, TrustedPeerRatio: m.TrustedPeerRatio, TrustUpdateTime: m.TrustUpdateTime, PeerRankingTime: m.PeerRankingTime, TrustAggregationTime: m.TrustAggregationTime, FLRounds: m.FLRounds, TrainingLoss: m.TrainingLoss, GlobalLoss: m.GlobalLoss, TrainingTime: m.TrainingTime, AggregationTime: m.AggregationTime, TotalRoundTime: m.TotalRoundTime, ParameterChange: m.ParameterChange, Contributors: m.Contributors, Rejected: m.Rejected, LocalLossByRound: m.LocalLossByRound, GlobalLossByRound: m.GlobalLossByRound, ParameterChangeByRound: m.ParameterChangeByRound, TrainingTimeByRound: m.TrainingTimeByRound, AggregationTimeByRound: m.AggregationTimeByRound, EffectiveWeights: m.EffectiveWeights, FLRoundTrace: traces, Available: map[string]bool{"live_network_counters": false, "process_cpu": false, "go_heap_memory": true, "trust_metrics": m.AverageTrust > 0}}
 }
 
 func scenarioConfig(cfg ExperimentConfig) ExperimentConfig {
@@ -106,6 +110,23 @@ func printAnalysis(results []Result) {
 	fmt.Println("\nAnalysis (positive means lower-is-better reduction for energy/CPU/duplicates)")
 	for _, current := range summaries[1:] {
 		fmt.Printf("%s vs %s: delivery improvement %+0.2f%%, duplicate reduction %+0.2f%%, energy reduction %+0.2f%%, CPU overhead %+0.2f%%\n", current.Implementation, base.Implementation, percent(current.DeliveryRatio.Mean-base.DeliveryRatio.Mean, base.DeliveryRatio.Mean), percent(base.DuplicateRatio.Mean-current.DuplicateRatio.Mean, base.DuplicateRatio.Mean), percent(base.EnergyPerDeliveredMessage.Mean-current.EnergyPerDeliveredMessage.Mean, base.EnergyPerDeliveredMessage.Mean), percent(current.CPU.Mean-base.CPU.Mean, base.CPU.Mean))
+	}
+}
+
+func printFLTrace(results []Result, seed int64) {
+	found := false
+	for _, result := range results {
+		if result.Seed != seed || (result.Implementation != "fl" && result.Implementation != "fedgreen" && result.Implementation != "trustaware") || len(result.Metrics.FLRoundTrace) == 0 {
+			continue
+		}
+		if !found {
+			fmt.Printf("\nFL causal trace (seed %d, first matching repetition)\n", seed)
+			found = true
+		}
+		fmt.Printf("%s:\n", result.Implementation)
+		for _, trace := range result.Metrics.FLRoundTrace {
+			fmt.Printf("  round=%d method=%s output=%v candidate={mesh=%d dlow=%d dhigh=%d gossip=%.6f heartbeat=%s} outcome={delivery=%.6f duplicate=%.6f latency_cost=%.6f energy=%.6f} weights=%v\n", trace.Round, trace.Method, trace.ModelOutput, trace.Candidate.MeshDegree, trace.Candidate.DLow, trace.Candidate.DHigh, trace.Candidate.GossipFactor, trace.Candidate.HeartbeatInterval, trace.ControlledOutcome.DeliveryRatio, trace.ControlledOutcome.DuplicateRatio, trace.ControlledOutcome.LatencyCost, trace.ControlledOutcome.EnergyCost, trace.EffectiveWeights)
+		}
 	}
 }
 
