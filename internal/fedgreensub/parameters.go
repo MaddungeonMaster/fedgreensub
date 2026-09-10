@@ -1,9 +1,14 @@
 package fedgreensub
 
 import (
+	"context"
 	"fmt"
 	"sync"
 )
+
+type ParameterApplier interface {
+	ApplyGossipParameters(context.Context, GossipParameters) error
+}
 
 // ParameterManager validates and safely stores GossipSub parameters.
 // It does not modify the original libp2p GossipSub runtime.
@@ -11,6 +16,16 @@ type ParameterManager struct {
 	mu         sync.RWMutex
 	config     Config
 	parameters GossipParameters
+	applier    ParameterApplier
+}
+
+func (p *ParameterManager) SetApplier(applier ParameterApplier) {
+	if p == nil {
+		return
+	}
+	p.mu.Lock()
+	p.applier = applier
+	p.mu.Unlock()
 }
 
 // NewParameterManager creates a new ParameterManager using the
@@ -139,6 +154,14 @@ func (p *ParameterManager) ApplyParameters(
 		return report
 	}
 
+	p.mu.Lock()
+	applier := p.applier
+	p.mu.Unlock()
+	if applier != nil {
+		if err := applier.ApplyGossipParameters(context.Background(), params); err != nil {
+			return ValidationReport{Accepted: false, Reason: fmt.Sprintf("live GossipSub application failed: %v", err)}
+		}
+	}
 	p.mu.Lock()
 	p.parameters = params
 	p.mu.Unlock()

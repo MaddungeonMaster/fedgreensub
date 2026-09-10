@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="560" viewBox="0 0 900 560">
+<rect width="100%" height="100%" fill="white"/><text x="450" y="34" text-anchor="middle" font-family="Arial" font-size="20">Modeled cost per delivered message vs number of peers</text>
+<line x1="90" y1="301.21876159030376" x2="870" y2="301.21876159030376" stroke="#dddddd"/><text x="82" y="305.21876159030376" text-anchor="end" font-family="Arial" font-size="12">0.3147</text>
+<line x1="90" y1="254.97500927224297" x2="870" y2="254.97500927224297" stroke="#dddddd"/><text x="82" y="258.97500927224297" text-anchor="end" font-family="Arial" font-size="12">0.4275</text>
+<line x1="90" y1="208.73125695418221" x2="870" y2="208.73125695418221" stroke="#dddddd"/><text x="82" y="212.73125695418221" text-anchor="end" font-family="Arial" font-size="12">0.5403</text>
+<line x1="90" y1="162.48750463612146" x2="870" y2="162.48750463612146" stroke="#dddddd"/><text x="82" y="166.48750463612146" text-anchor="end" font-family="Arial" font-size="12">0.6531</text>
+<line x1="90" y1="116.24375231806077" x2="870" y2="116.24375231806077" stroke="#dddddd"/><text x="82" y="120.24375231806077" text-anchor="end" font-family="Arial" font-size="12">0.7659</text>
+<line x1="90" y1="70" x2="870" y2="70" stroke="#dddddd"/><text x="82" y="74" text-anchor="end" font-family="Arial" font-size="12">0.8787</text>
+<polyline fill="none" stroke="#4C78A8" stroke-width="3" points="90,284.83031854066564 151.57894736842104,279.0663470276157 254.21052631578945,278.8159153827156 459.4736842105263,276.8441433900957 870,276.90787351129563 "/>
+<line x1="90" y1="285.2726401013173" x2="90" y2="284.38799698001407" stroke="#4C78A8"/><circle cx="90" cy="284.83031854066564" r="5" fill="#4C78A8"/>
+<line x1="151.57894736842104" y1="279.82147607878755" x2="151.57894736842104" y2="278.3112179764438" stroke="#4C78A8"/><circle cx="151.57894736842104" cy="279.0663470276157" r="5" fill="#4C78A8"/>
+<line x1="254.21052631578945" y1="279.2550264197615" x2="254.21052631578945" y2="278.3768043456698" stroke="#4C78A8"/><circle cx="254.21052631578945" cy="278.8159153827156" r="5" fill="#4C78A8"/>
+<line x1="459.4736842105263" y1="277.2741384456249" x2="459.4736842105263" y2="276.41414833456645" stroke="#4C78A8"/><circle cx="459.4736842105263" cy="276.8441433900957" r="5" fill="#4C78A8"/>
+<line x1="870" y1="277.2691212906128" x2="870" y2="276.5466257319785" stroke="#4C78A8"/><circle cx="870" cy="276.90787351129563" r="5" fill="#4C78A8"/>
+<polyline fill="none" stroke="#F58518" stroke-width="3" points="90,98.45884049548566 151.57894736842104,89.61024884411566 254.21052631578945,89.36569347132567 459.4736842105263,86.37611654451565 870,86.43984666571569 "/>
+<line x1="90" y1="99.70415612176205" x2="90" y2="97.21352486920927" stroke="#F58518"/><circle cx="90" cy="98.45884049548566" r="5" fill="#F58518"/>
+<line x1="151.57894736842104" y1="90.36537789528757" x2="151.57894736842104" y2="88.85511979294377" stroke="#F58518"/><circle cx="151.57894736842104" cy="89.61024884411566" r="5" fill="#F58518"/>
+<line x1="254.21052631578945" y1="89.80480450837146" x2="254.21052631578945" y2="88.9265824342799" stroke="#F58518"/><circle cx="254.21052631578945" cy="89.36569347132567" r="5" fill="#F58518"/>
+<line x1="459.4736842105263" y1="86.80611160004484" x2="459.4736842105263" y2="85.94612148898648" stroke="#F58518"/><circle cx="459.4736842105263" cy="86.37611654451565" r="5" fill="#F58518"/>
+<line x1="870" y1="86.80109444503285" x2="870" y2="86.07859888639851" stroke="#F58518"/><circle cx="870" cy="86.43984666571569" r="5" fill="#F58518"/>
+<polyline fill="none" stroke="#54A24B" stroke-width="3" points="90,98.45884049548566 151.57894736842104,89.61024884411566 254.21052631578945,89.36569347132567 459.4736842105263,86.37611654451565 870,86.43984666571569 "/>
+<line x1="90" y1="99.70415612176205" x2="90" y2="97.21352486920927" stroke="#54A24B"/><circle cx="90" cy="98.45884049548566" r="5" fill="#54A24B"/>
+<line x1="151.57894736842104" y1="90.36537789528757" x2="151.57894736842104" y2="88.85511979294377" stroke="#54A24B"/><circle cx="151.57894736842104" cy="89.61024884411566" r="5" fill="#54A24B"/>
+<line x1="254.21052631578945" y1="89.80480450837146" x2="254.21052631578945" y2="88.9265824342799" stroke="#54A24B"/><circle cx="254.21052631578945" cy="89.36569347132567" r="5" fill="#54A24B"/>
+<line x1="459.4736842105263" y1="86.80611160004484" x2="459.4736842105263" y2="85.94612148898648" stroke="#54A24B"/><circle cx="459.4736842105263" cy="86.37611654451565" r="5" fill="#54A24B"/>
+<line x1="870" y1="86.80109444503285" x2="870" y2="86.07859888639851" stroke="#54A24B"/><circle cx="870" cy="86.43984666571569" r="5" fill="#54A24B"/>
+<text x="90" y="502" text-anchor="middle" font-family="Arial" font-size="12">10</text>
+<text x="151.57894736842104" y="502" text-anchor="middle" font-family="Arial" font-size="12">25</text>
+<text x="254.21052631578945" y="502" text-anchor="middle" font-family="Arial" font-size="12">50</text>
+<text x="459.4736842105263" y="502" text-anchor="middle" font-family="Arial" font-size="12">100</text>
+<text x="870" y="502" text-anchor="middle" font-family="Arial" font-size="12">200</text>
+<text x="450" y="538" text-anchor="middle" font-family="Arial" font-size="14">Number of peers</text><text transform="translate(20 280) rotate(-90)" text-anchor="middle" font-family="Arial" font-size="14">Modeled cost per delivered message</text>
+<line x1="630" y1="90" x2="654" y2="90" stroke="#4C78A8" stroke-width="3"/><text x="662" y="94" font-family="Arial" font-size="12">Standard GossipSub</text>
+<line x1="630" y1="114" x2="654" y2="114" stroke="#F58518" stroke-width="3"/><text x="662" y="118" font-family="Arial" font-size="12">FedGreenSub</text>
+<line x1="630" y1="138" x2="654" y2="138" stroke="#54A24B" stroke-width="3"/><text x="662" y="142" font-family="Arial" font-size="12">Trust-Aware FedGreenSub</text>
+</svg>

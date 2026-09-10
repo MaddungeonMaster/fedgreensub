@@ -1,0 +1,98 @@
+{
+  "experiment_id": "1788972027988319600-2",
+  "timestamp": "2026-09-09T16:40:27.9883196Z",
+  "scenario": "fl",
+  "implementation": "fedgreen",
+  "peer_count": 8,
+  "message_count": 200,
+  "message_size": 1024,
+  "publish_rate": 100,
+  "duration": "1m40s",
+  "seed": 4243,
+  "repetition": 2,
+  "metrics": {
+    "CPU": 56.932576337666696,
+    "MemoryMB": 1.1791152954101562,
+    "BytesSent": 219728,
+    "BytesReceived": 203355,
+    "Published": 200,
+    "Received": 199,
+    "Delivered": 185,
+    "Duplicates": 14,
+    "DeliveryRatio": 0.925,
+    "DuplicateRatio": 0.07035175879396985,
+    "LatencyAverage": 126.30120338,
+    "LatencyP95": 145.246383887,
+    "AverageMeshDegree": 9,
+    "HeartbeatCount": 100,
+    "Energy": 0.4298918123802536,
+    "EnergyPerDeliveredMessage": 0.0023237395263797493,
+    "Available": {
+      "go_heap_memory": true,
+      "live_network_counters": false,
+      "process_cpu": false,
+      "trust_metrics": false
+    },
+    "AverageTrust": 0,
+    "MinimumTrust": 0,
+    "TrustVariance": 0,
+    "TrustedPeerRatio": 0,
+    "TrustUpdateTime": 0,
+    "PeerRankingTime": 0,
+    "TrustAggregationTime": 0,
+    "FLRounds": 5,
+    "TrainingLoss": 0.03784223220876694,
+    "GlobalLoss": 0.03784223220876694,
+    "TrainingTime": 551700,
+    "AggregationTime": 0,
+    "TotalRoundTime": 551700,
+    "ParameterChange": 0.10025718679081981,
+    "Contributors": 8,
+    "Rejected": 0,
+    "LocalLossByRound": [
+      0.14631050515232577,
+      0.09193406277244429,
+      0.06752098406831986,
+      0.05072294925336247,
+      0.03784223220876694
+    ],
+    "GlobalLossByRound": [
+      0.14631050515232577,
+      0.09193406277244429,
+      0.06752098406831986,
+      0.05072294925336247,
+      0.03784223220876694
+    ],
+    "ParameterChangeByRound": [
+      0.04338072684591275,
+      0.0652813078619375,
+      0.08315185645942802,
+      0.0950016112512999,
+      0.10025718679081981
+    ],
+    "TrainingTimeByRound": [
+      0,
+      0,
+      551700,
+      0,
+      0
+    ],
+    "AggregationTimeByRound": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "EffectiveWeights": {
+      "participant-0": 0.2019116339386386,
+      "participant-1": 0.1491860527730719,
+      "participant-2": 0.08274098978741516,
+      "participant-3": 0.05781488841601228,
+      "participant-4": 0.2019116339386386,
+      "participant-5": 0.1485703606718085,
+      "participant-6": 0.10085345948549347,
+      "participant-7": 0.05701098098892148
+    }
+  }
+}

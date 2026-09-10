@@ -1,0 +1,181 @@
+scenario,metric,implementation,mean,stddev,baseline_value,percentage_difference
+duplicate,Duplicate Ratio,Standard GossipSub,0.25925925925925924,0.0,0.25925925925925924,0.0
+duplicate,Duplicate Ratio,FedGreenSub,0.22879177377892032,0.0,0.25925925925925924,-11.7517443995593
+duplicate,Duplicate Ratio,Trust-Aware FedGreenSub,0.21052631578947367,0.0,0.25925925925925924,-18.796992481203006
+duplicate,Delivery Ratio,Standard GossipSub,1.0,0.0,1.0,0.0
+duplicate,Delivery Ratio,FedGreenSub,1.0,0.0,1.0,0.0
+duplicate,Delivery Ratio,Trust-Aware FedGreenSub,1.0,0.0,1.0,0.0
+duplicate,Estimated Energy per Delivered Message,Standard GossipSub,0.0005084656355095407,3.2907469063724752e-09,0.0005084656355095407,0.0
+duplicate,Estimated Energy per Delivered Message,FedGreenSub,0.0004822140004026393,3.2907469064108076e-09,0.0005084656355095407,-5.162912353082467
+duplicate,Estimated Energy per Delivered Message,Trust-Aware FedGreenSub,0.000467340566214174,3.29074690644914e-09,0.0005084656355095407,-8.088072511361483
+duplicate,Go Heap Memory (MB),Standard GossipSub,0.5438194274902344,0.026957798657143997,0.5438194274902344,0.0
+duplicate,Go Heap Memory (MB),FedGreenSub,0.5514259338378906,0.026957798657143997,0.5438194274902344,1.3987191268176686
+duplicate,Go Heap Memory (MB),Trust-Aware FedGreenSub,0.5761528015136719,0.026957798657143997,0.5438194274902344,5.945608484908003
+duplicate,Average Latency (ms),Standard GossipSub,20.0,0.0,20.0,0.0
+duplicate,Average Latency (ms),FedGreenSub,20.0,0.0,20.0,0.0
+duplicate,Average Latency (ms),Trust-Aware FedGreenSub,20.0,0.0,20.0,0.0
+duplicate,Average TrustScore,Standard GossipSub,0.0,0.0,0.0,
+duplicate,Average TrustScore,FedGreenSub,0.0,0.0,0.0,
+duplicate,Average TrustScore,Trust-Aware FedGreenSub,0.546139705882353,0.0,0.0,
+duplicate,Minimum TrustScore,Standard GossipSub,0.0,0.0,0.0,
+duplicate,Minimum TrustScore,FedGreenSub,0.0,0.0,0.0,
+duplicate,Minimum TrustScore,Trust-Aware FedGreenSub,0.5055147058823529,0.0,0.0,
+duplicate,Trust Variance,Standard GossipSub,0.0,0.0,0.0,
+duplicate,Trust Variance,FedGreenSub,0.0,0.0,0.0,
+duplicate,Trust Variance,Trust-Aware FedGreenSub,0.0008886718750000005,0.0,0.0,
+duplicate,Trusted Peer Ratio,Standard GossipSub,0.0,0.0,0.0,
+duplicate,Trusted Peer Ratio,FedGreenSub,0.0,0.0,0.0,
+duplicate,Trusted Peer Ratio,Trust-Aware FedGreenSub,0.0,0.0,0.0,
+duplicate,Trust Update Time (us),Standard GossipSub,0.0,0.0,0.0,
+duplicate,Trust Update Time (us),FedGreenSub,0.0,0.0,0.0,
+duplicate,Trust Update Time (us),Trust-Aware FedGreenSub,20.0,0.0,0.0,
+duplicate,Peer Ranking Time (us),Standard GossipSub,0.0,0.0,0.0,
+duplicate,Peer Ranking Time (us),FedGreenSub,0.0,0.0,0.0,
+duplicate,Peer Ranking Time (us),Trust-Aware FedGreenSub,0.0,0.0,0.0,
+duplicate,Trust Aggregation Time (us),Standard GossipSub,0.0,0.0,0.0,
+duplicate,Trust Aggregation Time (us),FedGreenSub,0.0,0.0,0.0,
+duplicate,Trust Aggregation Time (us),Trust-Aware FedGreenSub,0.0,0.0,0.0,
+normal,Duplicate Ratio,Standard GossipSub,0.0196078431372549,0.0,0.0196078431372549,0.0
+normal,Duplicate Ratio,FedGreenSub,0.01671583087512291,0.0,0.0196078431372549,-14.749262536873161
+normal,Duplicate Ratio,Trust-Aware FedGreenSub,0.015069437604648872,0.0,0.0196078431372549,-23.14586821629075
+normal,Delivery Ratio,Standard GossipSub,1.0,0.0,1.0,0.0
+normal,Delivery Ratio,FedGreenSub,1.0,0.0,1.0,0.0
+normal,Delivery Ratio,Trust-Aware FedGreenSub,1.0,0.0,1.0,0.0
+normal,Estimated Energy per Delivered Message,Standard GossipSub,1.0352021812647581e-05,2.2075001338316543e-10,1.0352021812647581e-05,0.0
+normal,Estimated Energy per Delivered Message,FedGreenSub,1.0306903179362418e-05,2.2075001338316543e-10,1.0352021812647581e-05,-0.4358436844678984
+normal,Estimated Energy per Delivered Message,Trust-Aware FedGreenSub,1.0281410728812219e-05,2.2075001338316543e-10,1.0352021812647581e-05,-0.6820994498784164
+normal,Go Heap Memory (MB),Standard GossipSub,0.6054229736328125,0.06027947032112652,0.6054229736328125,0.0
+normal,Go Heap Memory (MB),FedGreenSub,0.6130294799804688,0.06027947032112652,0.6054229736328125,1.2563953927968343
+normal,Go Heap Memory (MB),Trust-Aware FedGreenSub,0.63775634765625,0.06027947032112652,0.6054229736328125,5.340625551326966
+normal,Average Latency (ms),Standard GossipSub,20.0,0.0,20.0,0.0
+normal,Average Latency (ms),FedGreenSub,20.0,0.0,20.0,0.0
+normal,Average Latency (ms),Trust-Aware FedGreenSub,20.0,0.0,20.0,0.0
+normal,Average TrustScore,Standard GossipSub,0.0,0.0,0.0,
+normal,Average TrustScore,FedGreenSub,0.0,0.0,0.0,
+normal,Average TrustScore,Trust-Aware FedGreenSub,0.546139705882353,0.0,0.0,
+normal,Minimum TrustScore,Standard GossipSub,0.0,0.0,0.0,
+normal,Minimum TrustScore,FedGreenSub,0.0,0.0,0.0,
+normal,Minimum TrustScore,Trust-Aware FedGreenSub,0.5055147058823529,0.0,0.0,
+normal,Trust Variance,Standard GossipSub,0.0,0.0,0.0,
+normal,Trust Variance,FedGreenSub,0.0,0.0,0.0,
+normal,Trust Variance,Trust-Aware FedGreenSub,0.0008886718750000005,5.938419867664177e-20,0.0,
+normal,Trusted Peer Ratio,Standard GossipSub,0.0,0.0,0.0,
+normal,Trusted Peer Ratio,FedGreenSub,0.0,0.0,0.0,
+normal,Trusted Peer Ratio,Trust-Aware FedGreenSub,0.0,0.0,0.0,
+normal,Trust Update Time (us),Standard GossipSub,0.0,0.0,0.0,
+normal,Trust Update Time (us),FedGreenSub,0.0,0.0,0.0,
+normal,Trust Update Time (us),Trust-Aware FedGreenSub,20.0,0.0,0.0,
+normal,Peer Ranking Time (us),Standard GossipSub,0.0,0.0,0.0,
+normal,Peer Ranking Time (us),FedGreenSub,0.0,0.0,0.0,
+normal,Peer Ranking Time (us),Trust-Aware FedGreenSub,0.0,0.0,0.0,
+normal,Trust Aggregation Time (us),Standard GossipSub,0.0,0.0,0.0,
+normal,Trust Aggregation Time (us),FedGreenSub,0.0,0.0,0.0,
+normal,Trust Aggregation Time (us),Trust-Aware FedGreenSub,0.0,0.0,0.0,
+packetloss,Duplicate Ratio,Standard GossipSub,0.020618556701030927,0.0,0.020618556701030927,0.0
+packetloss,Duplicate Ratio,FedGreenSub,0.016824322044383458,0.0009835068840045049,0.020618556701030927,-18.402038084740227
+packetloss,Duplicate Ratio,Trust-Aware FedGreenSub,0.015228426395939087,0.0,0.020618556701030927,-26.142131979695428
+packetloss,Delivery Ratio,Standard GossipSub,0.95,0.0,0.95,0.0
+packetloss,Delivery Ratio,FedGreenSub,0.96,0.0,0.95,1.0526315789473695
+packetloss,Delivery Ratio,Trust-Aware FedGreenSub,0.97,0.0,0.95,2.105263157894739
+packetloss,Estimated Energy per Delivered Message,Standard GossipSub,0.00023242125134663027,0.00021164351773994105,0.00023242125134663027,0.0
+packetloss,Estimated Energy per Delivered Message,FedGreenSub,0.00022899644821438762,0.00020852453093532814,0.00023242125134663027,-1.4735326965153195
+packetloss,Estimated Energy per Delivered Message,Trust-Aware FedGreenSub,0.00022607447928209984,0.00020586347159942675,0.00023242125134663027,-2.73071934160828
+packetloss,Go Heap Memory (MB),Standard GossipSub,0.5876475742885044,0.058651114144261864,0.5876475742885044,0.0
+packetloss,Go Heap Memory (MB),FedGreenSub,0.5952540806361607,0.058651114144261864,0.5876475742885044,1.294399344175945
+packetloss,Go Heap Memory (MB),Trust-Aware FedGreenSub,0.619980948311942,0.058651114144261864,0.5876475742885044,5.502170933417908
+packetloss,Average Latency (ms),Standard GossipSub,20.0,0.0,20.0,0.0
+packetloss,Average Latency (ms),FedGreenSub,20.0,0.0,20.0,0.0
+packetloss,Average Latency (ms),Trust-Aware FedGreenSub,20.0,0.0,20.0,0.0
+packetloss,Average TrustScore,Standard GossipSub,0.0,0.0,0.0,
+packetloss,Average TrustScore,FedGreenSub,0.0,0.0,0.0,
+packetloss,Average TrustScore,Trust-Aware FedGreenSub,0.5443014705882354,0.0,0.0,
+packetloss,Minimum TrustScore,Standard GossipSub,0.0,0.0,0.0,
+packetloss,Minimum TrustScore,FedGreenSub,0.0,0.0,0.0,
+packetloss,Minimum TrustScore,Trust-Aware FedGreenSub,0.5036764705882353,0.0,0.0,
+packetloss,Trust Variance,Standard GossipSub,0.0,0.0,0.0,
+packetloss,Trust Variance,FedGreenSub,0.0,0.0,0.0,
+packetloss,Trust Variance,Trust-Aware FedGreenSub,0.0008886718750000005,0.0,0.0,
+packetloss,Trusted Peer Ratio,Standard GossipSub,0.0,0.0,0.0,
+packetloss,Trusted Peer Ratio,FedGreenSub,0.0,0.0,0.0,
+packetloss,Trusted Peer Ratio,Trust-Aware FedGreenSub,0.0,0.0,0.0,
+packetloss,Trust Update Time (us),Standard GossipSub,0.0,0.0,0.0,
+packetloss,Trust Update Time (us),FedGreenSub,0.0,0.0,0.0,
+packetloss,Trust Update Time (us),Trust-Aware FedGreenSub,20.0,0.0,0.0,
+packetloss,Peer Ranking Time (us),Standard GossipSub,0.0,0.0,0.0,
+packetloss,Peer Ranking Time (us),FedGreenSub,0.0,0.0,0.0,
+packetloss,Peer Ranking Time (us),Trust-Aware FedGreenSub,75.57142857142857,199.9432062218812,0.0,
+packetloss,Trust Aggregation Time (us),Standard GossipSub,0.0,0.0,0.0,
+packetloss,Trust Aggregation Time (us),FedGreenSub,0.0,0.0,0.0,
+packetloss,Trust Aggregation Time (us),Trust-Aware FedGreenSub,0.0,0.0,0.0,
+scaling,Duplicate Ratio,Standard GossipSub,0.0196078431372549,0.0,0.0196078431372549,0.0
+scaling,Duplicate Ratio,FedGreenSub,0.015748031496062992,0.0,0.0196078431372549,-19.68503937007874
+scaling,Duplicate Ratio,Trust-Aware FedGreenSub,0.013806706114398421,0.0,0.0196078431372549,-29.585798816568047
+scaling,Delivery Ratio,Standard GossipSub,1.0,0.0,1.0,0.0
+scaling,Delivery Ratio,FedGreenSub,1.0,0.0,1.0,0.0
+scaling,Delivery Ratio,Trust-Aware FedGreenSub,1.0,0.0,1.0,0.0
+scaling,Estimated Energy per Delivered Message,Standard GossipSub,0.00020604823764041068,5.0627584684597665e-09,0.00020604823764041068,0.0
+scaling,Estimated Energy per Delivered Message,FedGreenSub,0.0002051487763516605,5.062758468440601e-09,0.00020604823764041068,-0.4365294743844843
+scaling,Estimated Energy per Delivered Message,Trust-Aware FedGreenSub,0.0002046449446322024,5.062758468478933e-09,0.00020604823764041068,-0.6810507210730228
+scaling,Go Heap Memory (MB),Standard GossipSub,0.5736045837402344,0.06912352895617091,0.5736045837402344,0.0
+scaling,Go Heap Memory (MB),FedGreenSub,0.5812110900878906,0.06912352895617091,0.5736045837402344,1.326088835981299
+scaling,Go Heap Memory (MB),Trust-Aware FedGreenSub,0.6655693054199219,0.06912352895617091,0.5736045837402344,16.03277314836367
+scaling,Average Latency (ms),Standard GossipSub,20.0,0.0,20.0,0.0
+scaling,Average Latency (ms),FedGreenSub,20.0,0.0,20.0,0.0
+scaling,Average Latency (ms),Trust-Aware FedGreenSub,20.0,0.0,20.0,0.0
+scaling,Average TrustScore,Standard GossipSub,0.0,0.0,0.0,
+scaling,Average TrustScore,FedGreenSub,0.0,0.0,0.0,
+scaling,Average TrustScore,Trust-Aware FedGreenSub,0.5467647058823535,0.0,0.0,
+scaling,Minimum TrustScore,Standard GossipSub,0.0,0.0,0.0,
+scaling,Minimum TrustScore,FedGreenSub,0.0,0.0,0.0,
+scaling,Minimum TrustScore,Trust-Aware FedGreenSub,0.5055147058823529,0.0,0.0,
+scaling,Trust Variance,Standard GossipSub,0.0,0.0,0.0,
+scaling,Trust Variance,FedGreenSub,0.0,0.0,0.0,
+scaling,Trust Variance,Trust-Aware FedGreenSub,0.0008765624999999988,0.0,0.0,
+scaling,Trusted Peer Ratio,Standard GossipSub,0.0,0.0,0.0,
+scaling,Trusted Peer Ratio,FedGreenSub,0.0,0.0,0.0,
+scaling,Trusted Peer Ratio,Trust-Aware FedGreenSub,0.0,0.0,0.0,
+scaling,Trust Update Time (us),Standard GossipSub,0.0,0.0,0.0,
+scaling,Trust Update Time (us),FedGreenSub,0.0,0.0,0.0,
+scaling,Trust Update Time (us),Trust-Aware FedGreenSub,100.0,0.0,0.0,
+scaling,Peer Ranking Time (us),Standard GossipSub,0.0,0.0,0.0,
+scaling,Peer Ranking Time (us),FedGreenSub,0.0,0.0,0.0,
+scaling,Peer Ranking Time (us),Trust-Aware FedGreenSub,0.0,0.0,0.0,
+scaling,Trust Aggregation Time (us),Standard GossipSub,0.0,0.0,0.0,
+scaling,Trust Aggregation Time (us),FedGreenSub,0.0,0.0,0.0,
+scaling,Trust Aggregation Time (us),Trust-Aware FedGreenSub,0.0,0.0,0.0,
+trust,Duplicate Ratio,Standard GossipSub,0.0196078431372549,0.0,0.0196078431372549,0.0
+trust,Duplicate Ratio,FedGreenSub,0.013157894736842105,0.0,0.0196078431372549,-32.89473684210527
+trust,Duplicate Ratio,Trust-Aware FedGreenSub,0.013157894736842105,0.0,0.0196078431372549,-32.89473684210527
+trust,Delivery Ratio,Standard GossipSub,1.0,0.0,1.0,0.0
+trust,Delivery Ratio,FedGreenSub,1.0,0.0,1.0,0.0
+trust,Delivery Ratio,Trust-Aware FedGreenSub,1.0,0.0,1.0,0.0
+trust,Estimated Energy per Delivered Message,Standard GossipSub,0.0006868147817353407,7.288530468887392e-09,0.0006868147817353407,0.0
+trust,Estimated Energy per Delivered Message,FedGreenSub,0.0006838166019171477,7.288530468941602e-09,0.0006868147817353407,-0.4365339678068206
+trust,Estimated Energy per Delivered Message,Trust-Aware FedGreenSub,0.000682120598979791,7.288530468941602e-09,0.0006868147817353407,-0.6834714220461507
+trust,Go Heap Memory (MB),Standard GossipSub,0.5556793212890625,0.02985382080078125,0.5556793212890625,0.0
+trust,Go Heap Memory (MB),FedGreenSub,0.5632858276367188,0.02985382080078125,0.5556793212890625,1.3688661888678364
+trust,Go Heap Memory (MB),Trust-Aware FedGreenSub,0.579742431640625,0.02985382080078125,0.5556793212890625,4.3303951451245295
+trust,Average Latency (ms),Standard GossipSub,20.0,0.0,20.0,0.0
+trust,Average Latency (ms),FedGreenSub,20.0,0.0,20.0,0.0
+trust,Average Latency (ms),Trust-Aware FedGreenSub,20.0,0.0,20.0,0.0
+trust,Average TrustScore,Standard GossipSub,0.0,0.0,0.0,
+trust,Average TrustScore,FedGreenSub,0.0,0.0,0.0,
+trust,Average TrustScore,Trust-Aware FedGreenSub,0.5471813725490197,0.0,0.0,
+trust,Minimum TrustScore,Standard GossipSub,0.0,0.0,0.0,
+trust,Minimum TrustScore,FedGreenSub,0.0,0.0,0.0,
+trust,Minimum TrustScore,Trust-Aware FedGreenSub,0.5055147058823529,0.0,0.0,
+trust,Trust Variance,Standard GossipSub,0.0,0.0,0.0,
+trust,Trust Variance,FedGreenSub,0.0,0.0,0.0,
+trust,Trust Variance,Trust-Aware FedGreenSub,0.0008680555555555555,0.0,0.0,
+trust,Trusted Peer Ratio,Standard GossipSub,0.0,0.0,0.0,
+trust,Trusted Peer Ratio,FedGreenSub,0.0,0.0,0.0,
+trust,Trusted Peer Ratio,Trust-Aware FedGreenSub,0.0,0.0,0.0,
+trust,Trust Update Time (us),Standard GossipSub,0.0,0.0,0.0,
+trust,Trust Update Time (us),FedGreenSub,0.0,0.0,0.0,
+trust,Trust Update Time (us),Trust-Aware FedGreenSub,12.0,0.0,0.0,
+trust,Peer Ranking Time (us),Standard GossipSub,0.0,0.0,0.0,
+trust,Peer Ranking Time (us),FedGreenSub,0.0,0.0,0.0,
+trust,Peer Ranking Time (us),Trust-Aware FedGreenSub,0.0,0.0,0.0,
+trust,Trust Aggregation Time (us),Standard GossipSub,0.0,0.0,0.0,
+trust,Trust Aggregation Time (us),FedGreenSub,0.0,0.0,0.0,
+trust,Trust Aggregation Time (us),Trust-Aware FedGreenSub,0.0,0.0,0.0,

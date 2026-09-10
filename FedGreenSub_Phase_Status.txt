@@ -3,7 +3,8 @@ Last updated: 2026-08-31
 
 Overview
 - Implemented phases: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15
-- In progress / not yet implemented: None - all core phases complete
+- In progress / not yet implemented: live multi-node evaluation counters,
+  distributed FL transport, and full Level B ablation execution
 
 Phase 1: Package and Core Scaffolding (Implemented)
 What was done:
@@ -139,8 +140,8 @@ What was done:
 - Fixed TestRaceConditionConcurrentParameterApplication to generate valid mesh degree values
 - Fixed TestHardenedContextCancellation to properly call Stop() after context expiration
 
-Not Implemented Yet
-- None - all core phases are complete
+
+
 
 Verification
 - Command run: go test ./internal/fedgreensub -v

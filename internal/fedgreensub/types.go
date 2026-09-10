@@ -22,15 +22,19 @@ type RuntimeMetrics struct {
 	MeshDegree int
 	PeerCount  int
 
-	PublishLatency      float64
-	HeartbeatDuration   time.Duration
-	PeerScoreAverage    float64
-	BytesSent           uint64
-	BytesReceived       uint64
-	DroppedMessages     uint64
-	SuccessfulPublishes uint64
-	PacketLossRate      float64
-	PeerUptimeSeconds   float64
+	PublishLatency       float64
+	HeartbeatDuration    time.Duration
+	PeerScoreAverage     float64
+	BytesSent            uint64
+	BytesReceived        uint64
+	DroppedMessages      uint64
+	SuccessfulPublishes  uint64
+	PacketLossRate       float64
+	PeerUptimeSeconds    float64
+	AverageNeighborTrust float64
+	MinimumNeighborTrust float64
+	TrustVariance        float64
+	TrustedPeerRatio     float64
 }
 
 // GossipParameters represents the adaptive knobs that FedGreenSub can tune at
@@ -48,16 +52,19 @@ type GossipParameters struct {
 // ModelState stores a serializable view of model parameters and lightweight
 // training metadata for federated exchange.
 type ModelState struct {
-	Weights             []float64
-	Biases              []float64
-	Version             uint64
-	Samples             int64
-	Loss                float64
-	EnergyEstimate      float64
-	BatteryScore        float64
-	PacketLossRate      float64
-	PeerUptimeSeconds   float64
-	SuccessfulPublishes uint64
+	Weights              []float64
+	Biases               []float64
+	Version              uint64
+	Samples              int64
+	Loss                 float64
+	EnergyEstimate       float64
+	BatteryScore         float64
+	PacketLossRate       float64
+	PeerUptimeSeconds    float64
+	SuccessfulPublishes  uint64
+	FeatureVersion       uint64
+	NormalizationVersion uint64
+	ArchitectureVersion  uint64
 }
 
 // TrainingSample represents one labeled example for local training.
@@ -70,6 +77,29 @@ type TrainingSample struct {
 // TrainingDataset is the unit passed into the local trainer.
 type TrainingDataset struct {
 	Samples []TrainingSample
+}
+
+// ModelSpec identifies the model shape and feature/output contracts used by
+// a federated update.
+type ModelSpec struct {
+	InputSize            int
+	HiddenSize           int
+	OutputSize           int
+	FeatureVersion       uint64
+	NormalizationVersion uint64
+	ArchitectureVersion  uint64
+}
+
+// CandidateScore records the measured or controlled outcome of one safe
+// GossipSub configuration candidate.
+type CandidateScore struct {
+	Parameters     GossipParameters
+	DeliveryRatio  float64
+	DuplicateRatio float64
+	LatencyCost    float64
+	EnergyCost     float64
+	Objective      float64
+	Valid          bool
 }
 
 // ValidationReport summarizes safety checks applied before parameters are

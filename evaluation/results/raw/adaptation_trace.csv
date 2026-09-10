@@ -1,0 +1,151 @@
+peer_count,seed,implementation,round,previous_mesh,candidate_mesh,deployed_mesh,gossip_factor,heartbeat_ms,accepted,rejection_reason
+10,4242,FedGreenSub,1,8,7,7,0.2484876511,993,true,vs run-start: accepted: objective improved or remained equal within tolerances
+10,4242,FedGreenSub,2,7,6,7,0.2484876511,993,false,vs run-start: delivery regression exceeds tolerance
+10,4242,FedGreenSub,3,7,6,7,0.2484876511,993,false,vs run-start: delivery regression exceeds tolerance
+10,4242,Trust-Aware,1,8,7,7,0.2484877873,993,true,vs run-start: accepted: objective improved or remained equal within tolerances
+10,4242,Trust-Aware,2,7,6,7,0.2484877873,993,false,vs run-start: delivery regression exceeds tolerance
+10,4242,Trust-Aware,3,7,6,7,0.2484877873,993,false,vs run-start: delivery regression exceeds tolerance
+10,4243,FedGreenSub,1,8,7,7,0.2484876589,993,true,vs run-start: accepted: objective improved or remained equal within tolerances
+10,4243,FedGreenSub,2,7,6,7,0.2484876589,993,false,vs run-start: delivery regression exceeds tolerance
+10,4243,FedGreenSub,3,7,6,7,0.2484876589,993,false,vs run-start: delivery regression exceeds tolerance
+10,4243,Trust-Aware,1,8,7,7,0.2484877987,993,true,vs run-start: accepted: objective improved or remained equal within tolerances
+10,4243,Trust-Aware,2,7,6,7,0.2484877987,993,false,vs run-start: delivery regression exceeds tolerance
+10,4243,Trust-Aware,3,7,6,7,0.2484877987,993,false,vs run-start: delivery regression exceeds tolerance
+10,4244,FedGreenSub,1,8,7,7,0.2484876218,993,true,vs run-start: accepted: objective improved or remained equal within tolerances
+10,4244,FedGreenSub,2,7,6,7,0.2484876218,993,false,vs run-start: delivery regression exceeds tolerance
+10,4244,FedGreenSub,3,7,6,7,0.2484876218,993,false,vs run-start: delivery regression exceeds tolerance
+10,4244,Trust-Aware,1,8,7,7,0.2484877883,993,true,vs run-start: accepted: objective improved or remained equal within tolerances
+10,4244,Trust-Aware,2,7,6,7,0.2484877883,993,false,vs run-start: delivery regression exceeds tolerance
+10,4244,Trust-Aware,3,7,6,7,0.2484877883,993,false,vs run-start: delivery regression exceeds tolerance
+10,4245,FedGreenSub,1,8,7,7,0.2484876415,993,true,vs run-start: accepted: objective improved or remained equal within tolerances
+10,4245,FedGreenSub,2,7,6,7,0.2484876415,993,false,vs run-start: delivery regression exceeds tolerance
+10,4245,FedGreenSub,3,7,6,7,0.2484876415,993,false,vs run-start: delivery regression exceeds tolerance
+10,4245,Trust-Aware,1,8,7,7,0.2484877985,993,true,vs run-start: accepted: objective improved or remained equal within tolerances
+10,4245,Trust-Aware,2,7,6,7,0.2484877985,993,false,vs run-start: delivery regression exceeds tolerance
+10,4245,Trust-Aware,3,7,6,7,0.2484877985,993,false,vs run-start: delivery regression exceeds tolerance
+10,4246,FedGreenSub,1,8,7,7,0.2484876455,993,true,vs run-start: accepted: objective improved or remained equal within tolerances
+10,4246,FedGreenSub,2,7,6,7,0.2484876455,993,false,vs run-start: delivery regression exceeds tolerance
+10,4246,FedGreenSub,3,7,6,7,0.2484876455,993,false,vs run-start: delivery regression exceeds tolerance
+10,4246,Trust-Aware,1,8,7,7,0.248487803,993,true,vs run-start: accepted: objective improved or remained equal within tolerances
+10,4246,Trust-Aware,2,7,6,7,0.248487803,993,false,vs run-start: delivery regression exceeds tolerance
+10,4246,Trust-Aware,3,7,6,7,0.248487803,993,false,vs run-start: delivery regression exceeds tolerance
+25,4242,FedGreenSub,1,8,8,8,0.2484888198,993,true,vs run-start: accepted: objective improved or remained equal within tolerances
+25,4242,FedGreenSub,2,8,8,8,0.244334661,974,true,vs run-start: accepted: objective improved or remained equal within tolerances
+25,4242,FedGreenSub,3,8,8,8,0.2365575355,937,true,vs run-start: accepted: objective improved or remained equal within tolerances
+25,4242,Trust-Aware,1,8,8,8,0.2484889935,993,true,vs run-start: accepted: objective improved or remained equal within tolerances
+25,4242,Trust-Aware,2,8,8,8,0.2443353894,974,true,vs run-start: accepted: objective improved or remained equal within tolerances
+25,4242,Trust-Aware,3,8,8,8,0.2365596535,937,true,vs run-start: accepted: objective improved or remained equal within tolerances
+25,4243,FedGreenSub,1,8,8,8,0.2484888339,993,true,vs run-start: accepted: objective improved or remained equal within tolerances
+25,4243,FedGreenSub,2,8,8,8,0.2443347161,974,true,vs run-start: accepted: objective improved or remained equal within tolerances
+25,4243,FedGreenSub,3,8,8,8,0.2365576764,937,true,vs run-start: accepted: objective improved or remained equal within tolerances
+25,4243,Trust-Aware,1,8,8,8,0.2484890062,993,true,vs run-start: accepted: objective improved or remained equal within tolerances
+25,4243,Trust-Aware,2,8,8,8,0.2443354357,974,true,vs run-start: accepted: objective improved or remained equal within tolerances
+25,4243,Trust-Aware,3,8,8,8,0.2365597507,937,true,vs run-start: accepted: objective improved or remained equal within tolerances
+25,4244,FedGreenSub,1,8,8,8,0.2484888258,993,true,vs run-start: accepted: objective improved or remained equal within tolerances
+25,4244,FedGreenSub,2,8,8,8,0.2443346758,974,true,vs run-start: accepted: objective improved or remained equal within tolerances
+25,4244,FedGreenSub,3,8,8,8,0.2365575229,937,true,vs run-start: accepted: objective improved or remained equal within tolerances
+25,4244,Trust-Aware,1,8,8,8,0.2484890077,993,true,vs run-start: accepted: objective improved or remained equal within tolerances
+25,4244,Trust-Aware,2,8,8,8,0.2443354415,974,true,vs run-start: accepted: objective improved or remained equal within tolerances
+25,4244,Trust-Aware,3,8,8,8,0.236559764,937,true,vs run-start: accepted: objective improved or remained equal within tolerances
+25,4245,FedGreenSub,1,8,8,8,0.2484888058,993,true,vs run-start: accepted: objective improved or remained equal within tolerances
+25,4245,FedGreenSub,2,8,8,8,0.2443345998,974,true,vs run-start: accepted: objective improved or remained equal within tolerances
+25,4245,FedGreenSub,3,8,8,8,0.2365573428,937,true,vs run-start: accepted: objective improved or remained equal within tolerances
+25,4245,Trust-Aware,1,8,8,8,0.2484889941,993,true,vs run-start: accepted: objective improved or remained equal within tolerances
+25,4245,Trust-Aware,2,8,8,8,0.2443353917,974,true,vs run-start: accepted: objective improved or remained equal within tolerances
+25,4245,Trust-Aware,3,8,8,8,0.2365596589,937,true,vs run-start: accepted: objective improved or remained equal within tolerances
+25,4246,FedGreenSub,1,8,8,8,0.2484888129,993,true,vs run-start: accepted: objective improved or remained equal within tolerances
+25,4246,FedGreenSub,2,8,8,8,0.2443346335,974,true,vs run-start: accepted: objective improved or remained equal within tolerances
+25,4246,FedGreenSub,3,8,8,8,0.2365574642,937,true,vs run-start: accepted: objective improved or remained equal within tolerances
+25,4246,Trust-Aware,1,8,8,8,0.2484890011,993,true,vs run-start: accepted: objective improved or remained equal within tolerances
+25,4246,Trust-Aware,2,8,8,8,0.2443354168,974,true,vs run-start: accepted: objective improved or remained equal within tolerances
+25,4246,Trust-Aware,3,8,8,8,0.2365597108,937,true,vs run-start: accepted: objective improved or remained equal within tolerances
+50,4242,FedGreenSub,1,8,8,8,0.2484907248,993,true,vs run-start: accepted: objective improved or remained equal within tolerances
+50,4242,FedGreenSub,2,8,8,8,0.2443392229,974,true,vs run-start: accepted: objective improved or remained equal within tolerances
+50,4242,FedGreenSub,3,8,8,8,0.2365649354,937,true,vs run-start: accepted: objective improved or remained equal within tolerances
+50,4242,Trust-Aware,1,8,8,8,0.2484909006,993,true,vs run-start: accepted: objective improved or remained equal within tolerances
+50,4242,Trust-Aware,2,8,8,8,0.2443399735,974,true,vs run-start: accepted: objective improved or remained equal within tolerances
+50,4242,Trust-Aware,3,8,8,8,0.2365671923,937,true,vs run-start: accepted: objective improved or remained equal within tolerances
+50,4243,FedGreenSub,1,8,8,8,0.2484907335,993,true,vs run-start: accepted: objective improved or remained equal within tolerances
+50,4243,FedGreenSub,2,8,8,8,0.2443392576,974,true,vs run-start: accepted: objective improved or remained equal within tolerances
+50,4243,FedGreenSub,3,8,8,8,0.2365650282,937,true,vs run-start: accepted: objective improved or remained equal within tolerances
+50,4243,Trust-Aware,1,8,8,8,0.2484909083,993,true,vs run-start: accepted: objective improved or remained equal within tolerances
+50,4243,Trust-Aware,2,8,8,8,0.2443400014,974,true,vs run-start: accepted: objective improved or remained equal within tolerances
+50,4243,Trust-Aware,3,8,8,8,0.2365672503,937,true,vs run-start: accepted: objective improved or remained equal within tolerances
+50,4244,FedGreenSub,1,8,8,8,0.2484907343,993,true,vs run-start: accepted: objective improved or remained equal within tolerances
+50,4244,FedGreenSub,2,8,8,8,0.244339259,974,true,vs run-start: accepted: objective improved or remained equal within tolerances
+50,4244,FedGreenSub,3,8,8,8,0.2365650215,937,true,vs run-start: accepted: objective improved or remained equal within tolerances
+50,4244,Trust-Aware,1,8,8,8,0.2484909074,993,true,vs run-start: accepted: objective improved or remained equal within tolerances
+50,4244,Trust-Aware,2,8,8,8,0.2443399987,974,true,vs run-start: accepted: objective improved or remained equal within tolerances
+50,4244,Trust-Aware,3,8,8,8,0.236567246,937,true,vs run-start: accepted: objective improved or remained equal within tolerances
+50,4245,FedGreenSub,1,8,8,8,0.2484907264,993,true,vs run-start: accepted: objective improved or remained equal within tolerances
+50,4245,FedGreenSub,2,8,8,8,0.2443392285,974,true,vs run-start: accepted: objective improved or remained equal within tolerances
+50,4245,FedGreenSub,3,8,8,8,0.2365649458,937,true,vs run-start: accepted: objective improved or remained equal within tolerances
+50,4245,Trust-Aware,1,8,8,8,0.2484909009,993,true,vs run-start: accepted: objective improved or remained equal within tolerances
+50,4245,Trust-Aware,2,8,8,8,0.2443399749,974,true,vs run-start: accepted: objective improved or remained equal within tolerances
+50,4245,Trust-Aware,3,8,8,8,0.236567196,937,true,vs run-start: accepted: objective improved or remained equal within tolerances
+50,4246,FedGreenSub,1,8,8,8,0.2484907292,993,true,vs run-start: accepted: objective improved or remained equal within tolerances
+50,4246,FedGreenSub,2,8,8,8,0.2443392379,974,true,vs run-start: accepted: objective improved or remained equal within tolerances
+50,4246,FedGreenSub,3,8,8,8,0.236564961,937,true,vs run-start: accepted: objective improved or remained equal within tolerances
+50,4246,Trust-Aware,1,8,8,8,0.2484909078,993,true,vs run-start: accepted: objective improved or remained equal within tolerances
+50,4246,Trust-Aware,2,8,8,8,0.2443399998,974,true,vs run-start: accepted: objective improved or remained equal within tolerances
+50,4246,Trust-Aware,3,8,8,8,0.2365672472,937,true,vs run-start: accepted: objective improved or remained equal within tolerances
+100,4242,FedGreenSub,1,8,8,8,0.2484944849,993,true,vs run-start: accepted: objective improved or remained equal within tolerances
+100,4242,FedGreenSub,2,8,8,8,0.2443479154,974,true,vs run-start: accepted: objective improved or remained equal within tolerances
+100,4242,FedGreenSub,3,8,8,8,0.2365772539,937,true,vs run-start: accepted: objective improved or remained equal within tolerances
+100,4242,Trust-Aware,1,8,8,8,0.2484946594,993,true,vs run-start: accepted: objective improved or remained equal within tolerances
+100,4242,Trust-Aware,2,8,8,8,0.2443487122,974,true,vs run-start: accepted: objective improved or remained equal within tolerances
+100,4242,Trust-Aware,3,8,8,8,0.2365799221,937,true,vs run-start: accepted: objective improved or remained equal within tolerances
+100,4243,FedGreenSub,1,8,8,8,0.2484944955,993,true,vs run-start: accepted: objective improved or remained equal within tolerances
+100,4243,FedGreenSub,2,8,8,8,0.2443479574,974,true,vs run-start: accepted: objective improved or remained equal within tolerances
+100,4243,FedGreenSub,3,8,8,8,0.2365773639,937,true,vs run-start: accepted: objective improved or remained equal within tolerances
+100,4243,Trust-Aware,1,8,8,8,0.2484946684,993,true,vs run-start: accepted: objective improved or remained equal within tolerances
+100,4243,Trust-Aware,2,8,8,8,0.2443487451,974,true,vs run-start: accepted: objective improved or remained equal within tolerances
+100,4243,Trust-Aware,3,8,8,8,0.236579991,937,true,vs run-start: accepted: objective improved or remained equal within tolerances
+100,4244,FedGreenSub,1,8,8,8,0.248494493,993,true,vs run-start: accepted: objective improved or remained equal within tolerances
+100,4244,FedGreenSub,2,8,8,8,0.2443479461,974,true,vs run-start: accepted: objective improved or remained equal within tolerances
+100,4244,FedGreenSub,3,8,8,8,0.2365773264,937,true,vs run-start: accepted: objective improved or remained equal within tolerances
+100,4244,Trust-Aware,1,8,8,8,0.248494669,993,true,vs run-start: accepted: objective improved or remained equal within tolerances
+100,4244,Trust-Aware,2,8,8,8,0.2443487472,974,true,vs run-start: accepted: objective improved or remained equal within tolerances
+100,4244,Trust-Aware,3,8,8,8,0.2365799959,937,true,vs run-start: accepted: objective improved or remained equal within tolerances
+100,4245,FedGreenSub,1,8,8,8,0.2484944916,993,true,vs run-start: accepted: objective improved or remained equal within tolerances
+100,4245,FedGreenSub,2,8,8,8,0.2443479385,974,true,vs run-start: accepted: objective improved or remained equal within tolerances
+100,4245,FedGreenSub,3,8,8,8,0.2365772956,937,true,vs run-start: accepted: objective improved or remained equal within tolerances
+100,4245,Trust-Aware,1,8,8,8,0.2484946638,993,true,vs run-start: accepted: objective improved or remained equal within tolerances
+100,4245,Trust-Aware,2,8,8,8,0.2443487286,974,true,vs run-start: accepted: objective improved or remained equal within tolerances
+100,4245,Trust-Aware,3,8,8,8,0.2365799575,937,true,vs run-start: accepted: objective improved or remained equal within tolerances
+100,4246,FedGreenSub,1,8,8,8,0.2484944958,993,true,vs run-start: accepted: objective improved or remained equal within tolerances
+100,4246,FedGreenSub,2,8,8,8,0.2443479541,974,true,vs run-start: accepted: objective improved or remained equal within tolerances
+100,4246,FedGreenSub,3,8,8,8,0.2365773288,937,true,vs run-start: accepted: objective improved or remained equal within tolerances
+100,4246,Trust-Aware,1,8,8,8,0.2484946691,993,true,vs run-start: accepted: objective improved or remained equal within tolerances
+100,4246,Trust-Aware,2,8,8,8,0.2443487476,974,true,vs run-start: accepted: objective improved or remained equal within tolerances
+100,4246,Trust-Aware,3,8,8,8,0.2365799969,937,true,vs run-start: accepted: objective improved or remained equal within tolerances
+200,4242,FedGreenSub,1,8,8,8,0.2484944902,993,true,vs run-start: accepted: objective improved or remained equal within tolerances
+200,4242,FedGreenSub,2,8,8,8,0.2443479361,974,true,vs run-start: accepted: objective improved or remained equal within tolerances
+200,4242,FedGreenSub,3,8,8,8,0.2365773069,937,true,vs run-start: accepted: objective improved or remained equal within tolerances
+200,4242,Trust-Aware,1,8,8,8,0.2484946609,993,true,vs run-start: accepted: objective improved or remained equal within tolerances
+200,4242,Trust-Aware,2,8,8,8,0.2443487174,974,true,vs run-start: accepted: objective improved or remained equal within tolerances
+200,4242,Trust-Aware,3,8,8,8,0.2365799308,937,true,vs run-start: accepted: objective improved or remained equal within tolerances
+200,4243,FedGreenSub,1,8,8,8,0.2484944936,993,true,vs run-start: accepted: objective improved or remained equal within tolerances
+200,4243,FedGreenSub,2,8,8,8,0.2443479486,974,true,vs run-start: accepted: objective improved or remained equal within tolerances
+200,4243,FedGreenSub,3,8,8,8,0.2365773339,937,true,vs run-start: accepted: objective improved or remained equal within tolerances
+200,4243,Trust-Aware,1,8,8,8,0.2484946673,993,true,vs run-start: accepted: objective improved or remained equal within tolerances
+200,4243,Trust-Aware,2,8,8,8,0.2443487408,974,true,vs run-start: accepted: objective improved or remained equal within tolerances
+200,4243,Trust-Aware,3,8,8,8,0.2365799798,937,true,vs run-start: accepted: objective improved or remained equal within tolerances
+200,4244,FedGreenSub,1,8,8,8,0.2484944937,993,true,vs run-start: accepted: objective improved or remained equal within tolerances
+200,4244,FedGreenSub,2,8,8,8,0.2443479473,974,true,vs run-start: accepted: objective improved or remained equal within tolerances
+200,4244,FedGreenSub,3,8,8,8,0.2365773202,937,true,vs run-start: accepted: objective improved or remained equal within tolerances
+200,4244,Trust-Aware,1,8,8,8,0.2484946683,993,true,vs run-start: accepted: objective improved or remained equal within tolerances
+200,4244,Trust-Aware,2,8,8,8,0.2443487444,974,true,vs run-start: accepted: objective improved or remained equal within tolerances
+200,4244,Trust-Aware,3,8,8,8,0.2365799877,937,true,vs run-start: accepted: objective improved or remained equal within tolerances
+200,4245,FedGreenSub,1,8,8,8,0.2484944896,993,true,vs run-start: accepted: objective improved or remained equal within tolerances
+200,4245,FedGreenSub,2,8,8,8,0.2443479328,974,true,vs run-start: accepted: objective improved or remained equal within tolerances
+200,4245,FedGreenSub,3,8,8,8,0.2365772928,937,true,vs run-start: accepted: objective improved or remained equal within tolerances
+200,4245,Trust-Aware,1,8,8,8,0.2484946607,993,true,vs run-start: accepted: objective improved or remained equal within tolerances
+200,4245,Trust-Aware,2,8,8,8,0.244348717,974,true,vs run-start: accepted: objective improved or remained equal within tolerances
+200,4245,Trust-Aware,3,8,8,8,0.2365799304,937,true,vs run-start: accepted: objective improved or remained equal within tolerances
+200,4246,FedGreenSub,1,8,8,8,0.2484944945,993,true,vs run-start: accepted: objective improved or remained equal within tolerances
+200,4246,FedGreenSub,2,8,8,8,0.2443479516,974,true,vs run-start: accepted: objective improved or remained equal within tolerances
+200,4246,FedGreenSub,3,8,8,8,0.2365773386,937,true,vs run-start: accepted: objective improved or remained equal within tolerances
+200,4246,Trust-Aware,1,8,8,8,0.248494668,993,true,vs run-start: accepted: objective improved or remained equal within tolerances
+200,4246,Trust-Aware,2,8,8,8,0.2443487433,974,true,vs run-start: accepted: objective improved or remained equal within tolerances
+200,4246,Trust-Aware,3,8,8,8,0.2365799852,937,true,vs run-start: accepted: objective improved or remained equal within tolerances

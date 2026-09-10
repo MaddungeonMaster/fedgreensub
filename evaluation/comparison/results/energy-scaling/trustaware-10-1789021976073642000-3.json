@@ -1,0 +1,280 @@
+{
+  "experiment_id": "1789021976073642000-3",
+  "timestamp": "2026-09-10T06:32:56.073642Z",
+  "scenario": "energy-scaling",
+  "implementation": "trustaware",
+  "peer_count": 10,
+  "message_count": 200,
+  "message_size": 1024,
+  "publish_rate": 100,
+  "duration": "1m40s",
+  "seed": 4244,
+  "repetition": 3,
+  "metrics": {
+    "CPU": 52.041578296417164,
+    "MemoryMB": 0.9113540649414062,
+    "BytesSent": 216516,
+    "BytesReceived": 203461,
+    "Published": 200,
+    "Received": 198,
+    "Delivered": 187,
+    "Duplicates": 11,
+    "DeliveryRatio": 0.9397053576970776,
+    "DuplicateRatio": 0.05721071970110604,
+    "LatencyAverage": 55.25868117999999,
+    "LatencyP95": 63.54748335699998,
+    "AverageMeshDegree": 8,
+    "HeartbeatCount": 100,
+    "Energy": 0.3240894343958536,
+    "EnergyPerDeliveredMessage": 0.3466197159313942,
+    "ModeledResourceCostTotal": 64.81788687917071,
+    "ModeledResourceCostPerDeliveredMessage": 0.3466197159313942,
+    "Available": {
+      "go_heap_memory": true,
+      "live_network_counters": false,
+      "process_cpu": false,
+      "trust_metrics": true
+    },
+    "AverageTrust": 0.545514705882353,
+    "MinimumTrust": 0.45551470588235293,
+    "TrustVariance": 0.005399999999999997,
+    "TrustedPeerRatio": 0,
+    "TrustUpdateTime": 0,
+    "PeerRankingTime": 0,
+    "TrustAggregationTime": 0,
+    "FLRounds": 3,
+    "TrainingLoss": 0.1925030702097693,
+    "GlobalLoss": 0.1925030702097693,
+    "TrainingTime": 0.000003,
+    "AggregationTime": 0.000003,
+    "TotalRoundTime": 0.000003,
+    "ParameterChange": 0.13103283246052644,
+    "Contributors": 10,
+    "Rejected": 0,
+    "LocalLossByRound": [
+      0.2403108263071707,
+      0.2194599876420705,
+      0.1925030702097693
+    ],
+    "GlobalLossByRound": [
+      0.2403108263071707,
+      0.2194599876420705,
+      0.1925030702097693
+    ],
+    "ParameterChangeByRound": [
+      0.04940727463732409,
+      0.09451805615931146,
+      0.13103283246052644
+    ],
+    "TrainingTimeByRound": [
+      0.000001,
+      0.000001,
+      0.000001
+    ],
+    "AggregationTimeByRound": [
+      0.000001,
+      0.000001,
+      0.000001
+    ],
+    "EffectiveWeights": {
+      "participant-0": 0.08629356359881055,
+      "participant-1": 0.10913762426745967,
+      "participant-2": 0.10913762426745967,
+      "participant-3": 0.08629356359881055,
+      "participant-4": 0.10913762426745967,
+      "participant-5": 0.10913762426745967,
+      "participant-6": 0.08629356359881055,
+      "participant-7": 0.10913762426745967,
+      "participant-8": 0.10913762426745967,
+      "participant-9": 0.08629356359881055
+    },
+    "FLRoundTrace": [
+      {
+        "round": 1,
+        "method": "trust",
+        "model_output": [
+          0.489126799333756,
+          0.487317691033529,
+          0.4848780765095363
+        ],
+        "current": {
+          "mesh_degree": 8,
+          "d_low": 4,
+          "d_high": 12,
+          "gossip_factor": 0.25,
+          "heartbeat_interval": "1s"
+        },
+        "candidate": {
+          "mesh_degree": 8,
+          "d_low": 4,
+          "d_high": 12,
+          "gossip_factor": 0.24848780765095363,
+          "heartbeat_interval": "993.658845ms"
+        },
+        "current_outcome": {
+          "delivery_ratio": 0.9397053576970776,
+          "duplicate_ratio": 0.058824284438880395,
+          "latency_cost": 0.05620000000000001,
+          "energy_cost": 0.3306069279065198
+        },
+        "controlled_outcome": {
+          "delivery_ratio": 0.9397053576970776,
+          "duplicate_ratio": 0.05864282135699485,
+          "latency_cost": 0.056104882675,
+          "energy_cost": 0.32994559294423687
+        },
+        "current_objective": 0.25328754499359146,
+        "candidate_objective": 0.25272785576806445,
+        "accepted": true,
+        "rejection_reason": "accepted: objective improved or remained equal within tolerances",
+        "aggregation_parameter_change": 0.04940727463732409,
+        "predictor_parameter_change": 0.04940727463732409,
+        "decoded_mesh": 7.956507197335024,
+        "mesh_candidates": [
+          7,
+          8
+        ],
+        "mesh_candidate_objectives": {
+          "7": 0.25272785576806445,
+          "8": 0.25272785576806445
+        },
+        "effective_weights": {
+          "participant-0": 0.08629356359881053,
+          "participant-1": 0.10913762426745965,
+          "participant-2": 0.10913762426745965,
+          "participant-3": 0.08629356359881053,
+          "participant-4": 0.10913762426745965,
+          "participant-5": 0.10913762426745965,
+          "participant-6": 0.08629356359881053,
+          "participant-7": 0.10913762426745965,
+          "participant-8": 0.10913762426745965,
+          "participant-9": 0.08629356359881053
+        }
+      },
+      {
+        "round": 2,
+        "method": "trust",
+        "model_output": [
+          0.4730761577891385,
+          0.4607247011807961,
+          0.45844506146680325
+        ],
+        "current": {
+          "mesh_degree": 8,
+          "d_low": 4,
+          "d_high": 12,
+          "gossip_factor": 0.24848780765095363,
+          "heartbeat_interval": "993.658845ms"
+        },
+        "candidate": {
+          "mesh_degree": 8,
+          "d_low": 4,
+          "d_high": 12,
+          "gossip_factor": 0.24433231379763395,
+          "heartbeat_interval": "974.14572ms"
+        },
+        "current_outcome": {
+          "delivery_ratio": 0.9397053576970776,
+          "duplicate_ratio": 0.05864282135699485,
+          "latency_cost": 0.056104882675,
+          "energy_cost": 0.32994559294423687
+        },
+        "controlled_outcome": {
+          "delivery_ratio": 0.9397053576970776,
+          "duplicate_ratio": 0.058144162094596476,
+          "latency_cost": 0.05581218580000001,
+          "energy_cost": 0.32791948155487716
+        },
+        "current_objective": 0.25272785576806445,
+        "candidate_objective": 0.25106979237348626,
+        "accepted": true,
+        "rejection_reason": "accepted: objective improved or remained equal within tolerances",
+        "aggregation_parameter_change": 0.09451805615931146,
+        "predictor_parameter_change": 0.09451805615931146,
+        "decoded_mesh": 7.892304631156554,
+        "mesh_candidates": [
+          7,
+          8
+        ],
+        "mesh_candidate_objectives": {
+          "7": 0.25106979237348626,
+          "8": 0.25106979237348626
+        },
+        "effective_weights": {
+          "participant-0": 0.08629356359881053,
+          "participant-1": 0.10913762426745965,
+          "participant-2": 0.10913762426745965,
+          "participant-3": 0.08629356359881053,
+          "participant-4": 0.10913762426745965,
+          "participant-5": 0.10913762426745965,
+          "participant-6": 0.08629356359881053,
+          "participant-7": 0.10913762426745965,
+          "participant-8": 0.10913762426745965,
+          "participant-9": 0.08629356359881053
+        }
+      },
+      {
+        "round": 3,
+        "method": "trust",
+        "model_output": [
+          0.4508675186709147,
+          0.4242406820203109,
+          0.42221313387579745
+        ],
+        "current": {
+          "mesh_degree": 8,
+          "d_low": 4,
+          "d_high": 12,
+          "gossip_factor": 0.24433231379763395,
+          "heartbeat_interval": "974.14572ms"
+        },
+        "candidate": {
+          "mesh_degree": 8,
+          "d_low": 4,
+          "d_high": 12,
+          "gossip_factor": 0.2365536271852137,
+          "heartbeat_interval": "937.245412ms"
+        },
+        "current_outcome": {
+          "delivery_ratio": 0.9397053576970776,
+          "duplicate_ratio": 0.058144162094596476,
+          "latency_cost": 0.05581218580000001,
+          "energy_cost": 0.32791948155487716
+        },
+        "controlled_outcome": {
+          "delivery_ratio": 0.9397053576970776,
+          "duplicate_ratio": 0.05721071970110604,
+          "latency_cost": 0.05525868117999999,
+          "energy_cost": 0.3240894343958536
+        },
+        "current_objective": 0.25106979237348626,
+        "candidate_objective": 0.24794457409048398,
+        "accepted": true,
+        "rejection_reason": "accepted: objective improved or remained equal within tolerances",
+        "aggregation_parameter_change": 0.13103283246052644,
+        "predictor_parameter_change": 0.13103283246052644,
+        "decoded_mesh": 7.803470074683659,
+        "mesh_candidates": [
+          7,
+          8
+        ],
+        "mesh_candidate_objectives": {
+          "7": 0.24794457409048398,
+          "8": 0.24794457409048398
+        },
+        "effective_weights": {
+          "participant-0": 0.08629356359881055,
+          "participant-1": 0.10913762426745967,
+          "participant-2": 0.10913762426745967,
+          "participant-3": 0.08629356359881055,
+          "participant-4": 0.10913762426745967,
+          "participant-5": 0.10913762426745967,
+          "participant-6": 0.08629356359881055,
+          "participant-7": 0.10913762426745967,
+          "participant-8": 0.10913762426745967,
+          "participant-9": 0.08629356359881055
+        }
+      }
+    ]
+  }
+}

@@ -147,6 +147,24 @@ func (n *TinyNetwork) Backward(
 	target []float64,
 	output []float64,
 ) (float64, error) {
+	return n.backward(input, target, output, 1)
+}
+
+// BackwardWeighted applies one update whose loss and gradient contribution are
+// scaled by weight. A non-positive weight is not a meaningful training weight.
+func (n *TinyNetwork) BackwardWeighted(input []float64, target []float64, output []float64, weight float64) (float64, error) {
+	if weight <= 0 || math.IsNaN(weight) || math.IsInf(weight, 0) {
+		return 0, errors.New("invalid training sample weight")
+	}
+	return n.backward(input, target, output, weight)
+}
+
+func (n *TinyNetwork) backward(
+	input []float64,
+	target []float64,
+	output []float64,
+	weight float64,
+) (float64, error) {
 	if n == nil {
 		return 0, errors.New("network is nil")
 	}
@@ -189,11 +207,10 @@ func (n *TinyNetwork) Backward(
 
 		loss += errorValue * errorValue
 
-		outputDelta[o] =
-			errorValue * sigmoidDerivative(output[o])
+		outputDelta[o] = weight * errorValue * sigmoidDerivative(output[o])
 	}
 
-	loss /= float64(n.outputSize)
+	loss = weight * loss / float64(n.outputSize)
 
 	// Calculate hidden-layer errors before updating weights.
 	hiddenDelta := make([]float64, n.hiddenSize)
@@ -267,26 +284,38 @@ func (n *TinyNetwork) Train(
 	}
 
 	totalLoss := 0.0
+	totalWeight := 0.0
 
 	for _, sample := range dataset.Samples {
+		weight := sample.Weight
+		// A zero value preserves compatibility with datasets created before
+		// TrainingSample.Weight was introduced; it means neutral weight 1.
+		if weight == 0 {
+			weight = 1
+		}
+		if weight < 0 || math.IsNaN(weight) || math.IsInf(weight, 0) {
+			return 0, errors.New("invalid training sample weight")
+		}
 		output, err := n.Forward(sample.Features)
 		if err != nil {
 			return 0, err
 		}
 
-		loss, err := n.Backward(
+		loss, err := n.BackwardWeighted(
 			sample.Features,
 			sample.Targets,
 			output,
+			weight,
 		)
 		if err != nil {
 			return 0, err
 		}
 
 		totalLoss += loss
+		totalWeight += weight
 	}
 
-	return totalLoss / float64(len(dataset.Samples)), nil
+	return totalLoss / totalWeight, nil
 }
 
 // Weights returns a serializable snapshot of the model state.
@@ -333,11 +362,14 @@ func (n *TinyNetwork) Weights() ModelState {
 	)
 
 	return ModelState{
-		Weights: append([]float64(nil), weights...),
-		Biases:  append([]float64(nil), biases...),
-		Version: n.version,
-		Samples: n.samples,
-		Loss:    n.loss,
+		Weights:              append([]float64(nil), weights...),
+		Biases:               append([]float64(nil), biases...),
+		Version:              n.version,
+		Samples:              n.samples,
+		Loss:                 n.loss,
+		FeatureVersion:       FeatureVersion,
+		NormalizationVersion: NormalizationVersion,
+		ArchitectureVersion:  ArchitectureVersion,
 	}
 }
 
@@ -366,6 +398,15 @@ func (n *TinyNetwork) SetWeights(
 
 	if len(state.Biases) != expectedBiases {
 		return errors.New("invalid bias count")
+	}
+	if state.FeatureVersion != 0 && state.FeatureVersion != FeatureVersion {
+		return errors.New("incompatible feature version")
+	}
+	if state.NormalizationVersion != 0 && state.NormalizationVersion != NormalizationVersion {
+		return errors.New("incompatible normalization version")
+	}
+	if state.ArchitectureVersion != 0 && state.ArchitectureVersion != ArchitectureVersion {
+		return errors.New("incompatible architecture version")
 	}
 
 	inputHiddenCount :=

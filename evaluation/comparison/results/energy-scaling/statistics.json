@@ -1,0 +1,262 @@
+[
+  {
+    "scenario": "energy-scaling",
+    "implementation": "gossipsub",
+    "delivery_ratio": {
+      "mean": 0.9281400337637956,
+      "stddev": 0.005557308638790394,
+      "minimum": 0.9234649033660353,
+      "maximum": 0.9399450573530418
+    },
+    "duplicate_ratio": {
+      "mean": 0.06259970449998967,
+      "stddev": 0.0030720513932812636,
+      "minimum": 0.05425431789578729,
+      "maximum": 0.06507227544259173
+    },
+    "energy_per_delivered_message": {
+      "mean": 0.3682214985478482,
+      "stddev": 0.0072061404608575125,
+      "minimum": 0.35359029722622437,
+      "maximum": 0.375000056362534
+    },
+    "cpu": {
+      "mean": 56.0107973011982,
+      "stddev": 1.8286063739276182,
+      "minimum": 52.041578296417164,
+      "maximum": 57.71582234104555
+    },
+    "memory_mb": {
+      "mean": 2.4533197021484376,
+      "stddev": 0.8717635780707805,
+      "minimum": 0.7001724243164062,
+      "maximum": 3.8997344970703125
+    },
+    "latency_average": {
+      "mean": 61.53020000000001,
+      "stddev": 2.8305396941219434,
+      "minimum": 54.50000000000001,
+      "maximum": 63.945
+    },
+    "parameter_change": {
+      "mean": 0,
+      "stddev": 0,
+      "minimum": 0,
+      "maximum": 0
+    },
+    "global_loss": {
+      "mean": 0,
+      "stddev": 0,
+      "minimum": 0,
+      "maximum": 0
+    }
+  },
+  {
+    "scenario": "energy-scaling",
+    "implementation": "heuristic",
+    "delivery_ratio": {
+      "mean": 0.9281400337637956,
+      "stddev": 0.005557308638790394,
+      "minimum": 0.9234649033660353,
+      "maximum": 0.9399450573530418
+    },
+    "duplicate_ratio": {
+      "mean": 0.06259970449998967,
+      "stddev": 0.0030720513932812636,
+      "minimum": 0.05425431789578729,
+      "maximum": 0.06507227544259173
+    },
+    "energy_per_delivered_message": {
+      "mean": 0.3682214985478482,
+      "stddev": 0.0072061404608575125,
+      "minimum": 0.35359029722622437,
+      "maximum": 0.375000056362534
+    },
+    "cpu": {
+      "mean": 56.0107973011982,
+      "stddev": 1.8286063739276182,
+      "minimum": 52.041578296417164,
+      "maximum": 57.71582234104555
+    },
+    "memory_mb": {
+      "mean": 2.145494384765625,
+      "stddev": 0.6990269376121415,
+      "minimum": 0.7614898681640625,
+      "maximum": 3.323760986328125
+    },
+    "latency_average": {
+      "mean": 61.53020000000001,
+      "stddev": 2.8305396941219434,
+      "minimum": 54.50000000000001,
+      "maximum": 63.945
+    },
+    "parameter_change": {
+      "mean": 0,
+      "stddev": 0,
+      "minimum": 0,
+      "maximum": 0
+    },
+    "global_loss": {
+      "mean": 0,
+      "stddev": 0,
+      "minimum": 0,
+      "maximum": 0
+    }
+  },
+  {
+    "scenario": "energy-scaling",
+    "implementation": "fl",
+    "delivery_ratio": {
+      "mean": 0.9281400337637956,
+      "stddev": 0.005557308638790394,
+      "minimum": 0.9234649033660353,
+      "maximum": 0.9399450573530418
+    },
+    "duplicate_ratio": {
+      "mean": 0.060987803704764545,
+      "stddev": 0.003073035943705982,
+      "minimum": 0.052640761175620256,
+      "maximum": 0.06346175603669617
+    },
+    "energy_per_delivered_message": {
+      "mean": 0.36117542921504525,
+      "stddev": 0.007165248352255008,
+      "minimum": 0.346619745231329,
+      "maximum": 0.3679154273963171
+    },
+    "cpu": {
+      "mean": 56.0107973011982,
+      "stddev": 1.8286063739276182,
+      "minimum": 52.041578296417164,
+      "maximum": 57.71582234104555
+    },
+    "memory_mb": {
+      "mean": 2.405271301269531,
+      "stddev": 0.7526313507970893,
+      "minimum": 0.9388885498046875,
+      "maximum": 3.3887176513671875
+    },
+    "latency_average": {
+      "mean": 60.58885988240001,
+      "stddev": 2.8305018148530032,
+      "minimum": 53.55869190500001,
+      "maximum": 63.00355432499999
+    },
+    "parameter_change": {
+      "mean": 0.12850204525313727,
+      "stddev": 0.0011405542999299025,
+      "minimum": 0.12766746148769123,
+      "maximum": 0.13072847631908574
+    },
+    "global_loss": {
+      "mean": 0.1935181877792935,
+      "stddev": 0.0004924752687024297,
+      "minimum": 0.1925605602552447,
+      "maximum": 0.19388750134091434
+    }
+  },
+  {
+    "scenario": "energy-scaling",
+    "implementation": "fedgreen",
+    "delivery_ratio": {
+      "mean": 0.9281400337637956,
+      "stddev": 0.005557308638790394,
+      "minimum": 0.9234649033660353,
+      "maximum": 0.9399450573530418
+    },
+    "duplicate_ratio": {
+      "mean": 0.06098752927087447,
+      "stddev": 0.0030730072676592984,
+      "minimum": 0.05264054884316469,
+      "maximum": 0.0634614445087205
+    },
+    "energy_per_delivered_message": {
+      "mean": 0.3611742604463947,
+      "stddev": 0.007165103823765814,
+      "minimum": 0.34661872010633626,
+      "maximum": 0.36791407593920394
+    },
+    "cpu": {
+      "mean": 56.0107973011982,
+      "stddev": 1.8286063739276182,
+      "minimum": 52.041578296417164,
+      "maximum": 57.71582234104555
+    },
+    "memory_mb": {
+      "mean": 2.5747381591796876,
+      "stddev": 0.7880189112191696,
+      "minimum": 1.009674072265625,
+      "maximum": 4.0901031494140625
+    },
+    "latency_average": {
+      "mean": 60.588704018,
+      "stddev": 2.8304832958019577,
+      "minimum": 53.55857486,
+      "maximum": 63.00337490999998
+    },
+    "parameter_change": {
+      "mean": 0.13873108506090864,
+      "stddev": 0.0009639208091667123,
+      "minimum": 0.13782544394735083,
+      "maximum": 0.1413087487835373
+    },
+    "global_loss": {
+      "mean": 0.19200049719866957,
+      "stddev": 0.000511409599075501,
+      "minimum": 0.19089201209210913,
+      "maximum": 0.19241619921770745
+    }
+  },
+  {
+    "scenario": "energy-scaling",
+    "implementation": "trustaware",
+    "delivery_ratio": {
+      "mean": 0.9281400337637956,
+      "stddev": 0.005557308638790394,
+      "minimum": 0.9234649033660353,
+      "maximum": 0.9399450573530418
+    },
+    "duplicate_ratio": {
+      "mean": 0.06098780273633377,
+      "stddev": 0.0030730392490607096,
+      "minimum": 0.05264075194332198,
+      "maximum": 0.06346175552437922
+    },
+    "energy_per_delivered_message": {
+      "mean": 0.3611754248847159,
+      "stddev": 0.007165260713486462,
+      "minimum": 0.3466197159313942,
+      "maximum": 0.3679154235964891
+    },
+    "cpu": {
+      "mean": 56.0107973011982,
+      "stddev": 1.8286063739276182,
+      "minimum": 52.041578296417164,
+      "maximum": 57.71582234104555
+    },
+    "memory_mb": {
+      "mean": 2.461031494140625,
+      "stddev": 0.8330494004657093,
+      "minimum": 0.9113540649414062,
+      "maximum": 4.5066375732421875
+    },
+    "latency_average": {
+      "mean": 60.5888592938,
+      "stddev": 2.830503557377125,
+      "minimum": 53.55868593499999,
+      "maximum": 63.003554145
+    },
+    "parameter_change": {
+      "mean": 0.12855773298755452,
+      "stddev": 0.0012549219864960394,
+      "minimum": 0.12768342215569053,
+      "maximum": 0.13103283246052644
+    },
+    "global_loss": {
+      "mean": 0.19350768849025285,
+      "stddev": 0.0005136543553855555,
+      "minimum": 0.1925030702097693,
+      "maximum": 0.1938844467575026
+    }
+  }
+]

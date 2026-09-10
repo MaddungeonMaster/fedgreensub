@@ -1,160 +1,185 @@
 package fedgreensub
 
-import "fmt"
+import (
+	"fmt"
+	"math"
+)
 
-// Aggregator combines model updates from multiple peers.
 type Aggregator interface {
 	FedAvg([]ModelState) (ModelState, error)
 	EnergyWeightedFedAvg([]ModelState, []float64) (ModelState, error)
+	TrustWeightedFedAvg([]ModelState, []float64, float64) (ModelState, error)
 }
-
-// AggregationResult records the outcome of a federated round.
 type AggregationResult struct {
 	Round        uint64
 	Aggregated   ModelState
 	Contributors int
 	EnergyAware  bool
 }
-
-// AggregatorImpl is the default implementation of the federated averaging
-// strategy for FedGreenSub.
 type AggregatorImpl struct{}
 
-func NewAggregator() *AggregatorImpl {
-	return &AggregatorImpl{}
-}
+func NewAggregator() *AggregatorImpl { return &AggregatorImpl{} }
 
 func (a *AggregatorImpl) FedAvg(states []ModelState) (ModelState, error) {
+	if err := validateAggregationStates(states); err != nil {
+		return ModelState{}, err
+	}
 	if len(states) == 0 {
 		return ModelState{}, nil
 	}
-	if len(states) == 1 {
-		return cloneModelState(states[0]), nil
+	weights := make([]float64, len(states))
+	for i, s := range states {
+		weights[i] = float64(s.Samples)
 	}
-
-	merged := ModelState{Weights: make([]float64, len(states[0].Weights)), Biases: make([]float64, len(states[0].Biases))}
-	totalSamples := int64(0)
-	for _, state := range states {
-		totalSamples += state.Samples
-	}
-	if totalSamples == 0 {
-		for i := range states[0].Weights {
-			merged.Weights[i] = states[0].Weights[i]
-		}
-		for i := range states[0].Biases {
-			merged.Biases[i] = states[0].Biases[i]
-		}
-		merged.Samples = totalSamples
-		return merged, nil
-	}
-
-	for i := range merged.Weights {
-		weightedSum := 0.0
-		for _, state := range states {
-			if i < len(state.Weights) {
-				weightedSum += float64(state.Samples) * state.Weights[i]
-			}
-		}
-		merged.Weights[i] = weightedSum / float64(totalSamples)
-	}
-	for i := range merged.Biases {
-		weightedSum := 0.0
-		for _, state := range states {
-			if i < len(state.Biases) {
-				weightedSum += float64(state.Samples) * state.Biases[i]
-			}
-		}
-		merged.Biases[i] = weightedSum / float64(totalSamples)
-	}
-	merged.Samples = totalSamples
-	return merged, nil
+	return mergeWeighted(states, weights)
 }
 
-func (a *AggregatorImpl) EnergyWeightedFedAvg(states []ModelState, energyScores []float64) (ModelState, error) {
+// EnergyWeightedFedAvg uses a normalized, modelled resource-availability
+// score in [0,1], not a physical energy measurement. Its contribution is
+// sample count times resource availability times observed connectivity.
+func (a *AggregatorImpl) EnergyWeightedFedAvg(states []ModelState, resources []float64) (ModelState, error) {
+	if len(states) != len(resources) {
+		return ModelState{}, fmt.Errorf("mismatched state and resource score counts: %d != %d", len(states), len(resources))
+	}
+	if err := validateAggregationStates(states); err != nil {
+		return ModelState{}, err
+	}
 	if len(states) == 0 {
 		return ModelState{}, nil
 	}
-	if len(states) != len(energyScores) {
-		return ModelState{}, fmt.Errorf("mismatched state and energy score counts: %d != %d", len(states), len(energyScores))
-	}
-	if len(states) == 1 {
-		return cloneModelState(states[0]), nil
-	}
-
-	weightTotal := 0.0
 	weights := make([]float64, len(states))
-	for i, state := range states {
-		base := float64(state.Samples)
-		batteryScore := 1.0
-		if energyScores[i] > 0 {
-			batteryScore = energyScores[i]
+	for i, s := range states {
+		if resources[i] < 0 || resources[i] > 1 || math.IsNaN(resources[i]) || math.IsInf(resources[i], 0) {
+			return ModelState{}, fmt.Errorf("invalid modelled resource score at index %d", i)
 		}
-		connectivity := ConnectivityScore(state.PacketLossRate, state.PeerUptimeSeconds, state.SuccessfulPublishes)
-		w := base * batteryScore * connectivity
-		weights[i] = w
-		weightTotal += w
+		weights[i] = float64(s.Samples) * resources[i] * ConnectivityScore(s.PacketLossRate, s.PeerUptimeSeconds, s.SuccessfulPublishes)
 	}
-	if weightTotal == 0 {
-		return a.FedAvg(states)
-	}
+	return mergeWeighted(states, weights)
+}
 
-	merged := ModelState{Weights: make([]float64, len(states[0].Weights)), Biases: make([]float64, len(states[0].Biases))}
-	for i := range merged.Weights {
-		sum := 0.0
-		for j, state := range states {
-			if i < len(state.Weights) {
-				sum += weights[j] * state.Weights[i]
-			}
+// TrustWeightedFedAvg uses capped sample count × connectivity × trust factor.
+// The trust factor is 0.1 + 0.9*effectiveTrust; a participant's sample count
+// is capped at 1000 before weighting, so it cannot alone dominate a round.
+// Missing/new trust is neutral (0.5); trustWeight scales trust's influence.
+func (a *AggregatorImpl) TrustWeightedFedAvg(states []ModelState, trustScores []float64, trustWeight float64) (ModelState, error) {
+	if len(states) != len(trustScores) {
+		return ModelState{}, fmt.Errorf("mismatched state and trust score counts: %d != %d", len(states), len(trustScores))
+	}
+	if err := validateAggregationStates(states); err != nil {
+		return ModelState{}, err
+	}
+	if len(states) == 0 {
+		return ModelState{}, nil
+	}
+	if math.IsNaN(trustWeight) || math.IsInf(trustWeight, 0) || trustWeight < 0 {
+		return ModelState{}, fmt.Errorf("invalid trust weight")
+	}
+	if trustWeight > 1 {
+		trustWeight = 1
+	}
+	weights := make([]float64, len(states))
+	for i, s := range states {
+		trust := trustScores[i]
+		if math.IsNaN(trust) || math.IsInf(trust, 0) {
+			return ModelState{}, fmt.Errorf("invalid trust score at index %d", i)
 		}
-		merged.Weights[i] = sum / weightTotal
+		trust = clamp01(trust)
+		effective := .5 + trustWeight*(trust-.5)
+		weights[i] = float64(minInt64(s.Samples, 1000)) * (.1 + .9*effective) * ConnectivityScore(s.PacketLossRate, s.PeerUptimeSeconds, s.SuccessfulPublishes)
+	}
+	return mergeWeighted(states, weights)
+}
+
+func mergeWeighted(states []ModelState, weights []float64) (ModelState, error) {
+	if len(states) != len(weights) {
+		return ModelState{}, fmt.Errorf("mismatched state and aggregation weight counts")
+	}
+	total := 0.0
+	for i, w := range weights {
+		if w < 0 || math.IsNaN(w) || math.IsInf(w, 0) {
+			return ModelState{}, fmt.Errorf("invalid aggregation weight at index %d", i)
+		}
+		total += w
+	}
+	if total <= 0 || math.IsNaN(total) || math.IsInf(total, 0) {
+		return ModelState{}, fmt.Errorf("aggregation has zero or invalid total weight")
+	}
+	merged := ModelState{Weights: make([]float64, len(states[0].Weights)), Biases: make([]float64, len(states[0].Biases)), FeatureVersion: states[0].FeatureVersion}
+	for i := range merged.Weights {
+		for j, s := range states {
+			merged.Weights[i] += weights[j] * s.Weights[i]
+		}
+		merged.Weights[i] /= total
 	}
 	for i := range merged.Biases {
-		sum := 0.0
-		for j, state := range states {
-			if i < len(state.Biases) {
-				sum += weights[j] * state.Biases[i]
-			}
+		for j, s := range states {
+			merged.Biases[i] += weights[j] * s.Biases[i]
 		}
-		merged.Biases[i] = sum / weightTotal
+		merged.Biases[i] /= total
 	}
 	merged.Samples = totalSamples(states)
 	return merged, nil
 }
-
+func validateAggregationStates(states []ModelState) error {
+	if len(states) == 0 {
+		return nil
+	}
+	weights, biases, version := len(states[0].Weights), len(states[0].Biases), states[0].FeatureVersion
+	for _, s := range states {
+		if len(s.Weights) != weights || len(s.Biases) != biases {
+			return fmt.Errorf("model parameter dimensions do not match")
+		}
+		if s.FeatureVersion != 0 && version != 0 && s.FeatureVersion != version {
+			return fmt.Errorf("model feature versions do not match")
+		}
+		if s.Samples < 0 {
+			return fmt.Errorf("model has negative sample count")
+		}
+		if math.IsNaN(s.PacketLossRate) || math.IsInf(s.PacketLossRate, 0) || math.IsNaN(s.PeerUptimeSeconds) || math.IsInf(s.PeerUptimeSeconds, 0) {
+			return fmt.Errorf("model has invalid connectivity metadata")
+		}
+		if err := ValidateModelState(s, 0, 0); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+func minInt64(value, maximum int64) int64 {
+	if value > maximum {
+		return maximum
+	}
+	return value
+}
 func totalSamples(states []ModelState) int64 {
-	total := int64(0)
-	for _, state := range states {
-		total += state.Samples
+	var total int64
+	for _, s := range states {
+		total += s.Samples
 	}
 	return total
 }
-
-// ConnectivityScore estimates normalized connectivity based on packet loss,
-// peer uptime, and successful publish count. A value near 1 means healthier
-// connectivity for weighting in federated aggregation.
-func ConnectivityScore(packetLoss float64, peerUptimeSeconds float64, successfulPublishes uint64) float64 {
+func ConnectivityScore(packetLoss, uptime float64, publishes uint64) float64 {
 	if packetLoss < 0 {
 		packetLoss = 0
 	}
 	if packetLoss > 1 {
 		packetLoss = 1
 	}
-	if peerUptimeSeconds < 0 {
-		peerUptimeSeconds = 0
+	if uptime < 0 {
+		uptime = 0
 	}
-	if successfulPublishes == 0 {
-		return 0.5 * (1 - packetLoss)
+	if publishes == 0 {
+		return .5 * (1 - packetLoss)
 	}
-	base := 1.0 - packetLoss
-	if peerUptimeSeconds > 0 {
-		base *= 1.0 - (1.0 / (1.0 + peerUptimeSeconds/600.0))
+	base := 1 - packetLoss
+	if uptime > 0 {
+		base *= 1 - (1 / (1 + uptime/600))
 	}
-	base *= 1.0 - (1.0 / (1.0 + float64(successfulPublishes)/100.0))
-	if base < 0.01 {
-		return 0.01
+	base *= 1 - (1 / (1 + float64(publishes)/100))
+	if base < .01 {
+		return .01
 	}
-	if base > 1.0 {
-		return 1.0
+	if base > 1 {
+		return 1
 	}
 	return base
 }

@@ -35,11 +35,15 @@ type RuntimeStatus struct {
 type Runtime struct {
 	mu sync.RWMutex
 
-	config    Config
-	optimizer *Optimizer
-	predictor Predictor
-	smoother  *ParameterSmoother
-	params    *ParameterManager
+	config      Config
+	optimizer   *Optimizer
+	predictor   Predictor
+	smoother    *ParameterSmoother
+	params      *ParameterManager
+	coordinator *FederatedCoordinator
+	learned     Predictor
+	method      AggregationMethod
+	evaluator   CandidateEvaluator
 
 	cancel  context.CancelFunc
 	wg      sync.WaitGroup
@@ -52,6 +56,30 @@ type Runtime struct {
 	predictionBusy int32
 
 	status RuntimeStatus
+}
+
+// ConfigureTrainingData attaches the outcome evaluator used to turn runtime
+// observations into supervised samples for local FL windows.
+func (r *Runtime) ConfigureTrainingData(evaluator CandidateEvaluator) {
+	if r == nil {
+		return
+	}
+	r.mu.Lock()
+	r.evaluator = evaluator
+	r.mu.Unlock()
+}
+
+// ConfigureFederatedLearning attaches an in-process coordinator and learned
+// predictor. The default runtime remains heuristic-only until this is called.
+func (r *Runtime) ConfigureFederatedLearning(coordinator *FederatedCoordinator, predictor Predictor, method AggregationMethod) {
+	if r == nil {
+		return
+	}
+	r.mu.Lock()
+	r.coordinator = coordinator
+	r.learned = predictor
+	r.method = method
+	r.mu.Unlock()
 }
 
 // NewRuntime wires the heartbeat loop around already-constructed components.
@@ -187,7 +215,7 @@ func (r *Runtime) predictionLoop(ctx context.Context) {
 		case <-ctx.Done():
 			return
 		case <-ticker.C:
-			r.tickPrediction()
+			r.tickPrediction(ctx)
 		}
 	}
 }
@@ -228,7 +256,7 @@ func (r *Runtime) tickMetrics(ctx context.Context) {
 // safety clamping, Phase 10), and validates + applies the result through the
 // ParameterManager. If a previous prediction cycle is still in flight this
 // tick is skipped.
-func (r *Runtime) tickPrediction() {
+func (r *Runtime) tickPrediction(ctx context.Context) {
 	if r == nil || r.optimizer == nil || r.predictor == nil || r.params == nil {
 		return
 	}
@@ -238,13 +266,64 @@ func (r *Runtime) tickPrediction() {
 	defer atomic.StoreInt32(&r.predictionBusy, 0)
 
 	metrics := r.optimizer.Snapshot()
-	predicted := r.predictor.Predict(metrics)
+	r.mu.RLock()
+	coordinator, learned, method, evaluator := r.coordinator, r.learned, r.method, r.evaluator
+	r.mu.RUnlock()
+	if coordinator != nil {
+		if evaluator == nil {
+			r.mu.Lock()
+			r.status.LastError = errors.New("fedgreensub: FL training data evaluator is not configured")
+			r.mu.Unlock()
+			return
+		}
+		sample, _, err := GenerateTrainingSample(ctx, metrics, r.params.CurrentParameters(), evaluator, r.config)
+		if err != nil {
+			r.mu.Lock()
+			r.status.LastError = err
+			r.mu.Unlock()
+			return
+		}
+		coordinator.AppendTrainingSample(sample)
+		if _, err := coordinator.RunRound(ctx, method); err != nil {
+			r.mu.Lock()
+			r.status.LastError = err
+			r.mu.Unlock()
+			return
+		}
+	}
+	predictor := r.predictor
+	if learned != nil {
+		predictor = learned
+	}
+	var predicted GossipParameters
+	if currentAware, ok := predictor.(interface {
+		PredictWithCurrent(RuntimeMetrics, GossipParameters) GossipParameters
+	}); ok {
+		predicted = currentAware.PredictWithCurrent(metrics, r.params.CurrentParameters())
+	} else {
+		predicted = predictor.Predict(metrics)
+	}
 
 	if r.smoother != nil {
 		predicted = r.smoother.Smooth(predicted)
 	}
 
-	report := r.params.ApplyParameters(predicted)
+	report := ValidationReport{Accepted: true, Reason: "accepted: no candidate evaluator configured"}
+	if coordinator != nil && evaluator != nil {
+		current := r.params.CurrentParameters()
+		currentScore, currentErr := evaluator.Evaluate(ctx, metrics, current)
+		candidateScore, candidateErr := evaluator.Evaluate(ctx, metrics, predicted)
+		if currentErr != nil || candidateErr != nil {
+			report = ValidationReport{Reason: "candidate evaluation failed"}
+		} else {
+			report = compareCandidateDeployment(currentScore, candidateScore, r.config)
+		}
+		if report.Accepted {
+			report = r.params.ApplyParameters(predicted)
+		}
+	} else {
+		report = r.params.ApplyParameters(predicted)
+	}
 
 	r.mu.Lock()
 	r.status.LastParameters = predicted
@@ -257,6 +336,27 @@ func (r *Runtime) tickPrediction() {
 		slog.Float64("gossip_factor", predicted.GossipFactor),
 		slog.Duration("heartbeat_interval", predicted.HeartbeatInterval),
 	)
+}
+
+func compareCandidateDeployment(current, candidate CandidateScore, cfg Config) ValidationReport {
+	if !candidate.Valid {
+		return ValidationReport{Reason: "candidate outcome invalid"}
+	}
+	if candidate.DeliveryRatio < current.DeliveryRatio-.01 {
+		return ValidationReport{Reason: "delivery regression exceeds tolerance"}
+	}
+	if candidate.DuplicateRatio > current.DuplicateRatio+.02 {
+		return ValidationReport{Reason: "duplicate regression exceeds tolerance"}
+	}
+	if candidate.EnergyCost > current.EnergyCost+.02 {
+		return ValidationReport{Reason: "modeled resource-cost regression exceeds tolerance"}
+	}
+	currentObjective := ScoreCandidate(current, cfg.MinimumDeliveryRatio, cfg.TargetWeights)
+	candidateObjective := ScoreCandidate(candidate, cfg.MinimumDeliveryRatio, cfg.TargetWeights)
+	if candidateObjective > currentObjective+1e-9 {
+		return ValidationReport{Reason: "objective is worse than current configuration"}
+	}
+	return ValidationReport{Accepted: true, Reason: "accepted: objective improved or remained equal within tolerances"}
 }
 
 func (r *Runtime) logEvent(msg string, args ...any) {

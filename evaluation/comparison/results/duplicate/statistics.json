@@ -1,0 +1,122 @@
+[
+  {
+    "scenario": "duplicate",
+    "implementation": "gossipsub",
+    "delivery_ratio": {
+      "mean": 1,
+      "stddev": 0,
+      "minimum": 1,
+      "maximum": 1
+    },
+    "duplicate_ratio": {
+      "mean": 0.25925925925925924,
+      "stddev": 0,
+      "minimum": 0.25925925925925924,
+      "maximum": 0.25925925925925924
+    },
+    "energy_per_delivered_message": {
+      "mean": 0.0005084656355095407,
+      "stddev": 2.32690945266463e-9,
+      "minimum": 0.000508463308600088,
+      "maximum": 0.0005084679624189933
+    },
+    "cpu": {
+      "mean": 0,
+      "stddev": 0,
+      "minimum": 0,
+      "maximum": 0
+    },
+    "memory_mb": {
+      "mean": 0.5438194274902344,
+      "stddev": 0.019062042236328125,
+      "minimum": 0.5247573852539062,
+      "maximum": 0.5628814697265625
+    },
+    "latency_average": {
+      "mean": 20,
+      "stddev": 0,
+      "minimum": 20,
+      "maximum": 20
+    }
+  },
+  {
+    "scenario": "duplicate",
+    "implementation": "fedgreen",
+    "delivery_ratio": {
+      "mean": 1,
+      "stddev": 0,
+      "minimum": 1,
+      "maximum": 1
+    },
+    "duplicate_ratio": {
+      "mean": 0.22879177377892032,
+      "stddev": 0,
+      "minimum": 0.22879177377892032,
+      "maximum": 0.22879177377892032
+    },
+    "energy_per_delivered_message": {
+      "mean": 0.0004822140004026393,
+      "stddev": 2.326909452691735e-9,
+      "minimum": 0.00048221167349318664,
+      "maximum": 0.00048221632731209203
+    },
+    "cpu": {
+      "mean": 0,
+      "stddev": 0,
+      "minimum": 0,
+      "maximum": 0
+    },
+    "memory_mb": {
+      "mean": 0.5514259338378906,
+      "stddev": 0.019062042236328125,
+      "minimum": 0.5323638916015625,
+      "maximum": 0.5704879760742188
+    },
+    "latency_average": {
+      "mean": 20,
+      "stddev": 0,
+      "minimum": 20,
+      "maximum": 20
+    }
+  },
+  {
+    "scenario": "duplicate",
+    "implementation": "trustaware",
+    "delivery_ratio": {
+      "mean": 1,
+      "stddev": 0,
+      "minimum": 1,
+      "maximum": 1
+    },
+    "duplicate_ratio": {
+      "mean": 0.21052631578947367,
+      "stddev": 0,
+      "minimum": 0.21052631578947367,
+      "maximum": 0.21052631578947367
+    },
+    "energy_per_delivered_message": {
+      "mean": 0.000467340566214174,
+      "stddev": 2.32690945271884e-9,
+      "minimum": 0.0004673382393047213,
+      "maximum": 0.00046734289312362674
+    },
+    "cpu": {
+      "mean": 0,
+      "stddev": 0,
+      "minimum": 0,
+      "maximum": 0
+    },
+    "memory_mb": {
+      "mean": 0.5761528015136719,
+      "stddev": 0.019062042236328125,
+      "minimum": 0.5570907592773438,
+      "maximum": 0.59521484375
+    },
+    "latency_average": {
+      "mean": 20,
+      "stddev": 0,
+      "minimum": 20,
+      "maximum": 20
+    }
+  }
+]
