@@ -141,8 +141,9 @@ func (a *adapter) run(workload Workload) error {
 			_ = a.params.ApplyParameters(predicted)
 			parameters = predicted
 		} else {
-			// Keep the last known-good runtime configuration.
-			parameters = parameters
+			// Keep the last known-good runtime configuration: `parameters` is
+			// deliberately left untouched here. `reason` is discarded rather
+			// than removed because it is declared in the `if` initialiser.
 			_ = reason
 		}
 	}
@@ -618,33 +619,6 @@ func clampRange(value, minimum, maximum float64) float64 {
 func (a *adapter) optimizerPrediction(workload Workload) fedgreensub.GossipParameters {
 	return fedgreensub.NewHeuristicPredictor(fedgreensub.DefaultConfig()).Predict(fedgreensub.RuntimeMetrics{PeerCount: workload.Peers, PacketLossRate: workload.PacketLoss, DuplicateRate: workload.Duplicates, PublishLatency: float64(workload.Latency.Milliseconds())})
 }
-func (a *adapter) injectTrust(workload Workload) {
-	for i := 0; i < workload.Peers; i++ {
-		id := peerID(i)
-		success := i%3 != 0
-		a.optimizer.ObservePeer(id, fedgreensub.PeerObservation{PeerID: id, MessageReceived: success, DeliverySuccess: success, Connected: true, PacketLoss: workload.PacketLoss, Latency: workload.Latency})
-	}
-	scores := a.optimizer.TrustManager().AllScores()
-	f := fedgreensub.AggregateTrustFeatures(scores, .7)
-	a.metrics.AverageTrust, a.metrics.MinimumTrust, a.metrics.TrustVariance, a.metrics.TrustedPeerRatio = f.AverageNeighborTrust, f.MinimumNeighborTrust, f.TrustVariance, f.TrustedPeerRatio
-	ids := make([]peer.ID, 0, len(scores))
-	trustValues := make([]float64, 0, len(scores))
-	states := make([]fedgreensub.ModelState, 0, len(scores))
-	gossipScores := make(map[peer.ID]float64, len(scores))
-	for id, score := range scores {
-		ids = append(ids, id)
-		trustValues = append(trustValues, score.Score)
-		gossipScores[id] = score.PeerScore
-		states = append(states, fedgreensub.ModelState{Weights: []float64{score.Score}, Biases: []float64{score.Score}, Samples: 1})
-	}
-	started := time.Now()
-	_ = fedgreensub.RankPeers(ids, scores, gossipScores, fedgreensub.NewConfig(fedgreensub.WithTrustScore(true)))
-	a.metrics.PeerRankingTime = float64(time.Since(started).Microseconds())
-	started = time.Now()
-	_, _ = fedgreensub.NewAggregator().TrustWeightedFedAvg(states, trustValues, 1)
-	a.metrics.TrustAggregationTime = float64(time.Since(started).Microseconds())
-	a.metrics.TrustUpdateTime = float64(workload.Peers)
-}
 
 func peerID(i int) peer.ID { return peer.ID(fmt.Sprintf("evaluation-peer-%d", i)) }
 func ratio(n, d uint64) float64 {
@@ -652,21 +626,6 @@ func ratio(n, d uint64) float64 {
 		return 0
 	}
 	return float64(n) / float64(d)
-}
-func ratioFloat(n float64, d uint64) float64 {
-	if d == 0 {
-		return 0
-	}
-	return n / float64(d)
-}
-func minInt(a, b int) int {
-	if b < 0 {
-		return 0
-	}
-	if a < b {
-		return a
-	}
-	return b
 }
 func maxInt(a, b int) int {
 	if a > b {

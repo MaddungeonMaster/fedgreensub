@@ -383,9 +383,9 @@ func TestEvaluateGuardrailReferenceRejectsCumulativeDriftVsRunStart(t *testing.T
 	profiles := tenPeerDriftProfiles(4242)
 	workload := Workload{Peers: 10, Messages: 200, MessageSize: 1024, PublishRate: 100, Duration: 2 * time.Second, RandomSeed: 4242}
 	cfg := fedgreensub.DefaultConfig()
-	runStart := defaultParameters()  // mesh=8
-	previous := trace[0].Candidate   // mesh=7, accepted round-1 result
-	candidate := trace[1].Candidate  // mesh=6, round-2 proposal
+	runStart := defaultParameters() // mesh=8
+	previous := trace[0].Candidate  // mesh=7, accepted round-1 result
+	candidate := trace[1].Candidate // mesh=6, round-2 proposal
 
 	_, _, _, _, acceptedVsPrevious, reasonVsPrevious := evaluateGuardrailReference(profiles, workload, cfg, previous, candidate)
 	if !acceptedVsPrevious {

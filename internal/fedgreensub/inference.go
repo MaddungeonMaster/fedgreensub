@@ -97,10 +97,6 @@ func DecodedMeshValue(output float64, currentMesh int) float64 {
 	return float64(currentMesh) + (clamp01(output)-.5)*4
 }
 
-func defaultInferenceParameters(cfg Config) GossipParameters {
-	return GossipParameters{MeshDegree: (cfg.MinMeshDegree + cfg.MaxMeshDegree) / 2, GossipFactor: (cfg.MinGossipFactor + cfg.MaxGossipFactor) / 2, HeartbeatInterval: (cfg.MinHeartbeatInterval + cfg.MaxHeartbeatInterval) / 2}
-}
-
 // PredictionResult binds a prediction to the metrics that produced it so later
 // stages can log or validate the outcome.
 type PredictionResult struct {

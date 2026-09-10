@@ -1,116 +1,67 @@
 #!/bin/bash
-# Comparative Benchmark: Standard vs Adaptive Parameters (Bash/Linux/Mac)
+# Comparative Benchmark: Normal GossipSub vs FedGreenSub (Bash/Linux/Mac)
+#
+# This script runs the actual benchmark suites and prints their real, measured
+# output. It deliberately reports nothing that "go test -bench" did not produce:
+# no summary percentages, no energy figures, and no claims about physical units.
+#
+# Terminology: FedGreenSub's evaluation reports a modeled, normalized
+# resource-cost proxy. It is not a physical energy measurement and is never
+# expressed in Joules.
+#
+# These microbenchmarks measure runtime cost only. For the validated end-to-end
+# comparison across peer counts and seeds, use the dataset pipeline instead:
+#
+#   go run ./evaluation/comparison -export-dataset
+#   python evaluation/results/analyze_benchmark.py
+#
+# which write evaluation/results/{raw,processed,plots}.
 
-echo "=========================================="
-echo "  GossipSub vs FedGreenSub Comparison"
-echo "=========================================="
-echo ""
+set -u
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-cd "$SCRIPT_DIR"
+cd "$SCRIPT_DIR" || exit 1
 
-echo "Scenario 1: Baseline Performance (Healthy Network)"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo ""
-echo "Standard GossipSub (Fixed Parameters):"
-echo "  Mesh Degree: 8 (fixed)"
-echo "  Heartbeat: 1s (fixed)"
-echo "  Gossip Factor: 0.25 (fixed)"
-echo ""
-echo "FedGreenSub (Adaptive):"
-echo "  Mesh Degree: 8 (optimal for conditions)"
-echo "  Heartbeat: 1s (optimal for conditions)"
-echo "  Gossip Factor: 0.25 (optimal for conditions)"
-echo ""
-echo "Result: Similar performance, FedGreenSub has slight overhead"
-echo ""
-echo ""
-
-echo "Scenario 2: High CPU Load"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo ""
-echo "Standard GossipSub (Fixed Parameters):"
-echo "  Mesh Degree: 8 (inefficient, wastes cycles)"
-echo "  Heartbeat: 1s (conflicts with CPU-intensive task)"
-echo "  Gossip Factor: 0.25 (wastes bandwidth on messages)"
-echo "  CPU Impact: ~25% of total CPU"
-echo ""
-echo "FedGreenSub (Adaptive):"
-echo "  Mesh Degree: 6 (adapted: reduce redundancy)"
-echo "  Heartbeat: 2s (adapted: less frequent checks)"
-echo "  Gossip Factor: 0.15 (adapted: reduce gossip traffic)"
-echo "  CPU Impact: ~12% of total CPU"
-echo ""
-echo "Improvement: 52% less CPU consumed, adaptive tuning saves resources"
-echo ""
-echo ""
-
-echo "Scenario 3: Low Bandwidth Network"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo ""
-echo "Standard GossipSub (Fixed Parameters):"
-echo "  Mesh Degree: 8 (all peers active, high bandwidth)"
-echo "  Heartbeat: 1s (frequent probing on slow link)"
-echo "  Gossip Factor: 0.25 (sends to 2 peers per message)"
-echo "  Bandwidth: ~500 KB/min per peer"
-echo ""
-echo "FedGreenSub (Adaptive):"
-echo "  Mesh Degree: 4 (adapted: reduce mesh size)"
-echo "  Heartbeat: 3s (adapted: slower probing)"
-echo "  Gossip Factor: 0.10 (adapted: only 1 peer per message)"
-echo "  Bandwidth: ~150 KB/min per peer"
-echo ""
-echo "Improvement: 70% bandwidth reduction, still maintains connectivity"
-echo ""
-echo ""
-
-echo "Scenario 4: Battery-Constrained Device (IoT)"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo ""
-echo "Standard GossipSub (Fixed Parameters):"
-echo "  Energy Cost: 2.5 Joules/minute (constant)"
-echo "  Battery Drain Rate: 15% per hour"
-echo "  Operation Time: ~6.5 hours on 100% battery"
-echo ""
-echo "FedGreenSub (Energy-Aware):"
-echo "  Energy Cost: 1.2 Joules/minute (adaptive)"
-echo "  Battery Drain Rate: 7% per hour"
-echo "  Operation Time: ~14 hours on 100% battery"
-echo ""
-echo "Improvement: 52% longer battery life with adaptive tuning"
-echo ""
-echo ""
-
-echo "Running Actual Benchmarks..."
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo ""
-
-echo "Benchmark: Collector (Metrics Baseline)"
-go test ./internal/fedgreensub -bench=CollectorBaseline -benchmem -run=^$
-
-echo ""
-echo "Benchmark: Full Runtime Cycle (FedGreenSub Complete)"
-go test ./internal/fedgreensub -bench=FullRuntimeCycle -benchmem -run=^$
-
-echo ""
-echo "Benchmark: Parameter Validation (Safety Checks)"
-go test ./internal/fedgreensub -bench=ParameterValidation -benchmem -run=^$
-
-echo ""
-echo "Benchmark: Concurrent Reads (Real-World Load)"
-go test ./internal/fedgreensub -bench=CollectorConcurrentReads -benchmem -run=^$
-
-echo ""
-echo ""
 echo "=========================================="
-echo "  Comparison Complete"
+echo "  Normal GossipSub vs FedGreenSub"
 echo "=========================================="
 echo ""
-echo "Key Takeaways:"
-echo "  • GossipSub: Best for static, predictable networks"
-echo "  • FedGreenSub: Better for dynamic, resource-constrained environments"
-echo "  • Overhead: Minimal (5-15% CPU) for dynamic adaptation"
-echo "  • Savings: 50-70% in bandwidth/energy under high load"
+
+status=0
+
+echo "Running actual FedGreenSub benchmark suite..."
+echo "------------------------------------------"
+go test ./internal/fedgreensub -run '^$' -benchmem \
+    -bench 'CollectorBaseline|CollectorConcurrentReads|FullRuntimeCycle|ParameterValidation'
+fed_exit=$?
+if [ $fed_exit -ne 0 ]; then
+    echo "FedGreenSub benchmark run failed with exit code $fed_exit" >&2
+    status=$fed_exit
+fi
+
 echo ""
-echo "See COMPARISON.md for detailed analysis"
+echo "Running actual original GossipSub benchmark suite..."
+echo "------------------------------------------"
+go test . -run '^$' -bench 'OriginalGossipSub' -benchmem
+orig_exit=$?
+if [ $orig_exit -ne 0 ]; then
+    echo "Original GossipSub benchmark run failed with exit code $orig_exit" >&2
+    status=$orig_exit
+fi
+
 echo ""
+echo "=========================================="
+echo "  Comparison complete"
+echo "=========================================="
+echo ""
+echo "Interpretation:"
+echo "  - The original GossipSub benchmarks measure the network-level publish path."
+echo "  - The FedGreenSub benchmarks measure the adaptive runtime and tuning loop,"
+echo "    not a single message publish path."
+echo "  - The two suites measure different things and are not a like-for-like speed"
+echo "    comparison; read each set of numbers on its own terms."
+echo ""
+echo "All numbers above are the actual output of 'go test -bench' in this workspace."
+echo ""
+
+exit $status
