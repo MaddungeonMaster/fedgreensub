@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="560" viewBox="0 0 900 560">
+<rect width="100%" height="100%" fill="white"/><text x="450" y="34" text-anchor="middle" font-family="Arial" font-size="20">Modeled resource cost vs number of peers</text>
+<line x1="90" y1="480" x2="870" y2="480" stroke="#dddddd"/><text x="82" y="484" text-anchor="end" font-family="Arial" font-size="12">59.06</text>
+<line x1="90" y1="398" x2="870" y2="398" stroke="#dddddd"/><text x="82" y="402" text-anchor="end" font-family="Arial" font-size="12">79.57</text>
+<line x1="90" y1="316" x2="870" y2="316" stroke="#dddddd"/><text x="82" y="320" text-anchor="end" font-family="Arial" font-size="12">100.1</text>
+<line x1="90" y1="234.00000000000006" x2="870" y2="234.00000000000006" stroke="#dddddd"/><text x="82" y="238.00000000000006" text-anchor="end" font-family="Arial" font-size="12">120.6</text>
+<line x1="90" y1="152.00000000000003" x2="870" y2="152.00000000000003" stroke="#dddddd"/><text x="82" y="156.00000000000003" text-anchor="end" font-family="Arial" font-size="12">141.1</text>
+<line x1="90" y1="70" x2="870" y2="70" stroke="#dddddd"/><text x="82" y="74" text-anchor="end" font-family="Arial" font-size="12">161.6</text>
+<polyline fill="none" stroke="#4C78A8" stroke-width="3" points="90,450.9174526391074 151.57894736842104,443.35455456371676 254.21052631578945,442.9027138536649 459.4736842105263,440.84140256297576 870,440.9557659447228 "/>
+<line x1="90" y1="451.7241379310345" x2="90" y2="450.1107673471803" stroke="#4C78A8"/><circle cx="90" cy="450.9174526391074" r="5" fill="#4C78A8"/>
+<line x1="151.57894736842104" y1="444.7169943889567" x2="151.57894736842104" y2="441.99211473847674" stroke="#4C78A8"/><circle cx="151.57894736842104" cy="443.35455456371676" r="5" fill="#4C78A8"/>
+<line x1="254.21052631578945" y1="443.6949789157001" x2="254.21052631578945" y2="442.11044879162984" stroke="#4C78A8"/><circle cx="254.21052631578945" cy="442.9027138536649" r="5" fill="#4C78A8"/>
+<line x1="459.4736842105263" y1="441.6130265281653" x2="459.4736842105263" y2="440.0697785977862" stroke="#4C78A8"/><circle cx="459.4736842105263" cy="440.84140256297576" r="5" fill="#4C78A8"/>
+<line x1="870" y1="441.6040232684006" x2="870" y2="440.3075086210449" stroke="#4C78A8"/><circle cx="870" cy="440.9557659447228" r="5" fill="#4C78A8"/>
+<polyline fill="none" stroke="#F58518" stroke-width="3" points="90,109.0853690674801 151.57894736842104,101.5288323279006 254.21052631578945,101.08759386832568 459.4736842105263,99.04748603415507 870,99.1618494167018 "/>
+<line x1="90" y1="109.89205435940715" x2="90" y2="108.27868377555305" stroke="#F58518"/><circle cx="90" cy="109.0853690674801" r="5" fill="#F58518"/>
+<line x1="151.57894736842104" y1="102.89127215314065" x2="151.57894736842104" y2="100.16639250266056" stroke="#F58518"/><circle cx="151.57894736842104" cy="101.5288323279006" r="5" fill="#F58518"/>
+<line x1="254.21052631578945" y1="101.87985893036085" x2="254.21052631578945" y2="100.29532880629054" stroke="#F58518"/><circle cx="254.21052631578945" cy="101.08759386832568" r="5" fill="#F58518"/>
+<line x1="459.4736842105263" y1="99.81910999934465" x2="459.4736842105263" y2="98.27586206896551" stroke="#F58518"/><circle cx="459.4736842105263" cy="99.04748603415507" r="5" fill="#F58518"/>
+<line x1="870" y1="99.81010674037972" x2="870" y2="98.51359209302387" stroke="#F58518"/><circle cx="870" cy="99.1618494167018" r="5" fill="#F58518"/>
+<polyline fill="none" stroke="#54A24B" stroke-width="3" points="90,109.0853690674801 151.57894736842104,101.5288323279006 254.21052631578945,101.08759386832568 459.4736842105263,99.04748603415507 870,99.1618494167018 "/>
+<line x1="90" y1="109.89205435940715" x2="90" y2="108.27868377555305" stroke="#54A24B"/><circle cx="90" cy="109.0853690674801" r="5" fill="#54A24B"/>
+<line x1="151.57894736842104" y1="102.89127215314065" x2="151.57894736842104" y2="100.16639250266056" stroke="#54A24B"/><circle cx="151.57894736842104" cy="101.5288323279006" r="5" fill="#54A24B"/>
+<line x1="254.21052631578945" y1="101.87985893036085" x2="254.21052631578945" y2="100.29532880629054" stroke="#54A24B"/><circle cx="254.21052631578945" cy="101.08759386832568" r="5" fill="#54A24B"/>
+<line x1="459.4736842105263" y1="99.81910999934465" x2="459.4736842105263" y2="98.27586206896551" stroke="#54A24B"/><circle cx="459.4736842105263" cy="99.04748603415507" r="5" fill="#54A24B"/>
+<line x1="870" y1="99.81010674037972" x2="870" y2="98.51359209302387" stroke="#54A24B"/><circle cx="870" cy="99.1618494167018" r="5" fill="#54A24B"/>
+<text x="90" y="502" text-anchor="middle" font-family="Arial" font-size="12">10</text>
+<text x="151.57894736842104" y="502" text-anchor="middle" font-family="Arial" font-size="12">25</text>
+<text x="254.21052631578945" y="502" text-anchor="middle" font-family="Arial" font-size="12">50</text>
+<text x="459.4736842105263" y="502" text-anchor="middle" font-family="Arial" font-size="12">100</text>
+<text x="870" y="502" text-anchor="middle" font-family="Arial" font-size="12">200</text>
+<text x="450" y="538" text-anchor="middle" font-family="Arial" font-size="14">Number of peers</text><text transform="translate(20 280) rotate(-90)" text-anchor="middle" font-family="Arial" font-size="14">Modeled resource-cost units per workload</text>
+<line x1="630" y1="90" x2="654" y2="90" stroke="#4C78A8" stroke-width="3"/><text x="662" y="94" font-family="Arial" font-size="12">Standard GossipSub</text>
+<line x1="630" y1="114" x2="654" y2="114" stroke="#F58518" stroke-width="3"/><text x="662" y="118" font-family="Arial" font-size="12">FedGreenSub</text>
+<line x1="630" y1="138" x2="654" y2="138" stroke="#54A24B" stroke-width="3"/><text x="662" y="142" font-family="Arial" font-size="12">Trust-Aware FedGreenSub</text>
+</svg>

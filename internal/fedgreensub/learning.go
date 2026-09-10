@@ -81,10 +81,32 @@ func (p *LearnedPredictor) Predict(metrics RuntimeMetrics) GossipParameters {
 	return parameters
 }
 
+func (p *LearnedPredictor) PredictWithCurrent(metrics RuntimeMetrics, current GossipParameters) GossipParameters {
+	_, parameters := p.PredictWithOutput(metrics, current)
+	return parameters
+}
+
+// ImportModelState installs an aggregated global model into the network used
+// for subsequent predictions.
+func (p *LearnedPredictor) ImportModelState(state ModelState) error {
+	if p == nil || p.network == nil {
+		return errors.New("fedgreensub: nil learned predictor")
+	}
+	return p.network.SetWeights(state)
+}
+
+// ModelState returns the predictor's current model state for diagnostics.
+func (p *LearnedPredictor) ModelState() ModelState {
+	if p == nil || p.network == nil {
+		return ModelState{}
+	}
+	return p.network.Weights()
+}
+
 // PredictWithOutput exposes the normalized model output alongside the bounded
 // protocol parameters for experiment tracing. It uses the exact same mapping
 // as Predict, so traces cannot diverge from the running path.
-func (p *LearnedPredictor) PredictWithOutput(metrics RuntimeMetrics) ([]float64, GossipParameters) {
+func (p *LearnedPredictor) PredictWithOutput(metrics RuntimeMetrics, current ...GossipParameters) ([]float64, GossipParameters) {
 	if p == nil || p.network == nil {
 		return nil, GossipParameters{}
 	}
@@ -92,7 +114,7 @@ func (p *LearnedPredictor) PredictWithOutput(metrics RuntimeMetrics) ([]float64,
 	if err != nil {
 		return output, GossipParameters{}
 	}
-	parameters, err := ParametersFromModelOutput(output, p.config)
+	parameters, err := ParametersFromModelOutput(output, p.config, current...)
 	if err != nil {
 		return output, GossipParameters{}
 	}

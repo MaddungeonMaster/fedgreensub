@@ -3,37 +3,49 @@ package main
 import "math"
 
 type ExperimentMetrics struct {
-	CPU, MemoryMB                                               float64
-	BytesSent, BytesReceived                                    uint64
-	Published, Received, Delivered, Duplicates                  uint64
-	DeliveryRatio, DuplicateRatio                               float64
-	LatencyAverage, LatencyP95                                  float64
-	AverageMeshDegree                                           float64
-	HeartbeatCount                                              uint64
-	Energy, EnergyPerDeliveredMessage                           float64
-	Available                                                   map[string]bool
-	AverageTrust, MinimumTrust, TrustVariance, TrustedPeerRatio float64
-	TrustUpdateTime, PeerRankingTime, TrustAggregationTime      float64
-	FLRounds                                                    uint64
-	TrainingLoss, GlobalLoss, TrainingTime, AggregationTime     float64
-	TotalRoundTime, ParameterChange                             float64
-	Contributors, Rejected                                      int
-	LocalLossByRound, GlobalLossByRound, ParameterChangeByRound []float64
-	TrainingTimeByRound, AggregationTimeByRound                 []float64
-	EffectiveWeights                                            map[string]float64
-	FLRoundTrace                                                []implementationsTrace
+	CPU, MemoryMB                                                    float64
+	BytesSent, BytesReceived                                         uint64
+	Published, Received, Delivered, Duplicates                       uint64
+	DeliveryRatio, DuplicateRatio                                    float64
+	LatencyAverage, LatencyP95                                       float64
+	AverageMeshDegree                                                float64
+	HeartbeatCount                                                   uint64
+	Energy, EnergyPerDeliveredMessage                                float64
+	ModeledResourceCostTotal, ModeledResourceCostPerDeliveredMessage float64
+	Available                                                        map[string]bool
+	AverageTrust, MinimumTrust, TrustVariance, TrustedPeerRatio      float64
+	TrustUpdateTime, PeerRankingTime, TrustAggregationTime           float64
+	FLRounds                                                         uint64
+	TrainingLoss, GlobalLoss, TrainingTime, AggregationTime          float64
+	TotalRoundTime, ParameterChange                                  float64
+	Contributors, Rejected                                           int
+	LocalLossByRound, GlobalLossByRound, ParameterChangeByRound      []float64
+	TrainingTimeByRound, AggregationTimeByRound                      []float64
+	EffectiveWeights                                                 map[string]float64
+	FLRoundTrace                                                     []implementationsTrace
 }
 
 // implementationsTrace is kept in the comparison package's public result
 // schema so JSON benchmark artifacts include the causal FL trace without
 // importing the implementation package back into the main package.
 type implementationsTrace struct {
-	Round             uint64             `json:"round"`
-	Method            string             `json:"method"`
-	ModelOutput       []float64          `json:"model_output"`
-	Candidate         CandidateTrace     `json:"candidate"`
-	ControlledOutcome OutcomeTrace       `json:"controlled_outcome"`
-	EffectiveWeights  map[string]float64 `json:"effective_weights"`
+	Round                      uint64             `json:"round"`
+	Method                     string             `json:"method"`
+	ModelOutput                []float64          `json:"model_output"`
+	Current                    CandidateTrace     `json:"current"`
+	Candidate                  CandidateTrace     `json:"candidate"`
+	CurrentOutcome             OutcomeTrace       `json:"current_outcome"`
+	ControlledOutcome          OutcomeTrace       `json:"controlled_outcome"`
+	CurrentObjective           float64            `json:"current_objective"`
+	CandidateObjective         float64            `json:"candidate_objective"`
+	Accepted                   bool               `json:"accepted"`
+	RejectionReason            string             `json:"rejection_reason,omitempty"`
+	AggregationParameterChange float64            `json:"aggregation_parameter_change"`
+	PredictorParameterChange   float64            `json:"predictor_parameter_change"`
+	DecodedMesh                float64            `json:"decoded_mesh"`
+	MeshCandidates             []int              `json:"mesh_candidates"`
+	MeshCandidateObjectives    map[int]float64    `json:"mesh_candidate_objectives"`
+	EffectiveWeights           map[string]float64 `json:"effective_weights"`
 }
 
 type CandidateTrace struct {

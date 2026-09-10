@@ -57,7 +57,7 @@ func normalizeModelValue(value, maximum float64) float64 {
 // ParametersFromModelOutput maps the three sigmoid outputs to safe parameter
 // candidates. Final protocol validation remains the responsibility of the
 // ParameterManager and live GossipSub adapter.
-func ParametersFromModelOutput(output []float64, cfg Config) (GossipParameters, error) {
+func ParametersFromModelOutput(output []float64, cfg Config, current ...GossipParameters) (GossipParameters, error) {
 	cfg.normalize()
 	if len(output) != ModelOutputSize {
 		return GossipParameters{}, errInvalidModelOutput
@@ -67,16 +67,38 @@ func ParametersFromModelOutput(output []float64, cfg Config) (GossipParameters, 
 			return GossipParameters{}, errInvalidModelOutput
 		}
 	}
-	mesh := clampInt(int(math.Round(clamp01(output[0])*float64(cfg.MaxMeshDegree-cfg.MinMeshDegree)+float64(cfg.MinMeshDegree))), cfg.MinMeshDegree, cfg.MaxMeshDegree)
+	if len(current) == 0 {
+		mesh := clampInt(int(math.Round(clamp01(output[0])*float64(cfg.MaxMeshDegree-cfg.MinMeshDegree)+float64(cfg.MinMeshDegree))), cfg.MinMeshDegree, cfg.MaxMeshDegree)
+		dLow := clampInt(mesh/2, cfg.MinMeshDegree, mesh)
+		dHigh := clampInt(mesh+4, mesh, cfg.MaxMeshDegree)
+		return GossipParameters{MeshDegree: mesh, DLow: dLow, DHigh: dHigh, GossipFactor: clampFloat(clamp01(output[2])*(cfg.MaxGossipFactor-cfg.MinGossipFactor)+cfg.MinGossipFactor, cfg.MinGossipFactor, cfg.MaxGossipFactor), HeartbeatInterval: clampDuration(time.Duration(clamp01(output[1])*float64(cfg.MaxHeartbeatInterval-cfg.MinHeartbeatInterval)+float64(cfg.MinHeartbeatInterval)), cfg.MinHeartbeatInterval, cfg.MaxHeartbeatInterval)}, nil
+	}
+	base := current[0]
+	heartbeatSpan := float64(base.HeartbeatInterval) * .25
+	if heartbeatSpan < float64(time.Nanosecond) {
+		heartbeatSpan = float64(time.Nanosecond)
+	}
+	gossipSpan := .05
+	mesh := clampInt(int(math.Round(DecodedMeshValue(output[0], base.MeshDegree))), cfg.MinMeshDegree, cfg.MaxMeshDegree)
 	dLow := clampInt(mesh/2, cfg.MinMeshDegree, mesh)
 	dHigh := clampInt(mesh+4, mesh, cfg.MaxMeshDegree)
 	return GossipParameters{
 		MeshDegree:        mesh,
 		DLow:              dLow,
 		DHigh:             dHigh,
-		GossipFactor:      clampFloat(clamp01(output[2])*(cfg.MaxGossipFactor-cfg.MinGossipFactor)+cfg.MinGossipFactor, cfg.MinGossipFactor, cfg.MaxGossipFactor),
-		HeartbeatInterval: clampDuration(time.Duration(clamp01(output[1])*float64(cfg.MaxHeartbeatInterval-cfg.MinHeartbeatInterval)+float64(cfg.MinHeartbeatInterval)), cfg.MinHeartbeatInterval, cfg.MaxHeartbeatInterval),
+		GossipFactor:      clampFloat(base.GossipFactor+(clamp01(output[2])-.5)*2*gossipSpan, cfg.MinGossipFactor, cfg.MaxGossipFactor),
+		HeartbeatInterval: clampDuration(time.Duration(float64(base.HeartbeatInterval)+(clamp01(output[1])-.5)*2*heartbeatSpan), cfg.MinHeartbeatInterval, cfg.MaxHeartbeatInterval),
 	}, nil
+}
+
+// DecodedMeshValue returns the continuous relative mesh prediction before the
+// protocol's integer rounding step.
+func DecodedMeshValue(output float64, currentMesh int) float64 {
+	return float64(currentMesh) + (clamp01(output)-.5)*4
+}
+
+func defaultInferenceParameters(cfg Config) GossipParameters {
+	return GossipParameters{MeshDegree: (cfg.MinMeshDegree + cfg.MaxMeshDegree) / 2, GossipFactor: (cfg.MinGossipFactor + cfg.MaxGossipFactor) / 2, HeartbeatInterval: (cfg.MinHeartbeatInterval + cfg.MaxHeartbeatInterval) / 2}
 }
 
 // PredictionResult binds a prediction to the metrics that produced it so later

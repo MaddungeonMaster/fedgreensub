@@ -17,6 +17,7 @@ type ExperimentConfig struct {
 	ChurnRate     float64
 	TrustEnabled  bool
 	FLRounds      int
+	PeerCounts    []int
 }
 
 func DefaultConfig() ExperimentConfig {
@@ -69,6 +70,19 @@ func (c ExperimentConfig) normalize() ExperimentConfig {
 	}
 	if c.FLRounds < 0 {
 		c.FLRounds = 0
+	}
+	if len(c.PeerCounts) > 0 {
+		seen := make(map[int]struct{}, len(c.PeerCounts))
+		counts := make([]int, 0, len(c.PeerCounts))
+		for _, peers := range c.PeerCounts {
+			if peers > 0 {
+				if _, ok := seen[peers]; !ok {
+					seen[peers] = struct{}{}
+					counts = append(counts, peers)
+				}
+			}
+		}
+		c.PeerCounts = counts
 	}
 	return c
 }

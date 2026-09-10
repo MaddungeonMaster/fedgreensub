@@ -295,13 +295,35 @@ func (r *Runtime) tickPrediction(ctx context.Context) {
 	if learned != nil {
 		predictor = learned
 	}
-	predicted := predictor.Predict(metrics)
+	var predicted GossipParameters
+	if currentAware, ok := predictor.(interface {
+		PredictWithCurrent(RuntimeMetrics, GossipParameters) GossipParameters
+	}); ok {
+		predicted = currentAware.PredictWithCurrent(metrics, r.params.CurrentParameters())
+	} else {
+		predicted = predictor.Predict(metrics)
+	}
 
 	if r.smoother != nil {
 		predicted = r.smoother.Smooth(predicted)
 	}
 
-	report := r.params.ApplyParameters(predicted)
+	report := ValidationReport{Accepted: true, Reason: "accepted: no candidate evaluator configured"}
+	if coordinator != nil && evaluator != nil {
+		current := r.params.CurrentParameters()
+		currentScore, currentErr := evaluator.Evaluate(ctx, metrics, current)
+		candidateScore, candidateErr := evaluator.Evaluate(ctx, metrics, predicted)
+		if currentErr != nil || candidateErr != nil {
+			report = ValidationReport{Reason: "candidate evaluation failed"}
+		} else {
+			report = compareCandidateDeployment(currentScore, candidateScore, r.config)
+		}
+		if report.Accepted {
+			report = r.params.ApplyParameters(predicted)
+		}
+	} else {
+		report = r.params.ApplyParameters(predicted)
+	}
 
 	r.mu.Lock()
 	r.status.LastParameters = predicted
@@ -314,6 +336,27 @@ func (r *Runtime) tickPrediction(ctx context.Context) {
 		slog.Float64("gossip_factor", predicted.GossipFactor),
 		slog.Duration("heartbeat_interval", predicted.HeartbeatInterval),
 	)
+}
+
+func compareCandidateDeployment(current, candidate CandidateScore, cfg Config) ValidationReport {
+	if !candidate.Valid {
+		return ValidationReport{Reason: "candidate outcome invalid"}
+	}
+	if candidate.DeliveryRatio < current.DeliveryRatio-.01 {
+		return ValidationReport{Reason: "delivery regression exceeds tolerance"}
+	}
+	if candidate.DuplicateRatio > current.DuplicateRatio+.02 {
+		return ValidationReport{Reason: "duplicate regression exceeds tolerance"}
+	}
+	if candidate.EnergyCost > current.EnergyCost+.02 {
+		return ValidationReport{Reason: "modeled resource-cost regression exceeds tolerance"}
+	}
+	currentObjective := ScoreCandidate(current, cfg.MinimumDeliveryRatio, cfg.TargetWeights)
+	candidateObjective := ScoreCandidate(candidate, cfg.MinimumDeliveryRatio, cfg.TargetWeights)
+	if candidateObjective > currentObjective+1e-9 {
+		return ValidationReport{Reason: "objective is worse than current configuration"}
+	}
+	return ValidationReport{Accepted: true, Reason: "accepted: objective improved or remained equal within tolerances"}
 }
 
 func (r *Runtime) logEvent(msg string, args ...any) {

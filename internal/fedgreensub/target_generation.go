@@ -32,11 +32,11 @@ func GenerateTrainingSample(ctx context.Context, metrics RuntimeMetrics, current
 		}
 		scores = append(scores, score)
 	}
-	best, ok := SelectBestCandidate(scores, cfg.MinimumDeliveryRatio, cfg.TargetWeights)
+	best, ok := SelectBestCandidate(scores, cfg.MinimumDeliveryRatio, cfg.TargetWeights, current)
 	if !ok {
 		return TrainingSample{}, CandidateScore{}, errors.New("fedgreensub: no valid candidate score")
 	}
-	return TrainingSample{Features: FeatureVector(metrics, cfg), Targets: ParametersTarget(best.Parameters, cfg), Weight: 1}, best, nil
+	return TrainingSample{Features: FeatureVector(metrics, cfg), Targets: ParametersTarget(best.Parameters, cfg, current), Weight: 1}, best, nil
 }
 
 func CandidateParameters(current GossipParameters, cfg Config) []GossipParameters {
